@@ -85,6 +85,17 @@ function calculateCosts() {
 
     generateRoadmap(cropKey);
     generateNotifications(cropKey);
+    
+    // SAVE SESSION DATA
+    const sessionData = {
+        crop: cropKey,
+        landSize: landSize,
+        landUnit: currentLandUnit,
+        startDate: new Date().toISOString(),
+        costs: calculatedCosts
+    };
+    localStorage.setItem('bharatfarm_session', JSON.stringify(sessionData));
+    
     updateDashboard();
 }
 
