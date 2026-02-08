@@ -1,6 +1,6 @@
-# FarmAssist - Smart Agriculture Platform
+# BharatFarm - Smart Agriculture Platform
 
-A comprehensive web application designed to help farmers make smarter decisions through technology. FarmAssist provides weather monitoring, crop planning, disease detection, cost calculation, and activity scheduling tools.
+A comprehensive web application designed to help farmers make smarter decisions through technology. BharatFarm provides weather monitoring, crop planning, disease detection, cost calculation, and activity scheduling tools tailored for Indian farming contexts.
 
 ## Features
 
@@ -11,15 +11,20 @@ A comprehensive web application designed to help farmers make smarter decisions 
 - **📊 Revenue Prediction**: Estimate expected yields and revenue based on crop and land size
 - **🗺️ Activity Roadmap**: Day-by-day farming activity schedules for each crop
 - **🔔 Smart Notifications**: Personalized alerts for watering, fertilizing, and weather conditions
+- **👤 User Profile**: Manage personal information, preferences, and farming history
+- **📚 User Guide**: Comprehensive guide for using all features of the platform
+- **💳 Subscription Plans**: Premium features and enhanced functionality options
+- **📊 Session Dashboard**: Track farming activities and performance metrics
+- **ℹ️ About Section**: Learn more about the platform and its mission
 - **🌓 Dark/Light Theme**: Toggle between themes for comfortable viewing
 
 ## Project Structure
 
 ```
-d:/farm/
+BharatFarm/
 ├── index.html              # Main HTML file
-├── index.html.backup       # Backup of original file
-├── server.js               # Backend server
+├── README.md               # Project documentation
+├── assets/                 # Assets folder
 ├── css/                    # Stylesheets
 │   ├── variables.css       # CSS custom properties & themes
 │   ├── base.css            # Reset & base styles
@@ -34,7 +39,12 @@ d:/farm/
 │   ├── calculator.css      # Calculator & revenue
 │   ├── roadmap.css         # Roadmap timeline
 │   ├── notifications.css   # Notifications & alerts
-│   └── responsive.css      # Media queries
+│   ├── profile.css         # User profile
+│   ├── about.css           # About section
+│   ├── user-guide.css      # User guide
+│   ├── session-dashboard.css # Session tracking dashboard
+│   ├── subscription.css    # Subscription plans
+│   └── responsive.css      # Media queries & responsive design
 └── js/                     # JavaScript modules
     ├── config.js           # Configuration & constants
     ├── data.js             # Crop & disease data
@@ -48,6 +58,9 @@ d:/farm/
     ├── roadmap.js          # Roadmap generation
     ├── notifications.js    # Notification system
     ├── dashboard.js        # Dashboard updates
+    ├── profile.js          # User profile management
+    ├── user-guide.js       # User guide functionality
+    ├── subscription.js     # Subscription management
     └── app.js              # Main initialization
 ```
 
@@ -56,27 +69,29 @@ d:/farm/
 ### Prerequisites
 
 - Modern web browser (Chrome, Firefox, Safari, Edge)
-- Node.js (for running the backend server)
+- No additional software required for basic usage
 
 ### Installation
 
-1. Clone or download this repository
-2. Navigate to the project directory:
+1. Clone or download this repository:
+
    ```bash
-   cd d:/farm
+   git clone https://github.com/your-username/bharatchfarm.git
+   cd BharatFarm
    ```
 
-3. Install dependencies (if using the backend):
+2. Open `index.html` in your web browser, or
+3. Use a local server for better experience:
+
    ```bash
-   npm install
+   # Using Python
+   python -m http.server 8000
+
+   # Or using Node.js with http-server
+   npx http-server
    ```
 
-4. Start the backend server (optional):
-   ```bash
-   node server.js
-   ```
-
-5. Open `index.html` in your web browser or serve it using a local server
+4. Navigate to `http://localhost:8000` (or the port shown in your terminal)
 
 ### Usage
 
@@ -87,20 +102,26 @@ d:/farm/
 5. **Scan Leaves**: Upload or capture leaf images to detect diseases
 6. **Calculate Costs**: Enter your land size and crop to estimate costs and revenue
 7. **View Roadmap**: See day-by-day farming activities for your selected crop
+8. **Manage Profile**: Update personal information and farming preferences
+9. **Explore Subscription**: View premium features and upgrade your experience
+10. **Review Session Dashboard**: Track your farming activities and performance metrics
+11. **Read User Guide**: Get detailed instructions on using all platform features
 
 ## Technologies Used
 
-- **Frontend**: HTML5, CSS3, JavaScript (Vanilla)
+- **Frontend**: HTML5, CSS3, JavaScript (Vanilla JS)
 - **Styling**: Custom CSS with CSS Variables for theming
 - **Icons**: Font Awesome 6.4.0
 - **Fonts**: Google Fonts (Poppins)
-- **Storage**: LocalStorage for user data and preferences
-- **Backend**: Node.js with Express (optional)
+- **Storage**: Browser LocalStorage for user data and preferences
+- **Image Processing**: Client-side image handling for leaf scanning
 
 ## Features in Detail
 
 ### Land Unit Support
+
 The calculator supports three common Indian land measurement units:
+
 - **Acre**: International standard
 - **Bigha**: Common in North India
 - **Katha**: Common in Bihar, West Bengal, and Assam
@@ -108,7 +129,9 @@ The calculator supports three common Indian land measurement units:
 Automatic conversion between units is provided.
 
 ### Crop Database
+
 Includes detailed information for:
+
 - Rice (120-150 days)
 - Wheat (100-120 days)
 - Potato (90-120 days)
@@ -119,7 +142,9 @@ Includes detailed information for:
 Each crop includes seed rates, fertilizer requirements, watering schedules, and market prices.
 
 ### Disease Detection
+
 The leaf scanner can identify:
+
 - Healthy plants
 - Leaf Blight
 - Powdery Mildew
@@ -151,5 +176,5 @@ For questions or support, please refer to the contact information in the applica
 
 ---
 
-**© 2024 FarmAssist - Smart Agriculture Platform**  
-*Helping farmers make smarter decisions*
+**© 2026 BharatFarm - Smart Agriculture Platform**  
+_Empowering Indian Farmers with Smart Technology_
