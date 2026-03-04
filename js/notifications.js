@@ -5,9 +5,12 @@
 function generateNotifications(cropKey) {
     const crop = cropData[cropKey];
     const list = document.getElementById('notificationList');
+    
+    if (!list) return; // Prevent crashes if element doesn't exist
+
     const notifications = [];
 
-    if (currentWeather.rainProbability >= 70) {
+    if (currentWeather && currentWeather.rainProbability >= 70) {
         notifications.push({
             type: 'weather',
             icon: 'fa-cloud-rain',

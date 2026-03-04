@@ -156,8 +156,10 @@ function handleLogout() {
 function showApp() {
     document.getElementById('authPage').style.display = 'none';
     document.getElementById('appContainer').classList.add('active');
-    document.getElementById('userName').textContent = currentUser.name;
-    document.getElementById('welcomeName').textContent = currentUser.name.split(' ')[0];
+    const userNameEl = document.getElementById('userName');
+    if (userNameEl) userNameEl.textContent = currentUser.name;
+    const welcomeNameEl = document.getElementById('welcomeName');
+    if (welcomeNameEl) welcomeNameEl.textContent = currentUser.name.split(' ')[0];
     initCropGrid();
     initDefaultNotifications();
     checkAPIStatus();

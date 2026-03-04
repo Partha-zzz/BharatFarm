@@ -32,6 +32,7 @@
     <link rel="stylesheet" href="css/session-dashboard.css">
     <link rel="stylesheet" href="css/subscription.css">
     <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/chatbot.css">
     <script src="js/subscription.js" defer></script>
 </head>
 
@@ -421,7 +422,10 @@
         <header>
             <div class="header-content">
                 <div class="logo">
-                    <i class="fas fa-seedling"></i>
+                    <button class="global-back-btn" id="globalBackBtn" onclick="goBack()" title="Go Back" style="display: none;">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <i class="fas fa-seedling" id="globalLogoIcon"></i>
                     <h1>BharatFarm</h1>
                 </div>
 
@@ -435,15 +439,8 @@
                     <button class="subscription-btn" onclick="openSubscription()" title="Go Premium">
                         <i class="fas fa-crown"></i> Premium
                     </button>
-                    <div class="user-menu">
-                        <i class="fas fa-user-circle" style="font-size: 1.5rem;"></i>
-                        <span id="userName">User</span>
-                    </div>
                     <button class="logout-btn" onclick="handleLogout()">
                         <i class="fas fa-sign-out-alt"></i> Logout
-                    </button>
-                    <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
-                        <i class="fas fa-bars"></i>
                     </button>
                 </div>
             </div>
@@ -586,7 +583,7 @@
 
             <!-- USER PROFILE SECTION -->
             <section id="profile">
-                <button class="section-back-btn" onclick="showSection('dashboard', null)" title="Back to Dashboard">
+                <button class="section-back-btn" onclick="goBack()" title="Go Back">
                     <i class="fas fa-arrow-left"></i>
                 </button>
 
@@ -678,7 +675,7 @@
 
             <!-- LEAF SCANNER SECTION -->
             <section id="scanner">
-                <button class="section-back-btn" onclick="showSection('dashboard', null)" title="Back to Dashboard">
+                <button class="section-back-btn" onclick="goBack()" title="Go Back">
                     <i class="fas fa-arrow-left"></i>
                 </button>
                 <div class="card">
@@ -740,7 +737,7 @@
 
             <!-- WEATHER -->
             <section id="weather">
-                <button class="section-back-btn" onclick="showSection('dashboard', null)" title="Back to Dashboard">
+                <button class="section-back-btn" onclick="goBack()" title="Go Back">
                     <i class="fas fa-arrow-left"></i>
                 </button>
                 <div class="card">
@@ -748,8 +745,8 @@
                         <h2>Enter Your Location</h2>
                     </div>
                     <div class="location-input">
-                        <input type="text" id="locationInput" placeholder="Enter city name (e.g., Delhi, Mumbai)"
-                            value="Delhi">
+                        <input type="text" id="locationInput" placeholder="Enter village or city name (e.g., Haldia)"
+                            value="Haldia">
                         <button class="btn btn-primary btn-lg" onclick="fetchWeather()"><i class="fas fa-search"></i>
                             Get Weather</button>
                     </div>
@@ -766,7 +763,7 @@
                         <div class="weather-temp"><span id="temperature">32</span>°C</div>
                         <div class="weather-condition" id="weatherCondition">Clear Sky</div>
                         <div class="weather-location"><i class="fas fa-map-marker-alt"></i><span
-                                id="weatherLocation">Delhi, India</span></div>
+                                id="weatherLocation">Jashdighi, West Bengal</span></div>
                     </div>
 
                     <div class="weather-details">
@@ -795,21 +792,64 @@
                             <p>Weather conditions are suitable for farming activities.</p>
                         </div>
                     </div>
+
+                    <!-- AI Farming Advice -->
+                    <div id="weatherAISummary" style="display:none; margin-top:1rem; padding:1rem 1.2rem; background:linear-gradient(135deg,#e3f2fd,#f0f9ff); border-radius:12px; border-left:4px solid #0288d1;">
+                        <div style="font-size:0.75rem; color:#0277bd; font-weight:700; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.5px;">
+                            <i class="fas fa-robot"></i> AI Farming Advice
+                        </div>
+                        <div id="weatherAIText" style="font-size:0.875rem; color:#333; line-height:1.6;">
+                            <span style="color:#999;"><i class="fas fa-spinner fa-spin"></i> Generating advice...</span>
+                        </div>
+                    </div>
                 </div>
             </section>
 
             <!-- CROPS -->
             <section id="crops">
-                <button class="section-back-btn" onclick="showSection('dashboard', null)" title="Back to Dashboard">
+                <button class="section-back-btn" onclick="goBack()" title="Go Back">
                     <i class="fas fa-arrow-left"></i>
                 </button>
                 <div class="card">
                     <div class="card-header"><i class="fas fa-seedling"></i>
                         <h2>Crop Information</h2>
                     </div>
-                    <p style="margin-bottom: var(--spacing-md); color: var(--text-muted);">Choose a crop to see detailed
-                        farming recommendations.</p>
+                    <p style="margin-bottom: var(--spacing-md); color: var(--text-muted);">Search for any crop to see detailed farming recommendations from the global database.</p>
+                    
+                    <div class="crop-controls">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="cropSearchInput" placeholder="Search crops (e.g., Tomato, Rice...)" oninput="debounceSearch()">
+                        </div>
+                        <div class="category-filters">
+                            <button class="filter-btn active" data-category="all" onclick="filterCrops('all')">All</button>
+                            <button class="filter-btn" data-category="cereal" onclick="filterCrops('cereal')">Cereal</button>
+                            <button class="filter-btn" data-category="vegetable" onclick="filterCrops('vegetable')">Vegetable</button>
+                            <button class="filter-btn" data-category="fruit" onclick="filterCrops('fruit')">Fruit</button>
+                            <button class="filter-btn" data-category="oilseed" onclick="filterCrops('oilseed')">Oilseed</button>
+                        </div>
+                    </div>
+
+                    <div id="cropLoading" class="hidden">
+                        <div class="spinner"></div>
+                        <p class="text-center">Searching crop database...</p>
+                    </div>
+
+                    <div id="cropEmptyState" class="hidden">
+                        <div class="empty-state">
+                            <i class="fas fa-search"></i>
+                            <p>No crops found matching your search. Try a different name or category.</p>
+                        </div>
+                    </div>
+
                     <div class="crop-grid" id="cropGrid"></div>
+                </div>
+                
+                <!-- Pagination -->
+                <div id="cropPagination" class="pagination-container hidden">
+                    <button class="btn btn-outline" id="prevPageBtn" onclick="changePage(-1)">Previous</button>
+                    <span id="currentPage">Page 1</span>
+                    <button class="btn btn-outline" id="nextPageBtn" onclick="changePage(1)">Next</button>
                 </div>
                 <div class="crop-info" id="cropInfo">
                     <div class="card">
@@ -817,6 +857,24 @@
                             <h2>Crop Information: <span id="selectedCropName">-</span></h2>
                         </div>
                         <div class="info-grid">
+                            <div class="info-item"><i class="fas fa-microscope"></i>
+                                <div class="info-content">
+                                    <h4>Scientific Name</h4>
+                                    <p id="cropScientificName">-</p>
+                                </div>
+                            </div>
+                            <div class="info-item"><i class="fas fa-cloud-sun"></i>
+                                <div class="info-content">
+                                    <h4>Climate Requirement</h4>
+                                    <p id="cropClimate">-</p>
+                                </div>
+                            </div>
+                            <div class="info-item"><i class="fas fa-mountain"></i>
+                                <div class="info-content">
+                                    <h4>Soil Type</h4>
+                                    <p id="cropSoil">-</p>
+                                </div>
+                            </div>
                             <div class="info-item"><i class="fas fa-clock"></i>
                                 <div class="info-content">
                                     <h4>Total Duration</h4>
@@ -825,23 +883,28 @@
                             </div>
                             <div class="info-item"><i class="fas fa-tint"></i>
                                 <div class="info-content">
-                                    <h4>Watering Frequency</h4>
+                                    <h4>Water Requirement</h4>
                                     <p id="cropWatering">-</p>
                                 </div>
                             </div>
-                            <div class="info-item"><i class="fas fa-flask"></i>
+                            <div class="info-item"><i class="fas fa-calendar-alt"></i>
                                 <div class="info-content">
-                                    <h4>Recommended Fertilizers</h4>
-                                    <p id="cropFertilizers">-</p>
-                                </div>
-                            </div>
-                            <div class="info-item"><i class="fas fa-calendar-check"></i>
-                                <div class="info-content">
-                                    <h4>Fertilizer Schedule</h4>
-                                    <p id="cropFertSchedule">-</p>
+                                    <h4>Harvesting Period</h4>
+                                    <p id="cropHarvesting">-</p>
                                 </div>
                             </div>
                         </div>
+
+                        <!-- AI Insights Panel -->
+                        <div id="cropAIInsights" style="display:none; margin-top:1.5rem; padding:1.2rem 1.5rem; background:linear-gradient(135deg, rgba(0,168,255,0.08), rgba(0,100,200,0.05)); border-radius:12px; border-left:4px solid var(--primary);">
+                            <div style="font-size:0.75rem; color:var(--primary); font-weight:700; margin-bottom:10px; text-transform:uppercase; letter-spacing:0.5px;">
+                                <i class="fas fa-robot"></i> AI Growing Insights
+                            </div>
+                            <div id="cropAIText" style="font-size:0.875rem; color:var(--text-primary); line-height:1.7;">
+                                <span style="color:var(--text-muted);"><i class="fas fa-spinner fa-spin"></i> Generating AI insights...</span>
+                            </div>
+                        </div>
+
                         <div class="mt-lg" style="display: flex; gap: var(--spacing-sm); flex-wrap: wrap;">
                             <button class="btn btn-primary btn-lg" onclick="showSection('roadmap')"><i
                                     class="fas fa-road"></i> View Roadmap</button>
@@ -854,7 +917,7 @@
 
             <!-- CALCULATOR -->
             <section id="calculator">
-                <button class="section-back-btn" onclick="showSection('dashboard', null)" title="Back to Dashboard">
+                <button class="section-back-btn" onclick="goBack()" title="Go Back">
                     <i class="fas fa-arrow-left"></i>
                 </button>
                 <div class="grid grid-2">
@@ -871,12 +934,43 @@
                             <select id="calcCrop"
                                 style="width:100%; padding: var(--spacing-sm); border: 2px solid var(--border-color); border-radius: var(--border-radius-sm); font-size: 1rem; background: var(--bg-secondary); color: var(--text-primary);">
                                 <option value="">-- Choose a crop --</option>
-                                <option value="rice">Rice</option>
-                                <option value="wheat">Wheat</option>
-                                <option value="potato">Potato</option>
-                                <option value="mustard">Mustard</option>
-                                <option value="vegetables">Vegetables</option>
-                                <option value="maize">Maize (Corn)</option>
+                                <optgroup label="🌾 Cereals">
+                                    <option value="rice">Rice</option>
+                                    <option value="wheat">Wheat</option>
+                                    <option value="maize">Maize (Corn)</option>
+                                    <option value="barley">Barley</option>
+                                    <option value="oats">Oats</option>
+                                </optgroup>
+                                <optgroup label="🥬 Vegetables">
+                                    <option value="tomato">Tomato</option>
+                                    <option value="potato">Potato</option>
+                                    <option value="onion">Onion</option>
+                                    <option value="carrot">Carrot</option>
+                                    <option value="cabbage">Cabbage</option>
+                                    <option value="spinach">Spinach</option>
+                                    <option value="brinjal">Brinjal (Eggplant)</option>
+                                    <option value="cauliflower">Cauliflower</option>
+                                    <option value="okra">Okra (Lady's Finger)</option>
+                                    <option value="capsicum">Capsicum (Bell Pepper)</option>
+                                </optgroup>
+                                <optgroup label="🍎 Fruits">
+                                    <option value="mango">Mango</option>
+                                    <option value="banana">Banana</option>
+                                    <option value="apple">Apple</option>
+                                    <option value="papaya">Papaya</option>
+                                    <option value="guava">Guava</option>
+                                    <option value="orange">Orange</option>
+                                    <option value="grapes">Grapes</option>
+                                    <option value="pomegranate">Pomegranate</option>
+                                    <option value="watermelon">Watermelon</option>
+                                    <option value="pineapple">Pineapple</option>
+                                </optgroup>
+                                <optgroup label="🌻 Oilseeds">
+                                    <option value="mustard">Mustard</option>
+                                    <option value="soybean">Soybean</option>
+                                    <option value="sunflower">Sunflower</option>
+                                    <option value="groundnut">Groundnut (Peanut)</option>
+                                </optgroup>
                             </select>
                         </div>
 
@@ -970,7 +1064,7 @@
 
             <!-- ROADMAP -->
             <section id="roadmap">
-                <button class="section-back-btn" onclick="showSection('dashboard', null)" title="Back to Dashboard">
+                <button class="section-back-btn" onclick="goBack()" title="Go Back">
                     <i class="fas fa-arrow-left"></i>
                 </button>
                 <div class="card">
@@ -991,7 +1085,7 @@
 
             <!-- NOTIFICATIONS -->
             <section id="notifications">
-                <button class="section-back-btn" onclick="showSection('dashboard', null)" title="Back to Dashboard">
+                <button class="section-back-btn" onclick="goBack()" title="Go Back">
                     <i class="fas fa-arrow-left"></i>
                 </button>
                 <div class="card">
@@ -1019,6 +1113,7 @@
 
     <!-- JavaScript Files -->
     <script src="js/config.js"></script>
+    <script src="js/cropsData.js"></script>
     <script src="js/data.js"></script>
     <script src="js/theme.js"></script>
     <script src="js/navigation.js"></script>
@@ -1034,6 +1129,7 @@
     <script src="js/user-guide.js"></script>
     <script src="js/app.js"></script>
     <script src="js/lang.js"></script>
+    <script src="js/chatbot.js"></script>
 </body>
 
 </html>

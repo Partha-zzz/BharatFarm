@@ -1,5 +1,8 @@
 // ============================================
 // WEATHER FUNCTIONS
+// Uses: Open-Meteo (free, no key) for real data 
+//       Nominatim for village-level geocoding
+//       OpenRouter AI for farming advice
 // ============================================
 
 let isAPIOnline = false;
@@ -13,8 +16,8 @@ let currentWeather = {
     icon: 'fa-sun'
 };
 
-let userLocation = null; // Store user's detected location
-let userLocationName = ''; // Store the location name
+let userLocation = { lat: 21.0667, lon: 88.0667 };
+let userLocationName = 'Haldia';
 
 async function checkAPIStatus() {
     try {
@@ -25,22 +28,20 @@ async function checkAPIStatus() {
     }
 }
 
+// ── Entry point ─────────────────────────────
 function fetchWeather() {
     const locationInput = document.getElementById('locationInput').value.trim();
 
-    // Check if user manually entered a location
     if (locationInput && locationInput !== userLocationName && locationInput !== 'Detecting location...') {
-        // User entered a location manually
         fetchWeatherByLocation(locationInput);
     } else if (userLocation) {
-        // Use stored user location
-        fetchWeatherByCoords(userLocation.lat, userLocation.lon);
+        fetchWeatherByCoords(userLocation.lat, userLocation.lon, userLocationName);
     } else {
-        // Try to get location
         autoDetectLocation();
     }
 }
 
+// ── Update weather UI ────────────────────────
 function updateWeatherUI(location) {
     document.getElementById('temperature').textContent = currentWeather.temp;
     document.getElementById('humidity').textContent = currentWeather.humidity;
@@ -61,9 +62,12 @@ function updateWeatherUI(location) {
     }
 
     updateDashboard();
+
+    // Trigger AI advice (non-blocking)
+    getAIWeatherAdvice(location);
 }
 
-// Auto-detect user location using browser geolocation
+// ── Auto-detect location ─────────────────────
 function autoDetectLocation() {
     if (navigator.geolocation) {
         document.getElementById('weatherLoading').classList.remove('hidden');
@@ -75,12 +79,8 @@ function autoDetectLocation() {
                 const lat = position.coords.latitude;
                 const lon = position.coords.longitude;
                 userLocation = { lat, lon };
-
-                // FIRST: Get location name using reverse geocoding
                 await reverseGeocode(lat, lon);
-
-                // THEN: Fetch weather
-                fetchWeatherByCoords(lat, lon);
+                fetchWeatherByCoords(lat, lon, userLocationName);
             },
             (error) => {
                 console.log('Geolocation error:', error.message);
@@ -97,94 +97,115 @@ function autoDetectLocation() {
     }
 }
 
-// Reverse geocode coordinates to get location name FIRST
+// ── Precise Reverse geocode (Villages/Towns) ──
 async function reverseGeocode(lat, lon) {
     try {
-        const API_KEY = 'ad56bd42df68a127ce54e35ce12c33f4';
-        const url = `https://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=1&appid=${API_KEY}`;
-
+        // BigDataCloud is very fast and precise for Indian villages and local areas (free, no key needed for client-side)
+        const url = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en`;
         const response = await fetch(url);
+        
         if (response.ok) {
             const data = await response.json();
-            if (data && data.length > 0) {
-                const place = data[0];
-                userLocationName = `${place.name}, ${place.state || place.country}`;
-                document.getElementById('locationInput').value = userLocationName;
+            
+            // Try to get the most specific locality available (village -> suburb -> city)
+            const locality = data.locality || data.city || data.principalSubdivision;
+            const state = data.principalSubdivision;
+            
+            if (locality && state && locality !== state) {
+                userLocationName = `${locality}, ${state}`;
+            } else if (locality) {
+                userLocationName = locality;
+            } else {
+                userLocationName = "Your Location";
             }
+            
+            document.getElementById('locationInput').value = userLocationName;
         }
-    } catch (error) {
-        console.log('Reverse geocoding error:', error);
-        // Continue anyway, weather will still work
+    } catch (err) {
+        console.log('Reverse geocoding error:', err);
     }
 }
 
-// Fetch weather by location name using Visual Crossing API
+// ── Fetch weather by city/village name ───────
 async function fetchWeatherByLocation(locationName) {
     document.getElementById('weatherLoading').classList.remove('hidden');
     document.getElementById('weatherContent').style.display = 'none';
 
     try {
-        const API_KEY = 'AHWNC24HN789FFACZVX338UF3';
-        const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${encodeURIComponent(locationName)}?unitGroup=metric&key=${API_KEY}&contentType=json`;
+        // Geocode name -> coordinates using Nominatim (better for villages than standard OpenMeteo)
+        const geoUrl = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(locationName)}&format=json&limit=1`;
+        const geoRes = await fetch(geoUrl, { headers: { 'Accept-Language': 'en' } });
 
-        const response = await fetch(url);
+        if (!geoRes.ok) throw new Error('Geocoding failed');
+        const geoData = await geoRes.json();
 
-        if (response.ok) {
-            const data = await response.json();
-            processVisualCrossingData(data, locationName);
-        } else {
+        if (!geoData || geoData.length === 0) {
             document.getElementById('weatherLoading').classList.add('hidden');
             document.getElementById('weatherContent').style.display = 'block';
-            alert('Unable to find weather for this location. Please try a different location.');
+            alert('Location not found. Please try adding your district or state name (e.g., "Malandighi, West Bengal").');
+            return;
         }
+
+        const place = geoData[0];
+        const lat = parseFloat(place.lat);
+        const lon = parseFloat(place.lon);
+        
+        // Clean up the display name (e.g. "Malandighi, Kanksa CD Block, Paschim Bardhaman...")
+        let resolvedName = place.display_name.split(',').slice(0, 2).join(',').trim();
+
+        userLocation = { lat, lon };
+        userLocationName = resolvedName;
+        document.getElementById('locationInput').value = resolvedName;
+
+        // Fetch weather using resolved coordinates
+        await fetchWeatherByCoords(lat, lon, resolvedName);
+
     } catch (error) {
-        console.log('Weather API error:', error);
+        console.log('Weather fetch error:', error);
         document.getElementById('weatherLoading').classList.add('hidden');
         document.getElementById('weatherContent').style.display = 'block';
-        alert('Unable to fetch weather data. Please check your internet connection.');
+        alert('Unable to fetch weather. Please check your internet connection.');
     }
 }
 
-// Fetch weather using coordinates with Visual Crossing API
-async function fetchWeatherByCoords(lat, lon) {
+// ── Fetch weather by coordinates (Open-Meteo) ─
+async function fetchWeatherByCoords(lat, lon, locationName) {
     document.getElementById('weatherLoading').classList.remove('hidden');
     document.getElementById('weatherContent').style.display = 'none';
 
     try {
-        const API_KEY = 'AHWNC24HN789FFACZVX338UF3';
-        const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${lat},${lon}?unitGroup=metric&key=${API_KEY}&contentType=json`;
+        const url = `https://api.open-meteo.com/v1/forecast` +
+            `?latitude=${lat}&longitude=${lon}` +
+            `&current=temperature_2m,relative_humidity_2m,wind_speed_10m,` +
+            `precipitation_probability,weather_code,visibility` +
+            `&wind_speed_unit=kmh&timezone=auto`;
 
-        const response = await fetch(url);
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`Open-Meteo error ${res.status}`);
 
-        if (response.ok) {
-            const data = await response.json();
-            // Use the location name we already got from reverse geocoding
-            processVisualCrossingData(data, userLocationName || data.resolvedAddress);
-        } else {
-            document.getElementById('weatherLoading').classList.add('hidden');
-            document.getElementById('weatherContent').style.display = 'block';
-            alert('Unable to fetch weather data. Please try again later.');
-        }
+        const data = await res.json();
+        processOpenMeteoData(data, locationName || userLocationName || `${lat.toFixed(2)}, ${lon.toFixed(2)}`);
+
     } catch (error) {
-        console.log('Weather API error:', error);
+        console.log('Open-Meteo error:', error);
         document.getElementById('weatherLoading').classList.add('hidden');
         document.getElementById('weatherContent').style.display = 'block';
         alert('Unable to fetch weather data. Please check your internet connection.');
     }
 }
 
-// Process Visual Crossing API data
-function processVisualCrossingData(data, locationName) {
-    const current = data.currentConditions;
+// ── Parse Open-Meteo response ────────────────
+function processOpenMeteoData(data, locationName) {
+    const c = data.current;
 
     currentWeather = {
-        temp: Math.round(current.temp),
-        humidity: Math.round(current.humidity),
-        windSpeed: Math.round(current.windspeed),
-        visibility: Math.round(current.visibility),
-        rainProbability: Math.round(current.precipprob || 0),
-        condition: current.conditions,
-        icon: getWeatherIconFromCondition(current.icon)
+        temp: Math.round(c.temperature_2m),
+        humidity: Math.round(c.relative_humidity_2m),
+        windSpeed: Math.round(c.wind_speed_10m),
+        visibility: c.visibility != null ? Math.round(c.visibility / 1000) : 10, // m → km
+        rainProbability: Math.round(c.precipitation_probability || 0),
+        condition: weatherCodeToCondition(c.weather_code),
+        icon: weatherCodeToIcon(c.weather_code)
     };
 
     updateWeatherUI(locationName);
@@ -192,21 +213,108 @@ function processVisualCrossingData(data, locationName) {
     document.getElementById('weatherContent').style.display = 'block';
 }
 
-// Get appropriate icon for Visual Crossing weather condition
-function getWeatherIconFromCondition(icon) {
-    const iconMap = {
-        'clear-day': 'fa-sun',
-        'clear-night': 'fa-moon',
-        'cloudy': 'fa-cloud',
-        'partly-cloudy-day': 'fa-cloud-sun',
-        'partly-cloudy-night': 'fa-cloud-moon',
-        'rain': 'fa-cloud-showers-heavy',
-        'snow': 'fa-snowflake',
-        'wind': 'fa-wind',
-        'fog': 'fa-smog',
-        'sleet': 'fa-cloud-rain',
-        'hail': 'fa-cloud-meatball',
-        'thunderstorm': 'fa-bolt'
-    };
-    return iconMap[icon] || 'fa-cloud-sun';
+// ── WMO weather code → readable condition ────
+function weatherCodeToCondition(code) {
+    if (code === 0) return 'Clear Sky';
+    if (code <= 2) return 'Partly Cloudy';
+    if (code === 3) return 'Overcast';
+    if (code <= 49) return 'Foggy / Hazy';
+    if (code <= 59) return 'Drizzle';
+    if (code <= 69) return 'Rain';
+    if (code <= 79) return 'Snow / Sleet';
+    if (code <= 84) return 'Rain Showers';
+    if (code <= 94) return 'Thunderstorm';
+    return 'Severe Thunderstorm';
+}
+
+// ── WMO weather code → Font Awesome icon ─────
+function weatherCodeToIcon(code) {
+    if (code === 0) return 'fa-sun';
+    if (code <= 2) return 'fa-cloud-sun';
+    if (code === 3) return 'fa-cloud';
+    if (code <= 49) return 'fa-smog';
+    if (code <= 67) return 'fa-cloud-showers-heavy';
+    if (code <= 77) return 'fa-snowflake';
+    if (code <= 82) return 'fa-cloud-rain';
+    if (code <= 99) return 'fa-bolt';
+    return 'fa-cloud-sun';
+}
+
+// ── OpenRouter AI advice for farmers ─────────
+async function getAIWeatherAdvice(location) {
+    const summaryDiv = document.getElementById('weatherAISummary');
+    const textDiv = document.getElementById('weatherAIText');
+    if (!summaryDiv || !textDiv) return;
+
+    summaryDiv.style.display = 'block';
+    textDiv.innerHTML = '<span style="color:#999"><i class="fas fa-spinner fa-spin"></i> Generating advice...</span>';
+
+    // Get API key from config or session
+    const apiKey = (typeof OPENROUTER_API_KEY !== 'undefined' && OPENROUTER_API_KEY.trim().length > 10)
+        ? OPENROUTER_API_KEY
+        : sessionStorage.getItem('bf_openrouter_key');
+
+    if (!apiKey) {
+        textDiv.textContent = 'Add your OpenRouter API key to the chatbot to enable AI farming advice.';
+        return;
+    }
+
+    const prompt = `Current weather in ${location}:
+- Temperature: ${currentWeather.temp}°C
+- Humidity: ${currentWeather.humidity}%
+- Wind Speed: ${currentWeather.windSpeed} km/h
+- Rain Probability: ${currentWeather.rainProbability}%
+- Condition: ${currentWeather.condition}
+
+In 2-3 short sentences, give a practical farming advice for today based on this weather. Be specific and helpful for an Indian farmer. Keep it concise.`;
+
+    const models = ['openrouter/free', 'meta-llama/llama-3.3-70b-instruct:free', 'google/gemini-2.0-flash-exp:free'];
+
+    for (const model of models) {
+        try {
+            const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${apiKey}`,
+                    'HTTP-Referer': window.location.href,
+                    'X-Title': 'BharatFarm Weather Advice'
+                },
+                body: JSON.stringify({
+                    model,
+                    messages: [{ role: 'user', content: prompt }],
+                    max_tokens: 200,
+                    temperature: 0.6
+                })
+            });
+
+            if (!res.ok) {
+                if (res.status === 429) continue; // try next model
+                throw new Error(`HTTP ${res.status}`);
+            }
+
+            const data = await res.json();
+            const advice = data?.choices?.[0]?.message?.content?.trim();
+            if (advice) {
+                textDiv.textContent = advice;
+                return;
+            }
+        } catch (err) {
+            console.warn(`[Weather AI] model ${model} failed:`, err.message);
+            continue;
+        }
+    }
+
+    // All failed — show a fallback tip based on the data
+    let fallback = '';
+    if (currentWeather.rainProbability >= 70) {
+        fallback = '🌧 High rain expected. Avoid sowing or fertilizer application today. Ensure proper drainage in your fields.';
+    } else if (currentWeather.temp > 38) {
+        fallback = '🌡 Very hot day. Water your crops early morning or late evening. Avoid heavy field work in the afternoon.';
+    } else if (currentWeather.humidity > 80) {
+        fallback = '💧 High humidity today. Watch out for fungal diseases. Ensure good air circulation between plants.';
+    } else {
+        fallback = '✅ Weather looks good for farming today! Good conditions for irrigation, spraying, or field preparation.';
+    }
+    textDiv.textContent = fallback;
 }

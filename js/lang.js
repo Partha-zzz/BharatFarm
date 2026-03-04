@@ -93,7 +93,42 @@ const translations = {
         healthy_plant: "Healthy Plant", 
         disease_detected: "Disease Detected",
         recommended_fertilizers: "Recommended Fertilizers", 
-        treatment_tips: "Treatment Tips"
+        treatment_tips: "Treatment Tips",
+        // Crop section
+        crop_search_placeholder: "Search crops (e.g., Tomato, Rice...)",
+        crop_search_desc: "Search for any crop to see detailed farming recommendations from the global database.",
+        cat_all: "All",
+        cat_cereal: "Cereal",
+        cat_vegetable: "Vegetable",
+        cat_fruit: "Fruit",
+        cat_oilseed: "Oilseed",
+        searching_crops: "Searching crop database...",
+        no_crops_found: "No crops found matching your search. Try a different name or category.",
+        previous: "Previous",
+        next: "Next",
+        scientific_name: "Scientific Name",
+        climate_requirement: "Climate Requirement",
+        soil_type: "Soil Type",
+        total_duration: "Total Duration",
+        water_requirement: "Water Requirement",
+        harvesting_period: "Harvesting Period",
+        ai_insights: "AI Growing Insights",
+        view_roadmap_btn: "View Roadmap",
+        calculate_costs_btn: "Calculate Costs",
+        crop_info_label: "Crop Information",
+        cropNames: {
+            tomato: "Tomato", potato: "Potato", onion: "Onion", carrot: "Carrot",
+            cabbage: "Cabbage", spinach: "Spinach", brinjal: "Brinjal (Eggplant)",
+            cauliflower: "Cauliflower", okra: "Okra (Lady's Finger)", capsicum: "Capsicum (Bell Pepper)",
+            mango: "Mango", banana: "Banana", apple: "Apple", papaya: "Papaya",
+            guava: "Guava", orange: "Orange", grapes: "Grapes", pomegranate: "Pomegranate",
+            watermelon: "Watermelon", pineapple: "Pineapple",
+            rice: "Rice", wheat: "Wheat", maize: "Maize (Corn)", barley: "Barley", oats: "Oats",
+            mustard: "Mustard", soybean: "Soybean", sunflower: "Sunflower", groundnut: "Groundnut (Peanut)"
+        },
+        categoryNames: {
+            vegetable: "VEGETABLE", fruit: "FRUIT", cereal: "CEREAL", oilseed: "OILSEED"
+        }
     },
     hi: {
         loading_subtitle: "आपका स्मार्ट फार्मिंग डैशबोर्ड तैयार हो रहा है...",
@@ -181,7 +216,42 @@ const translations = {
         healthy_plant: "स्वस्थ पौधा", 
         disease_detected: "रोग पाया गया",
         recommended_fertilizers: "अनुशंसित उर्वरक", 
-        treatment_tips: "उपचार सुझाव"
+        treatment_tips: "उपचार सुझाव",
+        // Crop section
+        crop_search_placeholder: "फसल खोजें (जैसे, टमाटर, चावल...)",
+        crop_search_desc: "किसी भी फसल की विस्तृत खेती सिफारिशें देखने के लिए खोजें।",
+        cat_all: "सभी",
+        cat_cereal: "अनाज",
+        cat_vegetable: "सब्ज़ी",
+        cat_fruit: "फल",
+        cat_oilseed: "तिलहन",
+        searching_crops: "फसल डेटाबेस खोज रहे हैं...",
+        no_crops_found: "आपकी खोज से मेल खाती कोई फसल नहीं मिली। कोई अन्य नाम या श्रेणी आज़माएं।",
+        previous: "पिछला",
+        next: "अगला",
+        scientific_name: "वैज्ञानिक नाम",
+        climate_requirement: "जलवायु आवश्यकता",
+        soil_type: "मिट्टी का प्रकार",
+        total_duration: "कुल अवधि",
+        water_requirement: "पानी की आवश्यकता",
+        harvesting_period: "कटाई की अवधि",
+        ai_insights: "एआई उगाने की जानकारी",
+        view_roadmap_btn: "रोडमैप देखें",
+        calculate_costs_btn: "लागत गणना करें",
+        crop_info_label: "फसल जानकारी",
+        cropNames: {
+            tomato: "टमाटर", potato: "आलू", onion: "प्याज", carrot: "गाजर",
+            cabbage: "पत्तागोभी", spinach: "पालक", brinjal: "बैंगन",
+            cauliflower: "फूलगोभी", okra: "भिंडी", capsicum: "शिमला मिर्च",
+            mango: "आम", banana: "केला", apple: "सेब", papaya: "पपीता",
+            guava: "अमरूद", orange: "संतरा", grapes: "अंगूर", pomegranate: "अनार",
+            watermelon: "तरबूज", pineapple: "अनानास",
+            rice: "चावल", wheat: "गेहूं", maize: "मक्का", barley: "जौ", oats: "जई",
+            mustard: "सरसों", soybean: "सोयाबीन", sunflower: "सूरजमुखी", groundnut: "मूंगफली"
+        },
+        categoryNames: {
+            vegetable: "सब्ज़ी", fruit: "फल", cereal: "अनाज", oilseed: "तिलहन"
+        }
     },
     bn: {
         loading_subtitle: "আপনার স্মার্ট ফার্মিং ড্যাশবোর্ড প্রস্তুত হচ্ছে...",
@@ -269,7 +339,42 @@ const translations = {
         healthy_plant: "সুস্থ গাছ", 
         disease_detected: "রোগ সনাক্ত হয়েছে",
         recommended_fertilizers: "প্রস্তাবিত সার", 
-        treatment_tips: "চিকিৎসা টিপস"
+        treatment_tips: "চিকিৎসা টিপস",
+        // Crop section
+        crop_search_placeholder: "ফসল খুঁজুন (যেমন, টমেটো, ধান...)",
+        crop_search_desc: "যেকোনো ফসলের বিস্তারিত কৃষি সুপারিশ দেখতে অনুসন্ধান করুন।",
+        cat_all: "সব",
+        cat_cereal: "শস্য",
+        cat_vegetable: "সবজি",
+        cat_fruit: "ফল",
+        cat_oilseed: "তৈলবীজ",
+        searching_crops: "ফসল ডাটাবেস খোঁজা হচ্ছে...",
+        no_crops_found: "আপনার অনুসন্ধানের সাথে কোনো ফসল পাওয়া যায়নি। অন্য নাম বা শ্রেণী চেষ্টা করুন।",
+        previous: "পূর্ববর্তী",
+        next: "পরবর্তী",
+        scientific_name: "বৈজ্ঞানিক নাম",
+        climate_requirement: "জলবায়ু প্রয়োজনীয়তা",
+        soil_type: "মাটির ধরন",
+        total_duration: "মোট সময়কাল",
+        water_requirement: "পানির প্রয়োজনীয়তা",
+        harvesting_period: "ফসল কাটার সময়কাল",
+        ai_insights: "এআই চাষের অন্তর্দৃষ্টি",
+        view_roadmap_btn: "রোডম্যাপ দেখুন",
+        calculate_costs_btn: "খরচ হিসাব করুন",
+        crop_info_label: "ফসল তথ্য",
+        cropNames: {
+            tomato: "টমেটো", potato: "আলু", onion: "পেঁয়াজ", carrot: "গাজর",
+            cabbage: "বাঁধাকপি", spinach: "পালং শাক", brinjal: "বেগুন",
+            cauliflower: "ফুলকপি", okra: "ঢেঁড়স", capsicum: "ক্যাপসিকাম",
+            mango: "আম", banana: "কলা", apple: "আপেল", papaya: "পেঁপে",
+            guava: "পেয়ারা", orange: "কমলা", grapes: "আঙুর", pomegranate: "ডালিম",
+            watermelon: "তরমুজ", pineapple: "আনারস",
+            rice: "ধান", wheat: "গম", maize: "ভুট্টা", barley: "যব", oats: "ওটস",
+            mustard: "সরিষা", soybean: "সয়াবিন", sunflower: "সূর্যমুখী", groundnut: "চিনাবাদাম"
+        },
+        categoryNames: {
+            vegetable: "সবজি", fruit: "ফল", cereal: "শস্য", oilseed: "তৈলবীজ"
+        }
     }
 };
 
@@ -423,6 +528,9 @@ function updateLanguage() {
     // Update tips
     updateTips(t);
     
+    // Update Crop Section
+    updateCropSection(t);
+    
     console.log('Language updated to:', currentLanguage);
 }
 
@@ -497,6 +605,61 @@ function updateTips(t) {
             <p style="margin-top: var(--spacing-sm);"><strong><i class="fas fa-check-circle" style="color: var(--success);"></i> ${t.tip_afternoon.split(':')[0]}:</strong> ${t.tip_afternoon.split(':')[1]}</p>
             <p style="margin-top: var(--spacing-sm);"><strong><i class="fas fa-check-circle" style="color: var(--success);"></i> ${t.tip_evening.split(':')[0]}:</strong> ${t.tip_evening.split(':')[1]}</p>
         `;
+    }
+}
+
+// ============================================
+// UPDATE CROP SECTION WITH TRANSLATIONS
+// ============================================
+function updateCropSection(t) {
+    // Update category filter buttons
+    const catMap = { all: t.cat_all, cereal: t.cat_cereal, vegetable: t.cat_vegetable, fruit: t.cat_fruit, oilseed: t.cat_oilseed };
+    document.querySelectorAll('.category-filters .filter-btn').forEach(btn => {
+        const cat = btn.getAttribute('data-category');
+        if (cat && catMap[cat]) btn.textContent = catMap[cat];
+    });
+
+    // Update search placeholder
+    const searchInput = document.getElementById('cropSearchInput');
+    if (searchInput) searchInput.placeholder = t.crop_search_placeholder;
+
+    // Update crop section description
+    const cropDesc = document.querySelector('#crops .card > p');
+    if (cropDesc) cropDesc.textContent = t.crop_search_desc;
+
+    // Update loading text
+    const cropLoading = document.querySelector('#cropLoading p');
+    if (cropLoading) cropLoading.textContent = t.searching_crops;
+
+    // Update empty state text
+    const cropEmpty = document.querySelector('#cropEmptyState .empty-state p');
+    if (cropEmpty) cropEmpty.textContent = t.no_crops_found;
+
+    // Update pagination buttons
+    const prevBtn = document.getElementById('prevPageBtn');
+    const nextBtn = document.getElementById('nextPageBtn');
+    if (prevBtn) prevBtn.textContent = t.previous;
+    if (nextBtn) nextBtn.textContent = t.next;
+
+    // Update crop info detail labels (index-based since order is fixed)
+    const infoItems = document.querySelectorAll('#cropInfo .info-item h4');
+    const labelOrder = [t.scientific_name, t.climate_requirement, t.soil_type, t.total_duration, t.water_requirement, t.harvesting_period];
+    infoItems.forEach((h4, idx) => {
+        if (labelOrder[idx]) h4.textContent = labelOrder[idx];
+    });
+
+    // Update AI insights label
+    const aiLabel = document.querySelector('#cropAIInsights > div:first-child');
+    if (aiLabel) aiLabel.innerHTML = `<i class="fas fa-robot"></i> ${t.ai_insights}`;
+
+    // Update View Roadmap and Calculate Costs buttons in crop info
+    const cropBtns = document.querySelectorAll('#cropInfo .mt-lg button');
+    if (cropBtns[0]) cropBtns[0].innerHTML = `<i class="fas fa-road"></i> ${t.view_roadmap_btn}`;
+    if (cropBtns[1]) cropBtns[1].innerHTML = `<i class="fas fa-calculator"></i> ${t.calculate_costs_btn}`;
+
+    // Re-render crop cards with translated names
+    if (typeof fetchCrops === 'function') {
+        fetchCrops();
     }
 }
 

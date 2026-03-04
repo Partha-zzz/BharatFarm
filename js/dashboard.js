@@ -15,7 +15,11 @@ function updateDashboard() {
     }
 
     if (selectedCrop) {
-        document.getElementById('dashNextActivity').textContent = cropData[selectedCrop].roadmap[0].activity;
+        const crop = cropData[selectedCrop];
+        const nextActivity = (crop && crop.roadmap && crop.roadmap.length > 0) 
+            ? crop.roadmap[0].activity 
+            : 'Check Roadmap';
+        document.getElementById('dashNextActivity').textContent = nextActivity;
     }
 
     if (calculatedCosts) {
