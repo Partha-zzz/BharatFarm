@@ -15,8 +15,25 @@ function showSection(sectionId, button) {
 
     document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
     document.getElementById(sectionId).classList.add('active');
-    document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
-    if (button) button.classList.add('active');
+    // Update desktop nav buttons
+    document.querySelectorAll('nav button').forEach(btn => {
+        const btnSection = btn.getAttribute('onclick')?.match(/'([^']+)'/)?.[1];
+        if (btnSection === sectionId) {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
+    });
+
+    // Update mobile bottom nav buttons
+    document.querySelectorAll('.mobile-bottom-nav button').forEach(btn => {
+        const btnSection = btn.getAttribute('onclick')?.match(/'([^']+)'/)?.[1];
+        if (btnSection === sectionId) {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
+    });
     const nav = document.getElementById('mainNav');
     if (nav) nav.classList.remove('mobile-open');
 

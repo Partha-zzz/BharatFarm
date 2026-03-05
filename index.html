@@ -32,6 +32,7 @@
     <link rel="stylesheet" href="css/session-dashboard.css">
     <link rel="stylesheet" href="css/subscription.css">
     <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/mobile.css">
     <link rel="stylesheet" href="css/chatbot.css">
     <script src="js/subscription.js" defer></script>
 </head>
@@ -227,7 +228,7 @@
             </div>
         </div>
     </div>
-        <!-- LANGUAGE SELECTION MODAL -->
+    <!-- LANGUAGE SELECTION MODAL -->
     <div class="language-modal" id="languageModal">
         <div class="language-box">
             <h2><i class="fas fa-globe"></i> Select Language</h2>
@@ -422,7 +423,8 @@
         <header>
             <div class="header-content">
                 <div class="logo">
-                    <button class="global-back-btn" id="globalBackBtn" onclick="goBack()" title="Go Back" style="display: none;">
+                    <button class="global-back-btn" id="globalBackBtn" onclick="goBack()" title="Go Back"
+                        style="display: none;">
                         <i class="fas fa-arrow-left"></i>
                     </button>
                     <i class="fas fa-seedling" id="globalLogoIcon"></i>
@@ -794,8 +796,10 @@
                     </div>
 
                     <!-- AI Farming Advice -->
-                    <div id="weatherAISummary" style="display:none; margin-top:1rem; padding:1rem 1.2rem; background:linear-gradient(135deg,#e3f2fd,#f0f9ff); border-radius:12px; border-left:4px solid #0288d1;">
-                        <div style="font-size:0.75rem; color:#0277bd; font-weight:700; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.5px;">
+                    <div id="weatherAISummary"
+                        style="display:none; margin-top:1rem; padding:1rem 1.2rem; background:linear-gradient(135deg,#e3f2fd,#f0f9ff); border-radius:12px; border-left:4px solid #0288d1;">
+                        <div
+                            style="font-size:0.75rem; color:#0277bd; font-weight:700; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.5px;">
                             <i class="fas fa-robot"></i> AI Farming Advice
                         </div>
                         <div id="weatherAIText" style="font-size:0.875rem; color:#333; line-height:1.6;">
@@ -814,19 +818,26 @@
                     <div class="card-header"><i class="fas fa-seedling"></i>
                         <h2>Crop Information</h2>
                     </div>
-                    <p style="margin-bottom: var(--spacing-md); color: var(--text-muted);">Search for any crop to see detailed farming recommendations from the global database.</p>
-                    
+                    <p style="margin-bottom: var(--spacing-md); color: var(--text-muted);">Search for any crop to see
+                        detailed farming recommendations from the global database.</p>
+
                     <div class="crop-controls">
                         <div class="search-box">
                             <i class="fas fa-search"></i>
-                            <input type="text" id="cropSearchInput" placeholder="Search crops (e.g., Tomato, Rice...)" oninput="debounceSearch()">
+                            <input type="text" id="cropSearchInput" placeholder="Search crops (e.g., Tomato, Rice...)"
+                                oninput="debounceSearch()">
                         </div>
                         <div class="category-filters">
-                            <button class="filter-btn active" data-category="all" onclick="filterCrops('all')">All</button>
-                            <button class="filter-btn" data-category="cereal" onclick="filterCrops('cereal')">Cereal</button>
-                            <button class="filter-btn" data-category="vegetable" onclick="filterCrops('vegetable')">Vegetable</button>
-                            <button class="filter-btn" data-category="fruit" onclick="filterCrops('fruit')">Fruit</button>
-                            <button class="filter-btn" data-category="oilseed" onclick="filterCrops('oilseed')">Oilseed</button>
+                            <button class="filter-btn active" data-category="all"
+                                onclick="filterCrops('all')">All</button>
+                            <button class="filter-btn" data-category="cereal"
+                                onclick="filterCrops('cereal')">Cereal</button>
+                            <button class="filter-btn" data-category="vegetable"
+                                onclick="filterCrops('vegetable')">Vegetable</button>
+                            <button class="filter-btn" data-category="fruit"
+                                onclick="filterCrops('fruit')">Fruit</button>
+                            <button class="filter-btn" data-category="oilseed"
+                                onclick="filterCrops('oilseed')">Oilseed</button>
                         </div>
                     </div>
 
@@ -844,7 +855,7 @@
 
                     <div class="crop-grid" id="cropGrid"></div>
                 </div>
-                
+
                 <!-- Pagination -->
                 <div id="cropPagination" class="pagination-container hidden">
                     <button class="btn btn-outline" id="prevPageBtn" onclick="changePage(-1)">Previous</button>
@@ -896,12 +907,16 @@
                         </div>
 
                         <!-- AI Insights Panel -->
-                        <div id="cropAIInsights" style="display:none; margin-top:1.5rem; padding:1.2rem 1.5rem; background:linear-gradient(135deg, rgba(0,168,255,0.08), rgba(0,100,200,0.05)); border-radius:12px; border-left:4px solid var(--primary);">
-                            <div style="font-size:0.75rem; color:var(--primary); font-weight:700; margin-bottom:10px; text-transform:uppercase; letter-spacing:0.5px;">
+                        <div id="cropAIInsights"
+                            style="display:none; margin-top:1.5rem; padding:1.2rem 1.5rem; background:linear-gradient(135deg, rgba(0,168,255,0.08), rgba(0,100,200,0.05)); border-radius:12px; border-left:4px solid var(--primary);">
+                            <div
+                                style="font-size:0.75rem; color:var(--primary); font-weight:700; margin-bottom:10px; text-transform:uppercase; letter-spacing:0.5px;">
                                 <i class="fas fa-robot"></i> AI Growing Insights
                             </div>
-                            <div id="cropAIText" style="font-size:0.875rem; color:var(--text-primary); line-height:1.7;">
-                                <span style="color:var(--text-muted);"><i class="fas fa-spinner fa-spin"></i> Generating AI insights...</span>
+                            <div id="cropAIText"
+                                style="font-size:0.875rem; color:var(--text-primary); line-height:1.7;">
+                                <span style="color:var(--text-muted);"><i class="fas fa-spinner fa-spin"></i> Generating
+                                    AI insights...</span>
                             </div>
                         </div>
 
@@ -1106,6 +1121,32 @@
             </div>
         </footer>
     </div>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-bottom-nav">
+        <button onclick="showSection('dashboard')" id="bottomNavDashboard">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </button>
+        <button onclick="showSection('weather')" id="bottomNavWeather">
+            <i class="fas fa-cloud-sun"></i>
+            <span>Weather</span>
+        </button>
+        <div class="nav-placeholder"></div> <!-- Space for FAB -->
+        <button onclick="showSection('crops')" id="bottomNavCrops">
+            <i class="fas fa-seedling"></i>
+            <span>Crops</span>
+        </button>
+        <button onclick="showSection('calculator')" id="bottomNavCalc">
+            <i class="fas fa-calculator"></i>
+            <span>Calc</span>
+        </button>
+    </nav>
+
+    <!-- Scanner Floating Action Button -->
+    <button class="scanner-fab" onclick="showSection('scanner')" title="Scan Leaf">
+        <i class="fas fa-camera"></i>
+    </button>
 
     <!-- TensorFlow.js and MobileNet -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>

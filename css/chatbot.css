@@ -50,10 +50,12 @@
 }
 
 @keyframes chatPulse {
+
   0%,
   100% {
     box-shadow: 0 6px 24px rgba(2, 119, 189, 0.45);
   }
+
   50% {
     box-shadow:
       0 6px 32px rgba(2, 119, 189, 0.75),
@@ -65,6 +67,7 @@
   from {
     transform: scale(0);
   }
+
   to {
     transform: scale(1);
   }
@@ -154,10 +157,12 @@
 }
 
 @keyframes onlinePulse {
+
   0%,
   100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.4;
   }
@@ -233,6 +238,7 @@
 .chat-date-divider::before {
   left: 0;
 }
+
 .chat-date-divider::after {
   right: 0;
 }
@@ -250,6 +256,7 @@
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -407,16 +414,19 @@
 .typing-dot:nth-child(2) {
   animation-delay: 0.2s;
 }
+
 .typing-dot:nth-child(3) {
   animation-delay: 0.4s;
 }
 
 @keyframes typingBounce {
+
   0%,
   100% {
     transform: translateY(0);
     opacity: 0.5;
   }
+
   50% {
     transform: translateY(-6px);
     opacity: 1;
@@ -631,14 +641,14 @@
 /* ── Mobile Responsive ── */
 @media (max-width: 480px) {
   #chatbotToggle {
-    bottom: 18px;
+    bottom: calc(var(--bottom-nav-height) + 20px);
     right: 18px;
     width: 56px;
     height: 56px;
   }
 
   #chatbotPanel {
-    bottom: 0;
+    bottom: var(--bottom-nav-height);
     right: 0;
     left: 0;
     width: 100%;
@@ -672,7 +682,7 @@
 }
 
 /* Inner reading lane — centered, capped at 780px */
-#chatbotPanel.chat-fullscreen #chatbotMessages > * {
+#chatbotPanel.chat-fullscreen #chatbotMessages>* {
   max-width: 780px;
   width: 100%;
   margin: 0 auto;
@@ -700,4 +710,3 @@
   padding: 18px 32px;
   border-radius: 0;
 }
-

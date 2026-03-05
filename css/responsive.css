@@ -45,6 +45,8 @@
 @media (max-width: 768px) {
     header {
         padding: var(--spacing-sm);
+        z-index: 2500;
+        /* Ensure header is above bottom nav if they overlap in some layouts */
     }
 
     .logo h1 {
@@ -56,37 +58,38 @@
     }
 
     .dashboard-hero {
-        padding: var(--spacing-lg);
+        padding: var(--spacing-md);
+        margin-bottom: var(--spacing-md);
     }
 
     .dashboard-hero h2 {
-        font-size: 1.5rem;
+        font-size: 1.3rem;
     }
 
     .weather-main {
-        padding: var(--spacing-lg);
+        padding: var(--spacing-md);
     }
 
     .weather-temp {
-        font-size: 2.5rem;
+        font-size: 2.2rem;
     }
 
     .weather-icon {
-        font-size: 3.5rem;
+        font-size: 3rem;
     }
 
     .timeline {
-        padding-left: var(--spacing-lg);
+        padding-left: var(--spacing-md);
     }
 
     .timeline::before {
-        left: 10px;
+        left: 8px;
     }
 
     .timeline-item::before {
-        left: -22px;
-        width: 16px;
-        height: 16px;
+        left: -20px;
+        width: 14px;
+        height: 14px;
     }
 
     .timeline-item .activity-icon {
@@ -95,10 +98,11 @@
 
     .crop-grid {
         grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
     }
 
     .crop-card {
-        padding: var(--spacing-md);
+        padding: var(--spacing-sm);
     }
 
     .crop-card .crop-icon {
@@ -107,6 +111,11 @@
 
     .user-menu span {
         display: none;
+    }
+
+    /* Hide standard nav sidebar/menu on mobile if any */
+    .mobile-menu-btn {
+        display: none !important;
     }
 }
 
