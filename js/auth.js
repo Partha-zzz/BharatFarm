@@ -164,6 +164,10 @@ function showApp() {
     initDefaultNotifications();
     checkAPIStatus();
     fetchWeather();
+    // Initialize mobile navigation state
+    if (typeof showSection === 'function') {
+        showSection('dashboard');
+    }
 }
 
 function showLoadingPage() {
