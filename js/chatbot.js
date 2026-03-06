@@ -455,15 +455,13 @@ Goal: Act as a friendly, knowledgeable, and reliable digital farming assistant f
 
     for (const model of candidates) {
       try {
-        const url = "https://openrouter.ai/api/v1/chat/completions";
-        console.log(`[KrishiBot] Trying model: ${model}`);
+        const url = "/api/chat";
+        console.log(`[KrishiBot] Using proxy for model: ${model}`);
 
         const res = await fetch(url, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${apiKey}`,
-            "HTTP-Referer": window.location.href,
             "X-Title": "BharatFarm KrishiBot",
           },
           body: JSON.stringify({

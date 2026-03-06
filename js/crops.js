@@ -36,8 +36,8 @@ async function fetchCropImageFromUnsplash(keywords, cropId) {
         return cropState.imageCache[cropId];
     }
 
-    // Use fallback image if no API key configured
-    if (!USE_UNSPLASH || !UNSPLASH_API_KEY || UNSPLASH_API_KEY.includes('YOUR_')) {
+    // Use fallback image if no API enabled
+    if (!USE_UNSPLASH) {
         const fallbackUrl = `https://images.unsplash.com/photo-1500298967881-5e0f9c4ab89f?w=300&q=80`; // Generic crop image
         cropState.imageCache[cropId] = fallbackUrl;
         return fallbackUrl;
@@ -46,8 +46,9 @@ async function fetchCropImageFromUnsplash(keywords, cropId) {
     try {
         let imageUrl;
         // first attempt with provided keywords
+        // Use serverless function proxy to hide API key
         let response = await fetch(
-            `https://api.unsplash.com/search/photos?query=${encodeURIComponent(keywords)}&per_page=1&client_id=${UNSPLASH_API_KEY}`
+            `/api/unsplash?query=${encodeURIComponent(keywords)}`
         );
         if (!response.ok) throw new Error('Unsplash API error');
         let data = await response.json();
@@ -55,9 +56,9 @@ async function fetchCropImageFromUnsplash(keywords, cropId) {
             imageUrl = data.results[0].urls.small;
         } else {
             console.warn(`Unsplash returned no image for query "${keywords}" (crop ${cropId})`);
-            // try again using cropId or common name alone
+            // try again using cropId or common name alone through proxy
             response = await fetch(
-                `https://api.unsplash.com/search/photos?query=${encodeURIComponent(cropId)}&per_page=1&client_id=${UNSPLASH_API_KEY}`
+                `/api/unsplash?query=${encodeURIComponent(cropId)}`
             );
             if (response.ok) {
                 data = await response.json();
@@ -99,18 +100,16 @@ async function fetchCropImageFromPexels(keywords, cropId) {
         return cropState.imageCache[cropId];
     }
 
-    // Use fallback image if no API key configured
-    if (!USE_PEXELS || !PEXELS_API_KEY || PEXELS_API_KEY.includes('YOUR_')) {
+    // Use fallback image if no API enabled
+    if (!USE_PEXELS) {
         const fallbackUrl = `https://images.unsplash.com/photo-1500298967881-5e0f9c4ab89f?w=300&q=80`;
         cropState.imageCache[cropId] = fallbackUrl;
         return fallbackUrl;
     }
 
     try {
-        const response = await fetch(
-            `https://api.pexels.com/v1/search?query=${encodeURIComponent(keywords)}&page=1&per_page=1`,
-            { headers: { 'Authorization': PEXELS_API_KEY } }
-        );
+        // Use serverless function proxy
+        const response = await fetch(`/api/pexels?query=${encodeURIComponent(keywords)}`);
         
         if (!response.ok) throw new Error('Pexels API error');
         
@@ -270,10 +269,10 @@ async function loadCropImage(crop, cardElement) {
 
     try {
         let imageUrl;
-        // Fetch from Unsplash API using crop-specific keywords
-        if (USE_UNSPLASH && UNSPLASH_API_KEY && !UNSPLASH_API_KEY.includes('YOUR_')) {
+        // Fetch from proxies
+        if (USE_UNSPLASH) {
             imageUrl = await fetchCropImageFromUnsplash(crop.imageKeywords, crop.id);
-        } else if (USE_PEXELS && PEXELS_API_KEY && !PEXELS_API_KEY.includes('YOUR_')) {
+        } else if (USE_PEXELS) {
             imageUrl = await fetchCropImageFromPexels(crop.imageKeywords, crop.id);
         } else {
             imageUrl = 'https://images.unsplash.com/photo-1500298967881-5e0f9c4ab89f?w=300&q=80';
@@ -439,12 +438,10 @@ Guidelines:
 - Include approximate durations where possible.
 - Avoid unnecessary long text.`;
 
-    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    const response = await fetch('/api/chat', {
         method: 'POST',
         headers: {
-            'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
             'Content-Type': 'application/json',
-            'HTTP-Referer': window.location.origin,
             'X-Title': 'BharatFarm'
         },
         body: JSON.stringify({

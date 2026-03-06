@@ -272,12 +272,10 @@ In 2-3 short sentences, give a practical farming advice for today based on this 
 
     for (const model of models) {
         try {
-            const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+            const res = await fetch('/api/chat', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${apiKey}`,
-                    'HTTP-Referer': window.location.href,
                     'X-Title': 'BharatFarm Weather Advice'
                 },
                 body: JSON.stringify({
