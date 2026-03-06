@@ -688,6 +688,10 @@
                         any plant leaf to detect diseases and get fertilizer recommendations.</p>
 
                     <div class="scanner-container">
+                        <!-- AI model loading status (shown briefly on page load) -->
+                        <p id="modelStatus"
+                            style="display:none; color: var(--text-muted); font-size: 0.85rem; margin-bottom: var(--spacing-sm); text-align: center;">
+                        </p>
                         <div class="scanner-box" id="scannerBox" onclick="document.getElementById('leafInput').click()">
                             <i class="fas fa-cloud-upload-alt"></i>
                             <h3>Upload Leaf Image</h3>
@@ -712,7 +716,7 @@
 
                         <div id="scanLoading" class="hidden">
                             <div class="spinner"></div>
-                            <p class="text-center">Analyzing leaf image...</p>
+                            <p class="text-center">Detecting leaf and analysing disease…</p>
                         </div>
 
                         <div id="scanResult" class="scan-result" style="display: none;">
@@ -1148,9 +1152,9 @@
         <i class="fas fa-camera"></i>
     </button>
 
-    <!-- TensorFlow.js and MobileNet -->
+    <!-- TensorFlow.js and COCO-SSD (leaf detection) -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@2.1.0/dist/mobilenet.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
 
     <!-- JavaScript Files -->
     <script src="js/config.js"></script>
