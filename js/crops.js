@@ -395,10 +395,6 @@ async function selectCrop(crop) {
 async function fetchUnifiedCropData(crop) {
     if (cropFullDataCache[crop.id]) return cropFullDataCache[crop.id];
 
-    if (!OPENROUTER_API_KEY || OPENROUTER_API_KEY.includes('YOUR_')) {
-        throw new Error('No API key');
-    }
-
     const prompt = `You are an agricultural expert AI helping power a smart farming website called "BharatFarm".
 
 Your task is to generate accurate and structured crop information for farmers.

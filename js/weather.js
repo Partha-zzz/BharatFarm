@@ -249,16 +249,6 @@ async function getAIWeatherAdvice(location) {
     summaryDiv.style.display = 'block';
     textDiv.innerHTML = '<span style="color:#999"><i class="fas fa-spinner fa-spin"></i> Generating advice...</span>';
 
-    // Get API key from config or session
-    const apiKey = (typeof OPENROUTER_API_KEY !== 'undefined' && OPENROUTER_API_KEY.trim().length > 10)
-        ? OPENROUTER_API_KEY
-        : sessionStorage.getItem('bf_openrouter_key');
-
-    if (!apiKey) {
-        textDiv.textContent = 'Add your OpenRouter API key to the chatbot to enable AI farming advice.';
-        return;
-    }
-
     const prompt = `Current weather in ${location}:
 - Temperature: ${currentWeather.temp}°C
 - Humidity: ${currentWeather.humidity}%
