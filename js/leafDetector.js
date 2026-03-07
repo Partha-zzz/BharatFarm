@@ -31,7 +31,7 @@ async function detectLeaf(imageElement) {
         console.log('[LeafDetector] COCO-SSD predictions:', predictions);
 
         // COCO-SSD might not have 'leaf', but including based on requirements
-        const validClasses = ['plant', 'leaf', 'potted plant', 'flower', 'apple', 'orange', 'broccoli', 'carrot', 'vase'];
+        const validClasses = ['plant', 'leaf', 'potted plant', 'flower', 'tree', 'apple', 'orange', 'broccoli', 'carrot', 'vase'];
 
         let bestDetection = null;
 

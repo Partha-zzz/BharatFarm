@@ -107,54 +107,23 @@ function handleLeafUpload(e) {
                 document.getElementById('scannerPreview').style.display = 'block';
                 const analyzeBtn = document.getElementById('analyzeBtn');
                 analyzeBtn.style.display = 'inline-flex';
-                analyzeBtn.disabled = true;
-                analyzeBtn.style.opacity = '0.5';
+                analyzeBtn.disabled = false;
+                analyzeBtn.style.opacity = '1';
+                analyzeBtn.style.cursor = 'pointer';
                 document.getElementById('scanResult').style.display = 'none';
 
                 // Clear any previous alert
                 const existingAlert = document.querySelectorAll('.scanner-alert');
                 existingAlert.forEach(alert => alert.remove());
 
-                // Show analyzing indicator
-                const preview = document.getElementById('scannerPreview');
+                // Remove any scanning indicators
                 let indicator = document.getElementById('leafValidationIndicator');
-                if (!indicator) {
-                    indicator = document.createElement('div');
-                    indicator.id = 'leafValidationIndicator';
-                    indicator.style.marginTop = 'var(--spacing-sm)';
-                    indicator.style.fontWeight = 'bold';
-                    indicator.style.textAlign = 'center';
-                    preview.appendChild(indicator);
+                if (indicator) {
+                    indicator.remove();
                 }
-                indicator.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying image...';
-                indicator.style.color = 'var(--text-muted)';
-                indicator.style.display = 'block';
-
-                // Wait for models if still loading (prevent error on fast upload)
-                if (!modelsReady || !cocoSsdModel) {
-                    indicator.innerHTML = '<i class="fas fa-hourglass-half"></i> Models still loading, please wait...';
-                    // simple wait loop
-                    while (!modelsReady || !cocoSsdModel) {
-                        await new Promise(r => setTimeout(r, 500));
-                    }
-                    indicator.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying image...';
-                }
-
-                currentDetectionResult = await detectLeaf(img);
-
-                if (!currentDetectionResult.isPlant) {
-                    indicator.style.display = 'none';
-                    showError('This image does not appear to contain a plant leaf.');
-                    analyzeBtn.disabled = true;
-                    analyzeBtn.style.opacity = '0.5';
-                    analyzeBtn.style.cursor = 'not-allowed';
-                } else {
-                    indicator.innerHTML = '<i class="fas fa-check-circle"></i> Leaf Detected';
-                    indicator.style.color = 'var(--success)';
-                    analyzeBtn.disabled = false;
-                    analyzeBtn.style.opacity = '1';
-                    analyzeBtn.style.cursor = 'pointer';
-                }
+                
+                // Clear state
+                currentDetectionResult = null;
             };
         };
         reader.readAsDataURL(file);
@@ -180,7 +149,7 @@ async function analyzeLeaf() {
     const resultEl = document.getElementById('scanResult');
 
     // Wait for models if still loading
-    if (!modelsReady) {
+    if (!modelsReady || !cocoSsdModel) {
         showError('AI models are still loading. Please wait a moment and try again.');
         return;
     }
@@ -195,24 +164,29 @@ async function analyzeLeaf() {
     if (prevAlert) prevAlert.remove();
 
     try {
-        // --- Stage 1: Detect if it's a leaf/plant (Already done in upload, just check result) ---
-        if (!currentDetectionResult || !currentDetectionResult.isPlant) {
-            showError('This image does not appear to contain a plant leaf.');
-            loadingEl.classList.add('hidden');
-            analyzeBtn.style.display = 'inline-flex';
-            return;
-        }
-
+        // --- Stage 1: Detect if it's a leaf/plant ---
+        const detectionResult = await detectLeaf(img);
+        currentDetectionResult = detectionResult;
+        
         // --- Stage 1.5: Crop the detected leaf ---
         let processedImg = img;
-        if (currentDetectionResult.bbox) {
-            console.log('[Scanner] Cropping leaf using bounding box:', currentDetectionResult.bbox);
-            processedImg = cropLeafImage(img, currentDetectionResult.bbox);
+        if (detectionResult.isPlant && detectionResult.bbox) {
+            console.log('[Scanner] Cropping leaf using bounding box:', detectionResult.bbox);
+            processedImg = cropLeafImage(img, detectionResult.bbox);
         }
 
-        // ── Disease classification ────────────
+        // ── Stage 2: Disease classification ────────────
         const { label, confidence, diseaseKey } = await predictDisease(processedImg);
         console.log(`[Scanner] Disease: "${label}" → "${diseaseKey}" (${Math.round(confidence * 100)}%)`);
+
+        // If no plant was found by object detection AND the disease classifier confidence is extremely low (< 0.5)
+        // Only then do we reject the image.
+        if (!detectionResult.isPlant && confidence < 0.5) {
+             showError('This image does not appear to contain a plant leaf.');
+             loadingEl.classList.add('hidden');
+             analyzeBtn.style.display = 'inline-flex';
+             return;
+        }
 
         // ── Display final result ────────────────────────
         displayResult(diseaseKey, confidence);
