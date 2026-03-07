@@ -5,3 +5,8 @@ dist/
 .vscode/
 .qoder/
 *.log
+venv/
+.venv/
+training/venv/
+__pycache__/
+*.pyc
