@@ -723,8 +723,13 @@
                             <h3 style="margin-bottom: var(--spacing-md);"><i class="fas fa-clipboard-check"></i>
                                 Analysis Result</h3>
                             <div class="disease-badge" id="diseaseStatus">Healthy</div>
-                            <h4 id="diseaseName" style="font-size: 1.3rem; margin-bottom: var(--spacing-sm);">Plant
-                                Status</h4>
+                            <div
+                                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-sm); flex-wrap: wrap; gap: 8px;">
+                                <h4 id="diseaseName" style="font-size: 1.3rem; margin: 0;">Plant Status</h4>
+                                <span id="diseaseConfidence"
+                                    style="font-size: 0.85rem; font-weight: 500; color: var(--text-muted); background: var(--bg-secondary); padding: 4px 10px; border-radius: 12px; display: none; border: 1px solid var(--border-color);">Confidence:
+                                    0%</span>
+                            </div>
                             <p id="diseaseDescription"
                                 style="color: var(--text-secondary); margin-bottom: var(--spacing-md);">Description will
                                 appear here.</p>
@@ -1152,7 +1157,7 @@
         <i class="fas fa-camera"></i>
     </button>
 
-    <!-- TensorFlow.js and COCO-SSD (leaf detection) -->
+    <!-- TensorFlow.js (plant disease models) -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
 
@@ -1163,6 +1168,7 @@
     <script src="js/theme.js"></script>
     <script src="js/navigation.js"></script>
     <script src="js/auth.js"></script>
+    <script src="js/leafDetector.js"></script>
     <script src="js/scanner.js"></script>
     <script src="js/weather.js"></script>
     <script src="js/crops.js"></script>

@@ -5,15 +5,8 @@
 // ============================================
 
 // ---- Globals ----
-let cocoSsdModel = null;   // Stage 1 — object detector (COCO-SSD)
-let diseaseModel = null;   // Stage 2 — plant disease CNN
+let diseaseModel = null;   // plant disease CNN
 let modelsReady = false;
-
-// COCO-SSD class names that indicate a plant / leaf
-const LEAF_CLASSES = [
-    'potted plant', 'plant', 'flower', 'broccoli',
-    'carrot', 'banana', 'apple', 'orange', 'leaf', 'tree'
-];
 
 // Full 38-class PlantVillage label list (matches disease CNN output order)
 const PLANT_DISEASE_LABELS = [
@@ -74,12 +67,7 @@ async function loadModels() {
     }
 
     try {
-        // Load Stage 1: COCO-SSD leaf detector
-        console.log('[Scanner] Loading COCO-SSD leaf detector...');
-        cocoSsdModel = await cocoSsd.load();
-        console.log('[Scanner] COCO-SSD loaded.');
-
-        // Load Stage 2: Plant disease CNN
+        // Load Plant disease CNN
         // Attempts to load local PlantVillage model; falls back gracefully
         console.log('[Scanner] Loading plant disease model...');
         try {
@@ -99,6 +87,8 @@ async function loadModels() {
     }
 }
 
+let currentDetectionResult = null;
+
 // ============================================
 // HANDLE FILE UPLOAD
 // ============================================
@@ -109,14 +99,58 @@ function handleLeafUpload(e) {
         reader.onload = function (event) {
             const img = document.getElementById('leafPreviewImg');
             img.src = event.target.result;
-            img.onload = () => {
+            img.onload = async () => {
                 document.getElementById('scannerPreview').style.display = 'block';
-                document.getElementById('analyzeBtn').style.display = 'inline-flex';
+                const analyzeBtn = document.getElementById('analyzeBtn');
+                analyzeBtn.style.display = 'inline-flex';
+                analyzeBtn.disabled = true;
+                analyzeBtn.style.opacity = '0.5';
                 document.getElementById('scanResult').style.display = 'none';
 
                 // Clear any previous alert
-                const existingAlert = document.querySelector('.scanner-alert');
-                if (existingAlert) existingAlert.remove();
+                const existingAlert = document.querySelectorAll('.scanner-alert');
+                existingAlert.forEach(alert => alert.remove());
+
+                // Show analyzing indicator
+                const preview = document.getElementById('scannerPreview');
+                let indicator = document.getElementById('leafValidationIndicator');
+                if (!indicator) {
+                    indicator = document.createElement('div');
+                    indicator.id = 'leafValidationIndicator';
+                    indicator.style.marginTop = 'var(--spacing-sm)';
+                    indicator.style.fontWeight = 'bold';
+                    indicator.style.textAlign = 'center';
+                    preview.appendChild(indicator);
+                }
+                indicator.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying image...';
+                indicator.style.color = 'var(--text-muted)';
+                indicator.style.display = 'block';
+
+                // Wait for models if still loading (prevent error on fast upload)
+                if (!modelsReady || !cocoSsdModel) {
+                    indicator.innerHTML = '<i class="fas fa-hourglass-half"></i> Models still loading, please wait...';
+                    // simple wait loop
+                    while (!modelsReady || !cocoSsdModel) {
+                        await new Promise(r => setTimeout(r, 500));
+                    }
+                    indicator.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying image...';
+                }
+
+                currentDetectionResult = await detectLeaf(img);
+
+                if (!currentDetectionResult.isPlant) {
+                    indicator.style.display = 'none';
+                    showError('This image does not appear to contain a plant leaf.');
+                    analyzeBtn.disabled = true;
+                    analyzeBtn.style.opacity = '0.5';
+                    analyzeBtn.style.cursor = 'not-allowed';
+                } else {
+                    indicator.innerHTML = '<i class="fas fa-check-circle"></i> Leaf Detected';
+                    indicator.style.color = 'var(--success)';
+                    analyzeBtn.disabled = false;
+                    analyzeBtn.style.opacity = '1';
+                    analyzeBtn.style.cursor = 'pointer';
+                }
             };
         };
         reader.readAsDataURL(file);
@@ -142,7 +176,7 @@ async function analyzeLeaf() {
     const resultEl = document.getElementById('scanResult');
 
     // Wait for models if still loading
-    if (!modelsReady || !cocoSsdModel) {
+    if (!modelsReady) {
         showError('AI models are still loading. Please wait a moment and try again.');
         return;
     }
@@ -157,41 +191,27 @@ async function analyzeLeaf() {
     if (prevAlert) prevAlert.remove();
 
     try {
-        // ── STAGE 1: Detect plant/leaf ──────────────────
-        console.log('[Scanner] Running COCO-SSD detection...');
-        const detections = await cocoSsdModel.detect(img);
-        console.log('[Scanner] Detections:', detections);
-
-        // Find the highest-confidence detection that matches a leaf/plant class
-        const leafDetection = detections
-            .filter(d => LEAF_CLASSES.some(cls => d.class.toLowerCase().includes(cls)))
-            .sort((a, b) => b.score - a.score)[0];
-
-        if (!leafDetection || leafDetection.score < 0.50) {
-            showError('No leaf detected. Please upload a clear close-up photo of a plant leaf.');
+        // --- Stage 1: Detect if it's a leaf/plant (Already done in upload, just check result) ---
+        if (!currentDetectionResult || !currentDetectionResult.isPlant) {
+            showError('This image does not appear to contain a plant leaf.');
             loadingEl.classList.add('hidden');
             analyzeBtn.style.display = 'inline-flex';
             return;
         }
 
-        console.log(`[Scanner] Leaf detected: "${leafDetection.class}" (${Math.round(leafDetection.score * 100)}%)`);
+        // --- Stage 1.5: Crop the detected leaf ---
+        let processedImg = img;
+        if (currentDetectionResult.bbox) {
+            console.log('[Scanner] Cropping leaf using bounding box:', currentDetectionResult.bbox);
+            processedImg = cropLeafImage(img, currentDetectionResult.bbox);
+        }
 
-        // ── Crop the detected leaf region ──────────────
-        const croppedImg = cropLeaf(img, leafDetection.bbox);
-
-        // ── STAGE 2: Disease classification ────────────
-        const { label, confidence, diseaseKey } = await predictDisease(croppedImg);
+        // ── Disease classification ────────────
+        const { label, confidence, diseaseKey } = await predictDisease(processedImg);
         console.log(`[Scanner] Disease: "${label}" → "${diseaseKey}" (${Math.round(confidence * 100)}%)`);
 
-        if (confidence < 0.60) {
-            showError('Disease detection confidence is low. Please upload a clearer leaf image.');
-            loadingEl.classList.add('hidden');
-            analyzeBtn.style.display = 'inline-flex';
-            return;
-        }
-
         // ── Display final result ────────────────────────
-        displayResult(diseaseKey);
+        displayResult(diseaseKey, confidence);
         loadingEl.classList.add('hidden');
 
     } catch (err) {
@@ -203,41 +223,23 @@ async function analyzeLeaf() {
 }
 
 // ============================================
-// CROP LEAF: extract bounding box from canvas
-// bbox = [x, y, width, height]
+// CROP LEAF: Extracts bbox and returns 224x224 canvas
 // ============================================
-function cropLeaf(imgEl, bbox) {
-    const [bx, by, bw, bh] = bbox;
-
-    // Clamp to image dimensions to avoid negative/overflow slice
-    const natW = imgEl.naturalWidth || imgEl.width;
-    const natH = imgEl.naturalHeight || imgEl.height;
-
-    // COCO-SSD returns pixel coords relative to displayed size; scale to natural size
-    const scaleX = natW / imgEl.width;
-    const scaleY = natH / imgEl.height;
-
-    const x = Math.max(0, Math.round(bx * scaleX));
-    const y = Math.max(0, Math.round(by * scaleY));
-    const w = Math.min(natW - x, Math.round(bw * scaleX));
-    const h = Math.min(natH - y, Math.round(bh * scaleY));
-
+function cropLeafImage(imgEl, bbox) {
+    const [x, y, width, height] = bbox;
     const canvas = document.createElement('canvas');
-    canvas.width = w;
-    canvas.height = h;
+    canvas.width = 224;
+    canvas.height = 224;
     const ctx = canvas.getContext('2d');
-    ctx.drawImage(imgEl, x, y, w, h, 0, 0, w, h);
 
-    // Return an HTMLImageElement wrapping the cropped region
-    const cropped = new Image();
-    cropped.src = canvas.toDataURL('image/jpeg');
-    cropped.width = w;
-    cropped.height = h;
-    return cropped;
+    // Draw the cropped section scaled to 224x224
+    ctx.drawImage(imgEl, Math.max(0, x), Math.max(0, y), width, height, 0, 0, 224, 224);
+
+    return canvas;
 }
 
 // ============================================
-// PREPROCESS: image → [1, 224, 224, 3] tensor
+// PREPROCESS: image/canvas → [1, 224, 224, 3] tensor
 // ============================================
 function preprocessImage(imgEl) {
     return tf.tidy(() => {
@@ -264,14 +266,18 @@ async function predictDisease(imgEl) {
         // ── Path A: Local PlantVillage CNN ──────────────
         const inputTensor = preprocessImage(imgEl);
         const predictionTensor = diseaseModel.predict(inputTensor);
+
+        // Find the class with the highest probability using argMax
+        const maxIndexTensor = predictionTensor.argMax(-1);
+        const maxIndex = (await maxIndexTensor.data())[0];
+
         const probabilities = await predictionTensor.data();
 
         // Clean up tensors to prevent memory leaks
         inputTensor.dispose();
         predictionTensor.dispose();
+        maxIndexTensor.dispose();
 
-        // Find the class with the highest probability
-        const maxIndex = probabilities.indexOf(Math.max(...probabilities));
         label = PLANT_DISEASE_LABELS[maxIndex] || 'Unknown';
         confidence = probabilities[maxIndex];
 
@@ -398,9 +404,9 @@ function mapLabelToDiseaseKey(label) {
 }
 
 // ============================================
-// DISPLAY RESULT (existing UI — unchanged)
+// DISPLAY RESULT
 // ============================================
-function displayResult(diseaseKey) {
+function displayResult(diseaseKey, confidence = null) {
     if (!diseaseKey) diseaseKey = 'healthy';
 
     const result = diseaseDatabase[diseaseKey] || diseaseDatabase['healthy'];
@@ -413,6 +419,16 @@ function displayResult(diseaseKey) {
     statusEl.className = 'disease-badge ' + (isHealthy ? 'healthy' : 'diseased');
 
     document.getElementById('diseaseName').textContent = result.name;
+
+    // Display confidence if available
+    const confEl = document.getElementById('diseaseConfidence');
+    if (confEl && confidence !== null) {
+        confEl.textContent = `Confidence: ${(confidence * 100).toFixed(1)}%`;
+        confEl.style.display = 'inline-block';
+    } else if (confEl) {
+        confEl.style.display = 'none';
+    }
+
     document.getElementById('diseaseDescription').textContent = result.description;
 
     const fertList = document.getElementById('fertilizerRecommendations');
