@@ -918,6 +918,10 @@
                         any plant leaf to detect diseases and get fertilizer recommendations.</p>
 
                     <div class="scanner-container">
+                        <!-- AI model loading status (shown briefly on page load) -->
+                        <p id="modelStatus"
+                            style="display:none; color: var(--text-muted); font-size: 0.85rem; margin-bottom: var(--spacing-sm); text-align: center;">
+                        </p>
                         <div class="scanner-box" id="scannerBox" onclick="document.getElementById('leafInput').click()">
                             <i class="fas fa-cloud-upload-alt"></i>
                             <h3>Upload Leaf Image</h3>
@@ -942,15 +946,20 @@
 
                         <div id="scanLoading" class="hidden">
                             <div class="spinner"></div>
-                            <p class="text-center">Analyzing leaf image...</p>
+                            <p class="text-center">Detecting leaf and analysing disease…</p>
                         </div>
 
                         <div id="scanResult" class="scan-result" style="display: none;">
                             <h3 style="margin-bottom: var(--spacing-md);"><i class="fas fa-clipboard-check"></i>
                                 Analysis Result</h3>
                             <div class="disease-badge" id="diseaseStatus">Healthy</div>
-                            <h4 id="diseaseName" style="font-size: 1.3rem; margin-bottom: var(--spacing-sm);">Plant
-                                Status</h4>
+                            <div
+                                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-sm); flex-wrap: wrap; gap: 8px;">
+                                <h4 id="diseaseName" style="font-size: 1.3rem; margin: 0;">Plant Status</h4>
+                                <span id="diseaseConfidence"
+                                    style="font-size: 0.85rem; font-weight: 500; color: var(--text-muted); background: var(--bg-secondary); padding: 4px 10px; border-radius: 12px; display: none; border: 1px solid var(--border-color);">Confidence:
+                                    0%</span>
+                            </div>
                             <p id="diseaseDescription"
                                 style="color: var(--text-secondary); margin-bottom: var(--spacing-md);">Description will
                                 appear here.</p>
@@ -1381,9 +1390,9 @@
     </nav>
 
 
-    <!-- TensorFlow.js and MobileNet -->
+    <!-- TensorFlow.js (plant disease models) -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@2.1.0/dist/mobilenet.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
 
     <!-- JavaScript Files -->
     <script src="js/config.js"></script>
@@ -1392,6 +1401,7 @@
     <script src="js/theme.js"></script>
     <script src="js/navigation.js"></script>
     <script src="js/auth.js"></script>
+    <script src="js/leafDetector.js"></script>
     <script src="js/scanner.js"></script>
     <script src="js/weather.js"></script>
     <script src="js/crops.js"></script>
