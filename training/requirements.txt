@@ -1,0 +1,10 @@
+tensorflow==2.16.1
+tensorflowjs
+numpy
+scikit-learn
+kaggle
+pandas
+matplotlib
+seaborn
+opencv-python
+scipy
