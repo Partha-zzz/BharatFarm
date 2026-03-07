@@ -58,6 +58,10 @@ document.addEventListener('DOMContentLoaded', () => {
     loadModels();
 });
 
+// Model is loaded once from the initialization chain
+// (app.js calls initScannerDragDrop, scanner loads model on demand)
+
+
 async function loadModels() {
     // Show a subtle loading message inside the scanner section
     const statusEl = document.getElementById('modelStatus');
