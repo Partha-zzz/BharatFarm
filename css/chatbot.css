@@ -5,7 +5,7 @@
 /* ── Floating Toggle Button ── */
 #chatbotToggle {
   position: fixed;
-  bottom: 28px;
+  bottom: 100px;
   right: 28px;
   z-index: 9999;
   width: 62px;
@@ -35,8 +35,9 @@
 /* Base style for Talk to AI Button (Desktop) */
 .voice-fab {
   display: none !important;
-  bottom: 105px !important; /* Stacked right above desktop Chatbot Toggle */
-  right: 28px !important;
+  bottom: 28px !important; 
+  left: 28px !important;
+  right: auto !important;
   transition: transform 0.2s ease, box-shadow 0.2s ease !important;
   z-index: 9999 !important;
 }
@@ -97,7 +98,7 @@ body:has(.app-container.active) .voice-fab {
 /* ── Chat Panel ── */
 #chatbotPanel {
   position: fixed;
-  bottom: 105px;
+  bottom: 115px;
   right: 28px;
   z-index: 9998;
   width: 370px;
