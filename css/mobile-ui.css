@@ -330,9 +330,15 @@
 
     /* ─── Floating Buttons & Chatbot (Stacked properly) ─── */
     .voice-fab {
+        display: none !important; /* Hidden on login */
         bottom: calc(var(--bottom-nav-height) + 85px) !important;
         right: 15px !important;
         transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+    }
+    
+    .app-container.active ~ .voice-fab,
+    body:has(.app-container.active) .voice-fab {
+        display: flex !important;
     }
     
     #chatbotToggle {
