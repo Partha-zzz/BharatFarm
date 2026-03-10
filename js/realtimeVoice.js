@@ -20,10 +20,8 @@
         const talkBtn = document.createElement("button");
         talkBtn.id = "talkToAIBtn";
         talkBtn.innerHTML = '<i class="fas fa-microphone"></i> Talk to AI';
-        talkBtn.className = "btn btn-primary";
+        talkBtn.className = "btn btn-primary voice-fab";
         talkBtn.style.position = "fixed";
-        talkBtn.style.bottom = "100px";
-        talkBtn.style.right = "30px";
         talkBtn.style.zIndex = "999";
         talkBtn.style.padding = "10px 20px";
         talkBtn.style.borderRadius = "30px";
