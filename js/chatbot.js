@@ -199,6 +199,9 @@ Goal: Act as a friendly, knowledgeable, and reliable digital farming assistant f
       panel.classList.remove("chat-hidden");
       btn.style.display = "none"; // Hide toggle button when chat is open
       badge.style.display = "none";
+      
+      const voiceFab = document.querySelector(".voice-fab");
+      if (voiceFab) voiceFab.classList.add("chat-active");
 
       if (document.getElementById("chatbotMessages").children.length === 0) {
         startChat();
@@ -211,6 +214,9 @@ Goal: Act as a friendly, knowledgeable, and reliable digital farming assistant f
       panel.classList.add("chat-hidden");
       btn.style.display = ""; // Show toggle button when chat is closed
       btn.innerHTML = '<i class="fas fa-robot"></i>';
+      
+      const voiceFab = document.querySelector(".voice-fab");
+      if (voiceFab) voiceFab.classList.remove("chat-active");
     }
   }
 

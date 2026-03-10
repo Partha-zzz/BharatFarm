@@ -664,6 +664,16 @@ body:has(.app-container.active) .voice-fab {
   .voice-fab {
      z-index: 10000 !important;
   }
+
+  #chatbotInputArea {
+    padding: 10px 8px; /* Reduce side padding slightly */
+    gap: 6px; /* Decrease gap between buttons to give input more space */
+  }
+
+  #chatbotInput {
+    padding: 8px 12px;
+    font-size: 0.95rem; /* Slightly larger text on mobile to prevent squishing */
+  }
 }
 
 /* ── Fullscreen Mode ── */

@@ -350,18 +350,26 @@
     
     #chatbotPanel {
         bottom: calc(var(--bottom-nav-height) + 80px) !important;
-        right: 0 !important;
-        left: 0 !important;
-        margin: 0 auto !important;
-        width: 95% !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        width: calc(100vw - 32px) !important;
         max-width: 400px !important;
     }
 
-    #chatbotPanel:not(.chat-hidden) ~ .voice-fab,
-    body:has(#chatbotPanel:not(.chat-hidden)) .voice-fab {
+    #chatbotInputArea {
+        padding-bottom: 25px !important; /* Extra padding so the bottom isn't severely crushed by the system bar */
+    }
+
+    #chatbotInput {
+        min-height: 48px !important; /* Stops the text from getting clipped vertically */
+    }
+
+    .voice-fab.chat-active {
         right: auto !important;
-        left: 15px !important;
-        bottom: calc(var(--bottom-nav-height) + 15px) !important;
+        left: 10px !important;
+        bottom: calc(var(--bottom-nav-height) + 10px) !important;
+        transform: scale(0.85) !important;
+        transform-origin: left bottom !important;
     }
 
     /* ─── Utility ─── */
