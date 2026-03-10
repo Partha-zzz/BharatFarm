@@ -29,7 +29,7 @@ Keep your answers very concise (under 2-3 short sentences) because they will be 
 The user is speaking in ${language}. Reply naturally in the same language.`;
 
         // Strictly read from Backend Environment Variables (Vercel ENV or .env)
-        const apiKey = process.env.GEMINI_API_KEY || 'AIzaSyDAGBWpSXKU2aHtDB8aEZIrnh24GE-_G5o';
+        const apiKey = process.env.GEMINI_API_KEY;
 
         if (!apiKey) {
             console.error("CRITICAL: Missing GEMINI_API_KEY inside backend environment.");
