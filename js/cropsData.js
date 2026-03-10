@@ -1,11 +1,8 @@
 // ============================================
 // COMPREHENSIVE CROPS DATABASE
 // ============================================
-// Contains real Indian crops with:
-// - Common & scientific names
-// - Category (vegetable, fruit, cereal, pulse, oilseed)
-// - Growing information
-// - Image search keywords (for fetching from APIs)
+// Real Indian crops with hardcoded Unsplash images
+// so they always display (no API call required)
 
 const CROPS_DATABASE = {
     // ═══════════════════════════════════════════
@@ -21,7 +18,7 @@ const CROPS_DATABASE = {
         wateringFrequency: 'Regular, 3-4 times weekly',
         harvesting: 'June to September (Summer harvest)',
         imageKeywords: 'tomato red vegetable garden fresh',
-        imageUrl: null // Will be fetched from API
+        imageUrl: 'https://images.unsplash.com/photo-1546470427-e26264be0b0d?w=400&q=80'
     },
     potato: {
         commonName: 'Potato',
@@ -33,7 +30,7 @@ const CROPS_DATABASE = {
         wateringFrequency: 'Regular, weekly once',
         harvesting: 'October to March',
         imageKeywords: 'potato vegetable harvest farm',
-        imageUrl: null
+        imageUrl: 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=400&q=80'
     },
     onion: {
         commonName: 'Onion',
@@ -45,7 +42,7 @@ const CROPS_DATABASE = {
         wateringFrequency: 'Moderate, once in 2 weeks',
         harvesting: 'March to May',
         imageKeywords: 'onion bulb vegetable market',
-        imageUrl: null
+        imageUrl: 'https://images.unsplash.com/photo-1508747703725-719777637510?w=400&q=80'
     },
     carrot: {
         commonName: 'Carrot',
@@ -57,7 +54,7 @@ const CROPS_DATABASE = {
         wateringFrequency: 'Light irrigation, weekly',
         harvesting: 'October to January',
         imageKeywords: 'carrots harvest root vegetable bunch',
-        imageUrl: null
+        imageUrl: 'https://images.unsplash.com/photo-1447175008436-054170c2e979?w=400&q=80'
     },
     cabbage: {
         commonName: 'Cabbage',
@@ -69,7 +66,7 @@ const CROPS_DATABASE = {
         wateringFrequency: 'Regular, 2-3 times weekly',
         harvesting: 'November to February',
         imageKeywords: 'cabbage green vegetable fresh',
-        imageUrl: null
+        imageUrl: 'https://images.unsplash.com/photo-1594282486552-05b4d80fbb9f?w=400&q=80'
     },
     spinach: {
         commonName: 'Spinach',
@@ -81,7 +78,7 @@ const CROPS_DATABASE = {
         wateringFrequency: 'Regular, light watering',
         harvesting: 'October to March',
         imageKeywords: 'spinach fresh green leaves vegetable',
-        imageUrl: null
+        imageUrl: 'https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=400&q=80'
     },
     brinjal: {
         commonName: 'Brinjal (Eggplant)',
@@ -93,7 +90,7 @@ const CROPS_DATABASE = {
         wateringFrequency: 'Regular, 4-5 times weekly',
         harvesting: 'July to December',
         imageKeywords: 'eggplant purple brinjal vegetable',
-        imageUrl: null
+        imageUrl: 'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=400&q=80'
     },
     cauliflower: {
         commonName: 'Cauliflower',
@@ -105,10 +102,10 @@ const CROPS_DATABASE = {
         wateringFrequency: 'Regular, 2-3 times weekly',
         harvesting: 'December to February',
         imageKeywords: 'cauliflower white vegetable fresh',
-        imageUrl: null
+        imageUrl: 'https://images.unsplash.com/photo-1518568740562-b91501b13db5?w=400&q=80'
     },
     okra: {
-        commonName: 'Okra (Lady\s Finger)',
+        commonName: "Okra (Lady's Finger)",
         scientificName: 'Abelmoschus esculentus',
         category: 'vegetable',
         climate: 'Warm, 20-30°C',
@@ -117,7 +114,7 @@ const CROPS_DATABASE = {
         wateringFrequency: 'Regular, 3-4 times weekly',
         harvesting: 'June to September',
         imageKeywords: 'okra bhindi pods green vegetable',
-        imageUrl: null
+        imageUrl: 'https://images.unsplash.com/photo-1604977042946-1eecc30f269e?w=400&q=80'
     },
     capsicum: {
         commonName: 'Capsicum (Bell Pepper)',
@@ -129,11 +126,107 @@ const CROPS_DATABASE = {
         wateringFrequency: 'Regular, 2-3 times weekly',
         harvesting: 'September to May',
         imageKeywords: 'bell pepper capsicum red green vegetable',
-        imageUrl: null
+        imageUrl: 'https://images.unsplash.com/photo-1563565375-f3fdfdbefa83?w=400&q=80'
+    },
+    pumpkin: {
+        commonName: 'Pumpkin',
+        scientificName: 'Cucurbita pepo',
+        category: 'vegetable',
+        climate: 'Warm, 25-30°C',
+        soil: 'Well-drained rich loamy soil',
+        duration: '90-120 days',
+        wateringFrequency: 'Regular, deep watering weekly',
+        harvesting: 'September to November',
+        imageKeywords: 'pumpkin vegetable big orange',
+        imageUrl: 'https://images.unsplash.com/photo-1508218086208-f40ebac13cf5?w=400&q=80'
+    },
+    bittergourd: {
+        commonName: 'Bitter Gourd (Karela)',
+        scientificName: 'Momordica charantia',
+        category: 'vegetable',
+        climate: 'Hot & Humid, 24-27°C',
+        soil: 'Well-drained sandy loam',
+        duration: '55-60 days',
+        wateringFrequency: 'Regular, every 2-3 days',
+        harvesting: 'May to July',
+        imageKeywords: 'bitter gourd karela green vegetable',
+        imageUrl: 'https://images.unsplash.com/photo-1595856466986-e26038379468?w=400&q=80'
+    },
+    cucumber: {
+        commonName: 'Cucumber',
+        scientificName: 'Cucumis sativus',
+        category: 'vegetable',
+        climate: 'Warm, 20-30°C',
+        soil: 'Well-drained loamy soil',
+        duration: '50-70 days',
+        wateringFrequency: 'High, frequent irrigation',
+        harvesting: 'April to June',
+        imageKeywords: 'cucumber green fresh vegetable',
+        imageUrl: 'https://images.unsplash.com/photo-1604975701397-636dbf5c3a38?w=400&q=80'
+    },
+    cabbage: {
+        commonName: 'Cabbage',
+        scientificName: 'Brassica oleracea var. capitata',
+        category: 'vegetable',
+        climate: 'Cool season, 15-20°C',
+        soil: 'Well-drained fertile loamy soil',
+        duration: '90-120 days',
+        wateringFrequency: 'Regular, 2-3 times weekly',
+        harvesting: 'November to March',
+        imageKeywords: 'cabbage green vegetable fresh',
+        imageUrl: 'https://images.unsplash.com/photo-1594282486552-05b4d80fbb9f?w=400&q=80'
+    },
+    carrot: {
+        commonName: 'Carrot',
+        scientificName: 'Daucus carota',
+        category: 'vegetable',
+        climate: 'Cool season, 15-20°C',
+        soil: 'Loose, well-draining sandy loam',
+        duration: '70-90 days',
+        wateringFrequency: 'Regular, light watering weekly',
+        harvesting: 'October to January',
+        imageKeywords: 'carrot orange root vegetable',
+        imageUrl: 'https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?w=400&q=80'
+    },
+    onion: {
+        commonName: 'Onion',
+        scientificName: 'Allium cepa',
+        category: 'vegetable',
+        climate: 'Cool to moderate, 13-24°C',
+        soil: 'Well-drained fertile loamy soil',
+        duration: '120-150 days',
+        wateringFrequency: 'Moderate, once in 2 weeks',
+        harvesting: 'March to May',
+        imageKeywords: 'onion bulb vegetable market',
+        imageUrl: 'https://images.unsplash.com/photo-1508747703725-719777637510?w=400&q=80'
+    },
+    radish: {
+        commonName: 'Radish',
+        scientificName: 'Raphanus sativus',
+        category: 'vegetable',
+        climate: 'Cool season, 15-20°C',
+        soil: 'Loose, well-drained loamy soil',
+        duration: '40-60 days',
+        wateringFrequency: 'Regular, 2-3 times weekly',
+        harvesting: 'October to February',
+        imageKeywords: 'radish white red root vegetable',
+        imageUrl: 'https://images.unsplash.com/photo-1620986799042-3e21a2c53f36?w=400&q=80'
+    },
+    peas: {
+        commonName: 'Green Peas',
+        scientificName: 'Pisum sativum',
+        category: 'vegetable',
+        climate: 'Cool season, 13-18°C',
+        soil: 'Well-drained loamy soil',
+        duration: '60-80 days',
+        wateringFrequency: 'Moderate, 2-3 times weekly',
+        harvesting: 'January to March',
+        imageKeywords: 'green peas vegetable fresh pods',
+        imageUrl: 'https://images.unsplash.com/photo-1698299104085-3bc4549fbb1c?w=400&q=80'
     },
 
     // ═══════════════════════════════════════════
-    // FRUITS (10)
+    // FRUITS (18)
     // ═══════════════════════════════════════════
     mango: {
         commonName: 'Mango',
@@ -145,7 +238,7 @@ const CROPS_DATABASE = {
         wateringFrequency: 'Moderate, seasonal irrigation',
         harvesting: 'April to June',
         imageKeywords: 'mango fruit',
-        imageUrl: null
+        imageUrl: 'https://images.unsplash.com/photo-1553279768-865429fa0078?w=400&q=80'
     },
     banana: {
         commonName: 'Banana',
@@ -157,7 +250,7 @@ const CROPS_DATABASE = {
         wateringFrequency: 'High, frequent irrigation',
         harvesting: 'Year-round (5-7 months after planting)',
         imageKeywords: 'banana fruit',
-        imageUrl: null
+        imageUrl: 'https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=400&q=80'
     },
     apple: {
         commonName: 'Apple',
@@ -169,7 +262,7 @@ const CROPS_DATABASE = {
         wateringFrequency: 'Moderate, regular irrigation',
         harvesting: 'September to November',
         imageKeywords: 'apple fruit',
-        imageUrl: null
+        imageUrl: 'https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=400&q=80'
     },
     papaya: {
         commonName: 'Papaya',
@@ -181,7 +274,7 @@ const CROPS_DATABASE = {
         wateringFrequency: 'Moderate, regular irrigation',
         harvesting: 'Year-round (peak June-July)',
         imageKeywords: 'papaya fruit',
-        imageUrl: null
+        imageUrl: 'https://images.unsplash.com/photo-1526318472351-c75fcf070305?w=400&q=80'
     },
     guava: {
         commonName: 'Guava',
@@ -193,7 +286,7 @@ const CROPS_DATABASE = {
         wateringFrequency: 'Moderate, occasional irrigation',
         harvesting: 'September to November',
         imageKeywords: 'guava fruit',
-        imageUrl: null
+        imageUrl: 'https://images.unsplash.com/photo-1536511132770-e5058c7e8c46?w=400&q=80'
     },
     orange: {
         commonName: 'Orange',
@@ -205,7 +298,7 @@ const CROPS_DATABASE = {
         wateringFrequency: 'Moderate, regular irrigation',
         harvesting: 'December to February',
         imageKeywords: 'orange citrus fruit',
-        imageUrl: null
+        imageUrl: 'https://images.unsplash.com/photo-1547514701-42782101795e?w=400&q=80'
     },
     grapes: {
         commonName: 'Grapes',
@@ -217,7 +310,7 @@ const CROPS_DATABASE = {
         wateringFrequency: 'Moderate, regular irrigation',
         harvesting: 'April to June',
         imageKeywords: 'grapes fruit',
-        imageUrl: null
+        imageUrl: 'https://images.unsplash.com/photo-1537640538966-79f369143f8f?w=400&q=80'
     },
     pomegranate: {
         commonName: 'Pomegranate',
@@ -229,7 +322,7 @@ const CROPS_DATABASE = {
         wateringFrequency: 'Low to moderate irrigation',
         harvesting: 'September to November',
         imageKeywords: 'pomegranate fruit',
-        imageUrl: null
+        imageUrl: 'https://images.unsplash.com/photo-1615485291084-e2f09740e12e?w=400&q=80'
     },
     watermelon: {
         commonName: 'Watermelon',
@@ -241,7 +334,7 @@ const CROPS_DATABASE = {
         wateringFrequency: 'High, frequent irrigation',
         harvesting: 'April to June',
         imageKeywords: 'watermelon fruit',
-        imageUrl: null
+        imageUrl: 'https://images.unsplash.com/photo-1563114773-84221bd62daa?w=400&q=80'
     },
     pineapple: {
         commonName: 'Pineapple',
@@ -253,11 +346,107 @@ const CROPS_DATABASE = {
         wateringFrequency: 'Moderate, regular irrigation',
         harvesting: 'December to March',
         imageKeywords: 'pineapple fruit',
-        imageUrl: null
+        imageUrl: 'https://images.unsplash.com/photo-1550258987-190a2d41a8ba?w=400&q=80'
+    },
+    strawberry: {
+        commonName: 'Strawberry',
+        scientificName: 'Fragaria × ananassa',
+        category: 'fruit',
+        climate: 'Cool, 15-25°C',
+        soil: 'Well-drained slightly acidic loam',
+        duration: 'Perennial (60-90 days to fruit)',
+        wateringFrequency: 'Regular, 2-3 times weekly',
+        harvesting: 'February to April',
+        imageKeywords: 'strawberry red fruit fresh',
+        imageUrl: 'https://images.unsplash.com/photo-1464965911861-746a04b4bca6?w=400&q=80'
+    },
+    lemon: {
+        commonName: 'Lemon',
+        scientificName: 'Citrus limon',
+        category: 'fruit',
+        climate: 'Subtropical, 15-30°C',
+        soil: 'Well-drained loamy soil',
+        duration: 'Perennial (3-5 years to first yield)',
+        wateringFrequency: 'Moderate, regular irrigation',
+        harvesting: 'June to August',
+        imageKeywords: 'lemon citrus fruit yellow',
+        imageUrl: 'https://images.unsplash.com/photo-1590502593747-422987994828?w=400&q=80'
+    },
+    litchi: {
+        commonName: 'Litchi',
+        scientificName: 'Litchi chinensis',
+        category: 'fruit',
+        climate: 'Subtropical, frost-free winters, 20-30°C',
+        soil: 'Deep, well-drained loamy soil',
+        duration: 'Perennial (5-6 years to first yield)',
+        wateringFrequency: 'High, especially during fruit development',
+        harvesting: 'May to June',
+        imageKeywords: 'litchi lychee fruit fresh',
+        imageUrl: 'https://images.unsplash.com/photo-1594944415513-3efeb7cdbf2c?w=400&q=80'
+    },
+    kiwi: {
+        commonName: 'Kiwi',
+        scientificName: 'Actinidia deliciosa',
+        category: 'fruit',
+        climate: 'Temperate to Subtropical, 15-25°C',
+        soil: 'Well-drained, slightly acidic loamy soil',
+        duration: 'Perennial (3-4 years to first yield)',
+        wateringFrequency: 'Regular, keeps soil continuously moist',
+        harvesting: 'October to December',
+        imageKeywords: 'kiwi green fruit fresh',
+        imageUrl: 'https://images.unsplash.com/photo-1585011700446-5be54c5e3fec?w=400&q=80'
+    },
+    avocado: {
+        commonName: 'Avocado',
+        scientificName: 'Persea americana',
+        category: 'fruit',
+        climate: 'Subtropical to Tropical, 20-28°C',
+        soil: 'Well-drained, aerated loamy or sandy loam',
+        duration: 'Perennial (3-5 years to first yield)',
+        wateringFrequency: 'Moderate, avoid waterlogging',
+        harvesting: 'August to November',
+        imageKeywords: 'avocado green fruit fresh',
+        imageUrl: 'https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?w=400&q=80'
+    },
+    cherry: {
+        commonName: 'Cherry',
+        scientificName: 'Prunus avium',
+        category: 'fruit',
+        climate: 'Cool Temperate, needs winter chill',
+        soil: 'Well-drained sandy loam',
+        duration: 'Perennial (3-4 years to first yield)',
+        wateringFrequency: 'Moderate, consistent moisture',
+        harvesting: 'May to July',
+        imageKeywords: 'cherry red fruit fresh',
+        imageUrl: 'https://images.unsplash.com/photo-1528825871115-3581a5387919?w=400&q=80'
+    },
+    pear: {
+        commonName: 'Pear',
+        scientificName: 'Pyrus communis',
+        category: 'fruit',
+        climate: 'Temperate to Cool Subtropical',
+        soil: 'Deep, well-drained loamy soil',
+        duration: 'Perennial (4-6 years to first yield)',
+        wateringFrequency: 'Regular, deep watering',
+        harvesting: 'August to October',
+        imageKeywords: 'pear green fruit fresh',
+        imageUrl: 'https://images.unsplash.com/photo-1514756331096-242fdeb70d4a?w=400&q=80'
+    },
+    plum: {
+        commonName: 'Plum',
+        scientificName: 'Prunus salicina',
+        category: 'fruit',
+        climate: 'Temperate to Subtropical, 15-25°C',
+        soil: 'Well-drained, deep loamy soil',
+        duration: 'Perennial (3-5 years to first yield)',
+        wateringFrequency: 'Moderate, regular irrigation',
+        harvesting: 'May to July',
+        imageKeywords: 'plum purple red fruit fresh',
+        imageUrl: 'https://images.unsplash.com/photo-1601362758155-75ea7d6f5556?w=400&q=80'
     },
 
     // ═══════════════════════════════════════════
-    // CEREALS (5)
+    // CEREALS (6)
     // ═══════════════════════════════════════════
     rice: {
         commonName: 'Rice',
@@ -269,7 +458,7 @@ const CROPS_DATABASE = {
         wateringFrequency: 'High, flooded fields',
         harvesting: 'October to November',
         imageKeywords: 'rice paddy grain field harvest',
-        imageUrl: null
+        imageUrl: 'https://images.unsplash.com/photo-1536304929831-ee1ca9d44906?w=400&q=80'
     },
     wheat: {
         commonName: 'Wheat',
@@ -281,7 +470,7 @@ const CROPS_DATABASE = {
         wateringFrequency: 'Moderate, 4-5 irrigations',
         harvesting: 'March to April',
         imageKeywords: 'wheat grain field golden crop',
-        imageUrl: null
+        imageUrl: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400&q=80'
     },
     maize: {
         commonName: 'Maize (Corn)',
@@ -293,7 +482,7 @@ const CROPS_DATABASE = {
         wateringFrequency: 'Moderate, 4-6 irrigations',
         harvesting: 'September to October',
         imageKeywords: 'corn maize field green crop India',
-        imageUrl: null
+        imageUrl: 'https://images.unsplash.com/photo-1601593768799-76f7d35aa27c?w=400&q=80'
     },
     barley: {
         commonName: 'Barley',
@@ -305,7 +494,7 @@ const CROPS_DATABASE = {
         wateringFrequency: 'Low, 2-3 irrigations',
         harvesting: 'March to April',
         imageKeywords: 'barley grain cereal crop field',
-        imageUrl: null
+        imageUrl: 'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=400&q=80'
     },
     oats: {
         commonName: 'Oats',
@@ -317,7 +506,19 @@ const CROPS_DATABASE = {
         wateringFrequency: 'Low, rainfall dependent',
         harvesting: 'March to April',
         imageKeywords: 'oats cereal grain crop',
-        imageUrl: null
+        imageUrl: 'https://images.unsplash.com/photo-1614314107768-6018061b5b72?w=400&q=80'
+    },
+    millets: {
+        commonName: 'Millets (Bajra/Jowar)',
+        scientificName: 'Pennisetum glaucum / Sorghum bicolor',
+        category: 'cereal',
+        climate: 'Warm, dry, 25-35°C',
+        soil: 'Sandy or light loamy, tolerates poor soils',
+        duration: '60-90 days',
+        wateringFrequency: 'Very Low, drought tolerant',
+        harvesting: 'September to November',
+        imageKeywords: 'millet grain crop field pearl sorghum',
+        imageUrl: 'https://images.unsplash.com/photo-1588616538965-081e793910c2?w=400&q=80'
     },
 
     // ═══════════════════════════════════════════
@@ -333,7 +534,7 @@ const CROPS_DATABASE = {
         wateringFrequency: 'Low, 2-3 irrigations',
         harvesting: 'February to March',
         imageKeywords: 'mustard yellow flower field oilseed',
-        imageUrl: null
+        imageUrl: 'https://images.unsplash.com/photo-1593280359364-5d8b7e245d8f?w=400&q=80'
     },
     soybean: {
         commonName: 'Soybean',
@@ -345,7 +546,7 @@ const CROPS_DATABASE = {
         wateringFrequency: 'Moderate, 4-6 irrigations',
         harvesting: 'October to November',
         imageKeywords: 'soybean pod plant crop oilseed',
-        imageUrl: null
+        imageUrl: 'https://images.unsplash.com/photo-1599599810769-bcde5a160d32?w=400&q=80'
     },
     sunflower: {
         commonName: 'Sunflower',
@@ -357,7 +558,7 @@ const CROPS_DATABASE = {
         wateringFrequency: 'Moderate, 4-5 irrigations',
         harvesting: 'August to September',
         imageKeywords: 'sunflower yellow bloom flower field',
-        imageUrl: null
+        imageUrl: 'https://images.unsplash.com/photo-1470509037663-253d62d56bb7?w=400&q=80'
     },
     groundnut: {
         commonName: 'Groundnut (Peanut)',
@@ -369,7 +570,7 @@ const CROPS_DATABASE = {
         wateringFrequency: 'Moderate, 4-5 irrigations',
         harvesting: 'September to October',
         imageKeywords: 'peanut groundnut crop oilseed',
-        imageUrl: null
+        imageUrl: 'https://images.unsplash.com/photo-1567449303183-ae0d6ed1498e?w=400&q=80'
     }
 };
 
@@ -384,7 +585,7 @@ function getCropsByCategory(category) {
 function searchCrops(query) {
     const q = query.toLowerCase();
     return Object.entries(CROPS_DATABASE)
-        .filter(([key, crop]) => 
+        .filter(([key, crop]) =>
             crop.commonName.toLowerCase().includes(q) ||
             crop.scientificName.toLowerCase().includes(q) ||
             key.toLowerCase().includes(q)

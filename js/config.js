@@ -2,22 +2,21 @@
 // CONFIGURATION & CONSTANTS
 // ============================================
 
-const API_BASE_URL = 'http://localhost:3000/api';
+const API_BASE_URL = '/api';
 
 // ── OpenRouter AI Chat Assistant ─────────────────
-// Get your FREE key at: https://openrouter.ai/keys
-// Replace the value below with your key, or enter it in the chatbot at runtime.
-const OPENROUTER_API_KEY = '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';
+const OPENROUTER_API_KEY = '';
+
+// ── WebRTC Voice Assistant ─────────────────
+const OPENAI_API_KEY = '';
 
 // ── Unsplash API Configuration ─────────────────
-// Get your FREE key at: https://unsplash.com/oauth/applications
-const UNSPLASH_API_KEY = 'mHKzCJ1XvHD7aAD7cIks0mX1uLBzKD6mo8Q620CLt0g';
-const USE_UNSPLASH = true; // ✅ Enabled - Real crop images active!
+const UNSPLASH_API_KEY = '';
+const USE_UNSPLASH = true;
 
 // ── Pexels API Configuration ─────────────────
-// Get your FREE key at: https://www.pexels.com/api/
-const PEXELS_API_KEY = 'sJAkekKPJAxzSOMaF6t6CAz9pDdWo4oPzbIMaRaKv8CT2Gus0od77XHQ';
-const USE_PEXELS = true; // Set to true when you add your API key
+const PEXELS_API_KEY = '';
+const USE_PEXELS = true;
 
 // Land conversion rates
 const LAND_CONVERSIONS = {
@@ -26,3 +25,55 @@ const LAND_CONVERSIONS = {
     kathaPerAcre: 32.26,
     bighaPerAcre: 1.61
 };
+
+// ── Shared AI helper ─────────────────────────────
+// Tries /api/chat proxy first (Vercel), falls back to direct OpenRouter API (localhost)
+const FREE_MODELS = [
+    'openrouter/free',
+    'meta-llama/llama-3.3-70b-instruct:free',
+    'google/gemini-2.0-flash-exp:free',
+    'nvidia/llama-3.1-nemotron-nano-12b-v1:free'
+];
+
+async function aiCall({ messages, model, temperature = 0.7, max_tokens = 800 }) {
+    const useModel = model || FREE_MODELS[0];
+    const key = OPENROUTER_API_KEY;
+
+    // Helper to make one fetch attempt
+    async function attempt(url, headers, body) {
+        const res = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', ...headers },
+            body: JSON.stringify(body)
+        });
+        return res;
+    }
+
+    let lastErr = '';
+    for (const m of (model ? [model] : FREE_MODELS)) {
+        try {
+            // Try proxy first
+            let res = await attempt('/api/chat', { 'X-Title': 'BharatFarm' }, { model: m, messages, temperature, max_tokens });
+
+            // Proxy not found or method not allowed on localhost — fall back to direct call
+            if ((res.status === 404 || res.status === 405) && key) {
+                res = await attempt('https://openrouter.ai/api/v1/chat/completions', {
+                    'Authorization': `Bearer ${key}`,
+                    'HTTP-Referer': window.location.origin,
+                    'X-Title': 'BharatFarm'
+                }, { model: m, messages, temperature, max_tokens });
+            }
+
+            if (res.status === 429) { lastErr = 'rate_limit'; continue; }
+            if (!res.ok) { lastErr = `HTTP ${res.status}`; continue; }
+
+            const data = await res.json();
+            const content = data?.choices?.[0]?.message?.content?.trim();
+            if (content) return content;
+        } catch (e) {
+            lastErr = e.message;
+            continue;
+        }
+    }
+    throw new Error(`AI call failed: ${lastErr}`);
+}

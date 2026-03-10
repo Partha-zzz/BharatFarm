@@ -70,10 +70,6 @@ async function generateRoadmap(cropKey) {
  * Call OpenRouter API to generate a structured farming roadmap JSON.
  */
 async function fetchAIRoadmap(cropKey, localCrop) {
-    if (!OPENROUTER_API_KEY || OPENROUTER_API_KEY.includes('YOUR_')) {
-        throw new Error('No OpenRouter API key');
-    }
-
     const cropName = localCrop ? localCrop.commonName : cropKey;
     const duration = localCrop ? localCrop.duration : '90-120 days';
     const climate = localCrop ? localCrop.climate : 'tropical';
@@ -97,27 +93,11 @@ The "type" field must be one of: "prep", "seed", "water", "fertilizer", "harvest
 Include: land prep, sowing/planting, first irrigation, 2-3 fertilizer applications (with specific fertilizer names), pest/disease check, and final harvest.
 Make day numbers realistic for the crop duration. Keep descriptions concise and specific to ${cropName}.`;
 
-    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-            'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
-            'Content-Type': 'application/json',
-            'HTTP-Referer': window.location.origin,
-            'X-Title': 'BharatFarm'
-        },
-        body: JSON.stringify({
-            model: 'google/gemini-2.0-flash-001',
-            messages: [{ role: 'user', content: prompt }],
-            temperature: 0.3,
-            max_tokens: 1000
-        })
+    const raw = await aiCall({
+        messages: [{ role: 'user', content: prompt }],
+        temperature: 0.3,
+        max_tokens: 1000
     });
-
-    if (!response.ok) throw new Error(`OpenRouter error: ${response.status}`);
-
-    const data = await response.json();
-    const raw = data.choices?.[0]?.message?.content?.trim();
-    if (!raw) throw new Error('Empty AI response');
 
     // Extract JSON from response (handle if AI wraps in markdown code block)
     const jsonMatch = raw.match(/\[[\s\S]*\]/);
