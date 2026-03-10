@@ -40,8 +40,9 @@ async function analyzeLeaf() {
         let retries = 1;
         while (retries >= 0) {
             try {
-                response = await fetch('http://localhost:5000/api/analyze-leaf', {
-                    method: "POST",
+                // Production: Use backend proxy to protect API keys and apply verification logic
+                response = await fetch('/api/analyze-leaf', {
+                    method: 'POST',
                     headers: {
                         "Content-Type": "application/json"
                     },

@@ -253,7 +253,7 @@
 
         // The proxy runs on port 5000 (node server.js)
         // Make sure to run: node server.js  before using KrishiBot
-        const PROXY_URL = 'http://localhost:5000/api/chat';
+        const PROXY_URL = '/api/chat';
         const currentLang = localStorage.getItem('selectedLanguage') || 'en';
 
         const payload = {

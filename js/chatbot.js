@@ -420,10 +420,14 @@ Goal: Act as a friendly, knowledgeable, and reliable digital farming assistant f
           let retries = 1;
           while (retries >= 0) {
             try {
-              res = await fetch("http://localhost:5000/api/chat", {
+              res = await fetch("/api/chat", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ text: userText, language: selectedLang, history: conversationHistory }),
+                body: JSON.stringify({
+                  text: userText,
+                  language: selectedLang,
+                  history: conversationHistory
+                }),
               });
               break;
             } catch (err) {
