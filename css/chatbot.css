@@ -46,6 +46,13 @@ body:has(.app-container.active) .voice-fab {
   display: flex !important;
 }
 
+/* Hide the Voice FAB on desktop when Chatbot is open to prevent overlap */
+@media (min-width: 769px) {
+  .voice-fab.chat-active {
+    display: none !important;
+  }
+}
+
 #chatbotToggle .chat-badge {
   position: absolute;
   top: -4px;
@@ -315,6 +322,7 @@ body:has(.app-container.active) .voice-fab {
   color: var(--text-primary, #222);
   border-bottom-left-radius: 5px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+  box-sizing: border-box !important;
 }
 
 .chat-msg.user .msg-bubble {
@@ -323,6 +331,7 @@ body:has(.app-container.active) .voice-fab {
   border-bottom-right-radius: 5px;
   box-shadow: 0 2px 8px rgba(2, 119, 189, 0.3);
   max-width: 100%;
+  box-sizing: border-box !important;
 }
 
 .msg-time {

@@ -341,35 +341,39 @@
         display: flex !important;
     }
     
-    #chatbotToggle {
-        bottom: calc(var(--bottom-nav-height) + 15px) !important;
-        right: 15px !important;
-        width: 56px !important;
-        height: 56px !important;
-    }
-    
-    #chatbotPanel {
-        bottom: calc(var(--bottom-nav-height) + 80px) !important;
-        left: 50% !important;
-        transform: translateX(-50%) !important;
-        width: calc(100vw - 32px) !important;
-        max-width: 400px !important;
-    }
+    @media (max-width: 768px) {
+        #chatbotToggle {
+            bottom: calc(var(--bottom-nav-height) + 15px) !important;
+            right: 15px !important;
+            width: 56px !important;
+            height: 56px !important;
+        }
+        
+        #chatbotPanel {
+            bottom: calc(var(--bottom-nav-height) + 80px) !important;
+            left: 10px !important;
+            right: 10px !important;
+            width: auto !important;
+            max-width: none !important;
+            transform: none !important;
+            box-sizing: border-box !important;
+        }
 
-    #chatbotInputArea {
-        padding-bottom: 25px !important; /* Extra padding so the bottom isn't severely crushed by the system bar */
-    }
+        #chatbotInputArea {
+            padding-bottom: 25px !important; 
+        }
 
-    #chatbotInput {
-        min-height: 48px !important; /* Stops the text from getting clipped vertically */
-    }
+        #chatbotInput {
+            min-height: 48px !important;
+        }
 
-    .voice-fab.chat-active {
-        right: auto !important;
-        left: 10px !important;
-        bottom: calc(var(--bottom-nav-height) + 10px) !important;
-        transform: scale(0.85) !important;
-        transform-origin: left bottom !important;
+        .voice-fab.chat-active {
+            right: auto !important;
+            left: 10px !important;
+            bottom: calc(var(--bottom-nav-height) + 10px) !important;
+            transform: scale(0.85) !important;
+            transform-origin: left bottom !important;
+        }
     }
 
     /* ─── Utility ─── */
