@@ -20,7 +20,7 @@
     /* ─── Layout Structure ─── */
     main {
         padding: var(--spacing-sm) !important;
-        padding-top: calc(var(--header-height) + 10px) !important;
+        padding-top: calc(var(--header-height) + var(--spacing-md)) !important;
         padding-bottom: calc(var(--bottom-nav-height) + 20px) !important;
     }
 
@@ -110,7 +110,14 @@
 
     /* ─── Bottom Navigation (Glassmorphism) ─── */
     .mobile-bottom-nav {
+        display: none !important; /* Hidden on login page */
+    }
+    
+    /* Only show bottom nav when app is active (logged in) */
+    .app-container.active .mobile-bottom-nav,
+    body:has(.app-container.active) .mobile-bottom-nav {
         display: flex !important;
+
         background: rgba(255, 255, 255, 0.85) !important;
         backdrop-filter: blur(20px) saturate(180%);
         -webkit-backdrop-filter: blur(20px) saturate(180%);
