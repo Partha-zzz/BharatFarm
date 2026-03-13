@@ -422,7 +422,7 @@ Goal: Act as a friendly, knowledgeable, and reliable digital farming assistant f
       try {
         let res;
         try {
-          // Send directly to our local proxy!
+          // Send directly to our local proxy
           let retries = 1;
           while (retries >= 0) {
             try {

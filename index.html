@@ -1257,16 +1257,23 @@
                     </div>
 
                     <!-- Farming Tips -->
-                    <div class="weather-tips-container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;">
-                        <div class="weather-tip-card" style="background: #e6f4ea; padding: 15px; border-radius: 8px; border-left: 4px solid #34a853;">
-                            <h4 style="color: #137333; margin-bottom: 10px; font-size: 1rem;"><i class="fas fa-check-circle"></i> What to Do</h4>
-                            <ul id="whatToDoList" style="margin: 0; padding-left: 20px; font-size: 0.9rem; color: #333;">
+                    <div class="weather-tips-container"
+                        style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;">
+                        <div class="weather-tip-card"
+                            style="background: #e6f4ea; padding: 15px; border-radius: 8px; border-left: 4px solid #34a853;">
+                            <h4 style="color: #137333; margin-bottom: 10px; font-size: 1rem;"><i
+                                    class="fas fa-check-circle"></i> What to Do</h4>
+                            <ul id="whatToDoList"
+                                style="margin: 0; padding-left: 20px; font-size: 0.9rem; color: #333;">
                                 <li>Loading...</li>
                             </ul>
                         </div>
-                        <div class="weather-tip-card" style="background: #fce8e6; padding: 15px; border-radius: 8px; border-left: 4px solid #ea4335;">
-                            <h4 style="color: #c5221f; margin-bottom: 10px; font-size: 1rem;"><i class="fas fa-times-circle"></i> What Not to Do</h4>
-                            <ul id="whatNotToDoList" style="margin: 0; padding-left: 20px; font-size: 0.9rem; color: #333;">
+                        <div class="weather-tip-card"
+                            style="background: #fce8e6; padding: 15px; border-radius: 8px; border-left: 4px solid #ea4335;">
+                            <h4 style="color: #c5221f; margin-bottom: 10px; font-size: 1rem;"><i
+                                    class="fas fa-times-circle"></i> What Not to Do</h4>
+                            <ul id="whatNotToDoList"
+                                style="margin: 0; padding-left: 20px; font-size: 0.9rem; color: #333;">
                                 <li>Loading...</li>
                             </ul>
                         </div>
@@ -1423,47 +1430,45 @@
 
                         <div class="form-group">
                             <label><i class="fas fa-leaf"></i> Select Crop</label>
-                            <select id="calcCrop"
-                                style="width:100%; padding: var(--spacing-sm); border: 2px solid var(--border-color); border-radius: var(--border-radius-sm); font-size: 1rem; background: var(--bg-secondary); color: var(--text-primary);">
-                                <option value="">-- Choose a crop --</option>
-                                <optgroup label="🌾 Cereals">
-                                    <option value="rice">Rice</option>
-                                    <option value="wheat">Wheat</option>
-                                    <option value="maize">Maize (Corn)</option>
-                                    <option value="barley">Barley</option>
-                                    <option value="oats">Oats</option>
-                                </optgroup>
-                                <optgroup label="🥬 Vegetables">
-                                    <option value="tomato">Tomato</option>
-                                    <option value="potato">Potato</option>
-                                    <option value="onion">Onion</option>
-                                    <option value="carrot">Carrot</option>
-                                    <option value="cabbage">Cabbage</option>
-                                    <option value="spinach">Spinach</option>
-                                    <option value="brinjal">Brinjal (Eggplant)</option>
-                                    <option value="cauliflower">Cauliflower</option>
-                                    <option value="okra">Okra (Lady's Finger)</option>
-                                    <option value="capsicum">Capsicum (Bell Pepper)</option>
-                                </optgroup>
-                                <optgroup label="🍎 Fruits">
-                                    <option value="mango">Mango</option>
-                                    <option value="banana">Banana</option>
-                                    <option value="apple">Apple</option>
-                                    <option value="papaya">Papaya</option>
-                                    <option value="guava">Guava</option>
-                                    <option value="orange">Orange</option>
-                                    <option value="grapes">Grapes</option>
-                                    <option value="pomegranate">Pomegranate</option>
-                                    <option value="watermelon">Watermelon</option>
-                                    <option value="pineapple">Pineapple</option>
-                                </optgroup>
-                                <optgroup label="🌻 Oilseeds">
-                                    <option value="mustard">Mustard</option>
-                                    <option value="soybean">Soybean</option>
-                                    <option value="sunflower">Sunflower</option>
-                                    <option value="groundnut">Groundnut (Peanut)</option>
-                                </optgroup>
-                            </select>
+                            <input type="text" id="calcCrop" list="calcCropList"
+                                placeholder="-- Search or Type a crop --"
+                                style="width:100%; padding: var(--spacing-sm); border: 2px solid var(--border-color); border-radius: var(--border-radius-sm); font-size: 1rem; background: var(--bg-secondary); color: var(--text-primary);"
+                                autocomplete="off">
+                            <datalist id="calcCropList">
+                                <option value="Rice"></option>
+                                <option value="Wheat"></option>
+                                <option value="Maize (Corn)"></option>
+                                <option value="Barley"></option>
+                                <option value="Oats"></option>
+                                <option value="Tomato"></option>
+                                <option value="Potato"></option>
+                                <option value="Onion"></option>
+                                <option value="Carrot"></option>
+                                <option value="Cabbage"></option>
+                                <option value="Spinach"></option>
+                                <option value="Brinjal (Eggplant)"></option>
+                                <option value="Cauliflower"></option>
+                                <option value="Okra (Lady's Finger)"></option>
+                                <option value="Capsicum (Bell Pepper)"></option>
+                                <option value="Mango"></option>
+                                <option value="Banana"></option>
+                                <option value="Apple"></option>
+                                <option value="Papaya"></option>
+                                <option value="Guava"></option>
+                                <option value="Orange"></option>
+                                <option value="Grapes"></option>
+                                <option value="Pomegranate"></option>
+                                <option value="Watermelon"></option>
+                                <option value="Pineapple"></option>
+                                <option value="Mustard"></option>
+                                <option value="Soybean"></option>
+                                <option value="Sunflower"></option>
+                                <option value="Groundnut (Peanut)"></option>
+                            </datalist>
+                            <div id="calcCropError"
+                                style="display:none; margin-top:8px; padding:10px 14px; background:#ffebee; border-left:4px solid #f44336; border-radius:8px; color:#d32f2f; font-weight:600; font-size:0.95rem;">
+                                <i class="fas fa-exclamation-triangle"></i> Please enter a valid crop
+                            </div>
                         </div>
 
                         <div class="form-group">

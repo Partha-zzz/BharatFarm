@@ -47,11 +47,15 @@ function getLandSizeInAcres() {
 const aiCostCache = {};
 
 async function calculateCosts() {
-    const cropKey = document.getElementById('calcCrop').value;
+    const cropInput = document.getElementById('calcCrop').value.trim();
     const landSize = getLandSizeInAcres();
+    const cropErrorEl = document.getElementById('calcCropError');
 
-    if (!cropKey) {
-        alert('Please select a crop!');
+    // Hide previous error
+    if (cropErrorEl) cropErrorEl.style.display = 'none';
+
+    if (!cropInput) {
+        if (cropErrorEl) cropErrorEl.style.display = 'block';
         return;
     }
     if (landSize <= 0) {
@@ -59,28 +63,46 @@ async function calculateCosts() {
         return;
     }
 
-    selectedCrop = cropKey;
+    // Try to find the crop in our existing data (case insensitive)
+    let cropKey = Object.keys(cropData).find(k => k.toLowerCase() === cropInput.toLowerCase() || cropData[k].name.toLowerCase() === cropInput.toLowerCase());
+    let cropName = cropKey ? cropData[cropKey].name : cropInput;
+    let actualCropKey = cropKey || cropInput.toLowerCase().replace(/\s+/g, '_');
+
+    selectedCrop = actualCropKey;
     
     // UI Feedback: Loading state on button
     const calcBtns = document.querySelectorAll('button[onclick="calculateCosts()"]');
     const btnTexts = [];
     calcBtns.forEach((btn, idx) => {
         btnTexts[idx] = btn.innerHTML;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Fetching AI Data...';
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Searching please wait Krishibhai';
         btn.disabled = true;
     });
 
     try {
-        let crop = { ...cropData[cropKey] };
+        let crop = cropKey ? { ...cropData[cropKey] } : { name: cropName, icon: '🌿' };
         
         // Fetch AI data if not already cached
-        if (!aiCostCache[cropKey]) {
-            aiCostCache[cropKey] = await fetchAICostData(crop.name);
+        if (!aiCostCache[actualCropKey]) {
+            const fetchedData = await fetchAICostData(crop.name);
+            if (fetchedData && fetchedData.error) {
+                if (cropErrorEl) cropErrorEl.style.display = 'block';
+                return;
+            } else if (fetchedData) {
+                aiCostCache[actualCropKey] = fetchedData;
+            }
         }
         
         // Override static data with AI real-time data if available
-        if (aiCostCache[cropKey]) {
-            crop = { ...crop, ...aiCostCache[cropKey] };
+        if (aiCostCache[actualCropKey]) {
+            crop = { ...crop, ...aiCostCache[actualCropKey] };
+            // If it's a new crop, store it in cropData so it persists
+            if (!cropData[actualCropKey]) {
+                cropData[actualCropKey] = crop;
+            }
+        } else if (!cropKey) {
+            // No local data, and AI failed
+            throw new Error(`Could not generate cost data for "${crop.name}". Check your connection or try another crop.`);
         }
 
         const seedQty = crop.seedRate * landSize;
@@ -104,12 +126,12 @@ async function calculateCosts() {
         document.getElementById('expectedRevenue').textContent = '₹' + expectedRevenue.toLocaleString('en-IN');
         document.getElementById('profitMargin').textContent = profitMargin + '%';
         
-        const sourceNotice = aiCostCache[cropKey] ? 'AI Market Data' : 'Estimated Defaults';
+        const sourceNotice = aiCostCache[actualCropKey] ? 'AI Market Data' : 'Estimated Defaults';
         document.getElementById('revenueExplanation').textContent =
             `Based on ${landSize.toFixed(2)} acre(s) of ${crop.name}, expected yield: ${expectedYield.toLocaleString('en-IN')} kg, revenue: ₹${expectedRevenue.toLocaleString('en-IN')}. (${sourceNotice})`;
 
-        if (typeof generateRoadmap === 'function') generateRoadmap(cropKey);
-        if (typeof generateNotifications === 'function') generateNotifications(cropKey);
+        if (typeof generateRoadmap === 'function') generateRoadmap(actualCropKey);
+        if (typeof generateNotifications === 'function') generateNotifications(actualCropKey);
         
         // SAVE SESSION DATA
         const sessionData = {
@@ -147,11 +169,13 @@ async function fetchAICostData(cropName) {
                 "X-Title": "BharatFarm"
             },
             body: JSON.stringify({
-                model: "google/gemini-2.5-flash", // Fast, accurate model for structured data
+                model: "google/gemini-2.0-flash-001", // Fast, accurate model for structured data
                 messages: [
                     {
                         role: "system",
-                        content: `You are an expert Indian agricultural economist. Provide current average farming cost data for India in pure JSON format. Return ONLY the raw JSON object, without markdown formatting, backticks, or additional text.
+                        content: `You are an expert Indian agricultural economist. Analyze the following input to determine if it is a real farming crop, vegetable, fruit, seed, or spice (including local/regional names in any language, slang, or alternative spellings like "Alu", "Bhindi", etc.). 
+If it is NOT an authentic plant-based agricultural product (e.g., if it is an animal, machinery, car, phone, tool, person, or any non-plant item), you MUST return STRICTLY and ONLY {"error": "not_a_crop"}.
+If it IS a valid crop, seed, vegetable, fruit, or spice, provide current average farming cost data for India in pure JSON format. Return ONLY the raw JSON object, without markdown formatting, backticks, or additional text.
 Required JSON keys (MUST all be numbers):
 {
   "seedRate": <number: kg needed per acre>,
@@ -164,7 +188,7 @@ Required JSON keys (MUST all be numbers):
                     },
                     {
                         role: "user",
-                        content: `Provide the farming cost data for crop: ${cropName}`
+                        content: `Input: ${cropName}`
                     }
                 ]
             })
@@ -182,6 +206,10 @@ Required JSON keys (MUST all be numbers):
         
         const parsed = JSON.parse(content.trim());
         
+        if (parsed.error) {
+            return parsed;
+        }
+
         // Simple validation to ensure all required fields are numbers
         const requiredFields = ['seedRate', 'seedPrice', 'fertilizerRate', 'fertilizerPrice', 'yieldPerAcre', 'marketPrice'];
         for (const field of requiredFields) {

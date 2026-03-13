@@ -5,7 +5,7 @@
 const API_BASE_URL = '/api';
 
 // ── OpenRouter AI Chat Assistant ─────────────────
-const OPENROUTER_API_KEY = '';
+const OPENROUTER_API_KEY = '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';
 
 // ── WebRTC Voice Assistant ─────────────────
 const OPENAI_API_KEY = '';

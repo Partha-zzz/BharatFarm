@@ -152,6 +152,8 @@ function populateSellProductDropdown() {
     });
 }
 
+let sellProductTimer = null;
+
 function updateSellProductImage() {
     const input = document.getElementById('sellProductName');
     const imagePreview = document.getElementById('sellProductImage');
@@ -161,6 +163,22 @@ function updateSellProductImage() {
     if (!input) return;
 
     const cropName = input.value.trim().toLowerCase();
+    
+    if (sellProductTimer) clearTimeout(sellProductTimer);
+
+    if (cropName.length === 0) {
+        if (imagePreview) imagePreview.style.display = 'none';
+        if (icon) icon.style.display = 'block';
+        const noListingDiv = document.querySelector('.farmer-no-listing');
+        if (noListingDiv && marketplaceState.myListings.length === 0) {
+            noListingDiv.innerHTML = `
+                <i class="fas fa-seedling"></i>
+                <p>Your published listings will appear here</p>
+            `;
+        }
+        return;
+    }
+
     let matchedCrop = null;
 
     // Find crop in database (case insensitive match)
@@ -185,34 +203,51 @@ function updateSellProductImage() {
 
             categorySelect.value = mappedCat;
         }
-    } else {
-        if (imagePreview) imagePreview.style.display = 'none';
-        if (icon) icon.style.display = 'block';
-    }
-
-    // Update live preview in right panel
-    const noListingDiv = document.querySelector('.farmer-no-listing');
-    if (noListingDiv && marketplaceState.myListings.length === 0) {
-        if (matchedCrop && matchedCrop.imageUrl) {
+        
+        const noListingDiv = document.querySelector('.farmer-no-listing');
+        if (noListingDiv && marketplaceState.myListings.length === 0) {
             noListingDiv.innerHTML = `
                 <img src="${matchedCrop.imageUrl}" style="max-width: 100%; max-height: 200px; border-radius: 12px; object-fit: cover; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
                 <p style="font-weight: 500; font-size: 1.1rem; color: var(--text-primary); margin-bottom: 5px;">${matchedCrop.commonName} Preview</p>
                 <p style="font-size: 0.9rem;">Fill the form to publish your listing</p>
             `;
-        } else if (input.value.trim().length > 0) {
+        }
+    } else {
+        if (imagePreview) imagePreview.style.display = 'none';
+        if (icon) icon.style.display = 'block';
+        
+        const noListingDiv = document.querySelector('.farmer-no-listing');
+        if (noListingDiv && marketplaceState.myListings.length === 0) {
             noListingDiv.innerHTML = `
                 <div style="width: 120px; height: 120px; border-radius: 50%; background: #e8f5e9; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
-                    <i class="fas fa-seedling" style="font-size: 4rem; color: #4caf50;"></i>
+                    <i class="fas fa-spinner fa-spin" style="font-size: 4rem; color: #4caf50;"></i>
                 </div>
-                <p style="font-weight: 500; font-size: 1.1rem; color: var(--text-primary); margin-bottom: 5px;">${input.value.trim()} Preview</p>
-                <p style="font-size: 0.9rem;">Custom crop selected</p>
-            `;
-        } else {
-            noListingDiv.innerHTML = `
-                <i class="fas fa-seedling"></i>
-                <p>Your published listings will appear here</p>
+                <p style="font-weight: 500; font-size: 1.1rem; color: var(--text-primary); margin-bottom: 5px;">Searching please wait Krishibhai</p>
+                <p style="font-size: 0.9rem;">Finding crop details for you...</p>
             `;
         }
+        
+        sellProductTimer = setTimeout(async () => {
+            if (cropName === input.value.trim().toLowerCase() && typeof fetchAICropMetadata === 'function') {
+                const aiCrop = await fetchAICropMetadata(input.value.trim());
+                if (aiCrop && aiCrop.imageUrl) {
+                    // Force refresh preview now that it's in CROPS_DATABASE
+                    if (input.value.trim().toLowerCase() === aiCrop.commonName.toLowerCase()) {
+                        updateSellProductImage();
+                    }
+                } else {
+                    if (noListingDiv && marketplaceState.myListings.length === 0 && input.value.trim().toLowerCase() === cropName) {
+                        noListingDiv.innerHTML = `
+                            <div style="width: 120px; height: 120px; border-radius: 50%; background: #ffebee; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+                                <i class="fas fa-times-circle" style="font-size: 4rem; color: #f44336;"></i>
+                            </div>
+                            <p style="font-weight: 500; font-size: 1.1rem; color: #f44336; margin-bottom: 5px;">Enter a valid crop</p>
+                            <p style="font-size: 0.9rem;">Please enter a real crop or vegetable</p>
+                        `;
+                    }
+                }
+            }
+        }, 1200);
     }
 }
 
@@ -338,22 +373,41 @@ function searchMarketplace(query) {
 
 // ─── Sell Submit ─────────────────────────────────────────────────────────────
 
-function handleSellSubmit(event) {
+async function handleSellSubmit(event) {
     event.preventDefault();
     const form = event.target;
-    const fd = new FormData(form);
-
-    const phone = fd.get('contact').replace(/\D/g, '');
-    const cropNameInput = fd.get('name').trim();
-
-    // Look up the image if it's a known crop
-    let imageUrl = 'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=600&q=75';
-    if (typeof CROPS_DATABASE !== 'undefined') {
-        const matchedCrop = Object.values(CROPS_DATABASE).find(c => c.commonName.toLowerCase() === cropNameInput.toLowerCase());
-        if (matchedCrop && matchedCrop.imageUrl) {
-            imageUrl = matchedCrop.imageUrl;
-        }
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const originalBtnText = submitBtn ? submitBtn.innerHTML : 'Publish Listing';
+    
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
     }
+
+    try {
+        const fd = new FormData(form);
+
+        const phone = fd.get('contact').replace(/\D/g, '');
+        const cropNameInput = fd.get('name').trim();
+
+        // Look up the image if it's a known crop
+        let imageUrl = 'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=600&q=75';
+        
+        if (typeof CROPS_DATABASE !== 'undefined') {
+            let matchedCrop = Object.values(CROPS_DATABASE).find(c => c.commonName.toLowerCase() === cropNameInput.toLowerCase());
+            
+            // If not found instantly, user probably submitted before AI was done
+            if (!matchedCrop && typeof fetchAICropMetadata === 'function') {
+                matchedCrop = await fetchAICropMetadata(cropNameInput);
+            }
+            
+            if (matchedCrop && matchedCrop.imageUrl) {
+                imageUrl = matchedCrop.imageUrl;
+            } else if (!matchedCrop) {
+                alert(`"${cropNameInput}" does not seem to be a valid crop. Please correct the name before publishing.`);
+                return;
+            }
+        }
 
     const newProduct = {
         id: 'my' + Date.now(),
@@ -381,12 +435,19 @@ function handleSellSubmit(event) {
     form.reset();
     updateSellProductImage();
 
-    // Toast
-    const toast = document.createElement('div');
-    toast.className = 'mk-toast';
-    toast.innerHTML = '<i class="fas fa-check-circle"></i> Listing published successfully!';
-    document.body.appendChild(toast);
-    setTimeout(() => toast.remove(), 4000);
+        // Toast
+        const toast = document.createElement('div');
+        toast.className = 'mk-toast';
+        toast.innerHTML = '<i class="fas fa-check-circle"></i> Listing published successfully!';
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 4000);
+        
+    } finally {
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalBtnText;
+        }
+    }
 }
 
 // ─── Legacy stubs (kept for compatibility) ───────────────────────────────────
