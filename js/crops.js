@@ -310,7 +310,7 @@ If it IS a valid crop, seed, vegetable, fruit, or spice, act as an expert agricu
 Reply ONLY with the raw JSON object. Do not include markdown formatting or backticks.
 `;
         const messages = [{ role: "user", content: prompt }];
-        const responseText = await aiCall({ messages, model: "google/gemini-2.0-flash-001" });
+        const responseText = await aiCall({ messages, model: "google/gemini-2.0-flash-001" }); // aiCall is in config.js
         const cleanJson = responseText.replace(/\`\`\`json/g, '').replace(/\`\`\`/g, '').trim();
         const data = JSON.parse(cleanJson);
 
