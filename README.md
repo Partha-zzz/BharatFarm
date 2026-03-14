@@ -1,126 +1,117 @@
-# BharatFarm - Smart Agriculture Platform
+# 🌾 BharatFarm - The Intelligent Agri-Platform
 
-A comprehensive web application designed to help farmers make smarter decisions through technology. BharatFarm provides a premium, mobile-first experience offering weather monitoring, an AI-powered real-time Voice Assistant, crop planning, disease detection, cost calculation, and activity scheduling tools tailored for Indian farming contexts.
+[![Project Status: Active](https://img.shields.io/badge/Project%20Status-Active-brightgreen)](https://github.com/Souvik-Dey-2029/BharatFarm_Final-Version)
+[![Built for: Farmers](https://img.shields.io/badge/Built%20for-Indian%20Farmers-orange)](https://bharatfarm.live)
+[![Tech: AI-Powered](https://img.shields.io/badge/Tech-AI--Powered-blue)](#-intelligent-ai-ecosystem)
+[![UI: Mobile-First](https://img.shields.io/badge/UI-Mobile--First-red)](#-premium-mobile-experience)
 
-## 🌟 Key Features
+**BharatFarm** is a state-of-the-art, full-stack agricultural ecosystem designed to revolutionize how Indian farmers manage their crops. By blending advanced AI capabilities with a premium mobile-first interface, BharatFarm provides actionable insights, real-time assistance, and a direct-to-market trade platform.
 
-- **📱 Premium Mobile-First UI**: Native app feel with glassmorphism, fluid animations, and a notch-friendly full-screen chatbot experience.
-- **🎙️ Real-time AI Voice Assistant**: A floating, hands-free voice interface for interacting with KrishiBot via Speech-to-Text and Text-to-Speech.
-- **🌤️ Weather & Safety**: Real-time weather data with farming safety alerts based on your location.
-- **🍃 Leaf Disease Scanner**: Interactive AI scanner to detect leaf diseases and get tailored treatment recommendations.
-- **🌾 Comprehensive Crop Database**: Highly detailed information for 33 major Indian crops spanning Vegetables, Fruits, Cereals, Pulses, and Oilseeds. Includes Unsplash/Pexels API integration for real imagery.
-- **💰 Cost & Revenue Calculator**: Project costs for seeds and fertilizers using multiple land units (Acre, Bigha, Katha) and estimate expected yields.
-- **🗺️ Activity Roadmap**: Day-by-day farming activity schedules tailored precisely for each crop lifecycle.
-- **🔔 Smart Notifications**: Alerts for watering, fertilizing, and severe weather conditions.
-- **💳 Premium Subscriptions**: Backend-enforced payment mockup system via `/submit-payment` handling.
+---
 
-## 🏗️ Architecture & Project Structure
+## 🚀 Key Features
 
-The project has evolved from a static page into a full-stack **Node.js** architecture relying on external AI proxying to bypass CORS and secure API keys.
+### 🤖 Intelligent AI Ecosystem
+- **🎙️ KrishiBot Voice Assistant**: A hands-free, real-time AI companion using STT (Speech-to-Text) and TTS (Text-to-Speech) to answer farming queries instantly.
+- **🍃 AI Leaf Disease Scanner**: Interactive scanner that identifies crop diseases from photos and suggests precise fertilizer and treatment protocols.
+- **🧠 Predictive Analytics**: Secured through a Node.js proxy server using Gemini 2.0 Flash for low-latency, high-accuracy agricultural advice.
 
+### 📱 Premium Mobile Experience
+- **Glassmorphic UI**: A stunning, modern design with fluid animations and responsive glassmorphism.
+- **Notch-Friendly Layout**: Seamless full-screen experience designed for modern mobile devices.
+- **Immersive Chatbot**: A bezel-less, high-impact interface for AI interactions.
+
+### 📊 Farming Management Tools
+- **🌤️ Smart Weather & Safety**: Real-time localized weather data with proximity-based safety alerts for farming operations.
+- **🌾 Dynamic Crop Database**: Deep data for 33 major Indian crops, integrated with Unsplash/Pexels APIs for high-resolution visual identification.
+- **💰 Financial Suite**: Professional cost and revenue calculators supporting local land units (Acre, Bigha, Katha) with yield estimation.
+- **🗺️ Activity Roadmap**: Precision day-by-day schedules tailored to the specific lifecycle of each crop.
+
+### 🛒 Integrated Marketplace
+- **Direct Trade**: A dual-role marketplace for farmers to sell produce directly and buyers to browse fresh local inventory.
+- **Digital Agri-India Portal**: A government-inspired branding for trust and professional trade experience.
+
+---
+
+## 🏗️ Technical Architecture
+
+BharatFarm uses a high-performance **SPA (Single Page Application)** architecture powered by a dedicated **Node.js** backend.
+
+### Technology Stack
+- **Frontend**: HTML5, CSS3 (Modern Flex/Grid, Variables, Glassmorphism), Vanilla JavaScript (ES6+ Modules).
+- **Backend**: Node.js, Express-style routing, `dotenv` for security.
+- **AI Integrations**: Gemini 2.0 Flash (via OpenRouter), Vision-Language Models for Leaf Scanning and Payment Verification.
+- **APIs**: OpenWeatherMap (Weather), Unsplash/Pexels (Imagery).
+
+### Project Structure
 ```text
 BharatFarm/
-├── server.js               # Node.js Backend Server (Proxy, API, Subscriptions)
-├── .env                    # Environment variables (OpenRouter, Unsplash keys)
-├── package.json            # Node.js dependencies
-├── index.html              # Main HTML SPA Application
+├── server.js               # Node.js Backend (AI Proxy, Vision, Payment Logic)
+├── index.html              # Main SPA Entry Point
 ├── css/                    
-│   ├── mobile-ui.css       # Dedicated mobile overrides & UI enhancements
-│   ├── chatbot.css         # Styling for KrishiBot and Realtime Voice
-│   └── ...                 # Component-specific styles
+│   ├── mobile-ui.css       # Mobile-specific UX enhancements
+│   ├── glassmorphism.css   # Dynamic UI tokens and styles
+│   └── components.css      # Modular UI components
 └── js/                     
-    ├── config.js           # Frontend config, toggles, keys
-    ├── realtimeVoice.js    # STT/TTS Voice Assistant
-    ├── cropsData.js        # Offline database of 33 crops
-    ├── crops.js            # Unsplash/Pexels image fetching & filtering
-    └── ...                 # Core logic modules
+    ├── realtimeVoice.js    # AI Voice Assistant logic
+    ├── cropsData.js        # Offline-first crop intelligence database
+    ├── scanner.js          # Leaf disease vision analysis
+    └── marketplace.js      # Trade & role management
 ```
 
-## 🚀 Getting Started
+---
+
+## 🛠️ Installation & Setup
 
 ### Prerequisites
+- [Node.js](https://nodejs.org/) (v16+)
+- [NPM](https://www.npmjs.com/) (latest)
 
-- **Node.js** (v16.x or higher recommended)
-- **NPM** (Node Package Manager)
+### Step-by-Step Installation
 
-### Installation & Setup
-
-1. **Clone the repository:**
-
+1. **Clone the Project**
    ```bash
-   git clone https://github.com/Souvik-Dey-2029/BharatFarm.git
-   cd BharatFarm
+   git clone https://github.com/Souvik-Dey-2029/BharatFarm_Final-Version.git
+   cd BharatFarm_Final-Version
    ```
 
-2. **Install Dependencies:**
-   Install backend requirements like `dotenv`.
-   
+2. **Install Dependencies**
    ```bash
    npm install
    ```
 
-3. **Configure Environment Variables:**
-   Create a `.env` file in the root directory (you can copy `sample.env` if available) and add your API credentials:
-
+3. **Configure Environment**
+   Create a `.env` file in the root directory:
    ```env
-   # Required for Chatbot and Voice Assistant
-   OPENROUTER_API_KEY=your_openrouter_or_gemini_key_here
-   
-   # Optional: For high-quality Crop images (configure in js/config.js as well)
+   OPENROUTER_API_KEY=your_gemini_api_key_here
    UNSPLASH_API_KEY=your_unsplash_key_here
-   PEXELS_API_KEY=your_pexels_key_here
    ```
 
-4. **Run the Server:**
-   Start the Node.js backend which serves the application on Port 5000 and proxies AI requests securely.
-
+4. **Launch Server**
    ```bash
    node server.js
    ```
 
-5. **Access the Application:**
-   Navigate to `http://localhost:5000` in your browser. (Note: Ensure you view the site on a mobile device or responsive emulator for the optimal experience).
-
-## 🧠 AI Backend Integration
-
-BharatFarm implements a custom `/api/chat` route in `server.js`. This dual-purpose proxy achieves two things:
-1. **Security**: Hides your `OPENROUTER_API_KEY` from the client.
-2. **Compatibility**: Unifies requests from both the legacy KrishiBot text-chat and the new generic AI configurations (like the plant disease scanner).
-
-## 🌾 The Crop Database
-
-The platform includes a zero-config, pre-populated database (`cropsData.js`) containing 33 crops properly categorized into:
-- 🍅 **Vegetables** (Tomato, Potato, Cabbage, etc.)
-- 🍎 **Fruits** (Mango, Banana, Papaya, etc.)
-- 🌾 **Cereals** (Rice, Wheat, Maize, etc.)
-- 🫘 **Pulses** (Chickpea, Lentil, etc.)
-- 🌻 **Oilseeds** (Mustard, Soybean, etc.)
-
-With a 5-minute configuration (adding an Unsplash API key), the application seamlessly replaces local generic images with stunning, real-world photography of these crops dynamically.
-
-## 📱 Mobile-First Paradigm
-
-The UI has undergone a substantial mobile overhaul incorporating:
-- Fluid, native tap animations with no visual delay.
-- Bottom navigation menus that respect device safe-areas (notches).
-- A Voice Assistant button gracefully suspended above the `KrishiBot` widget.
-- A fully immersive, bezel-less full-screen layout constraint when the AI assistant is activated.
-
-## 📜 Documentation
-
-For more detailed technical insights, review the included markdown files:
-- `QUICK_START.md`
-- `CROPS_SETUP.md`
-- `CROPS_VERIFICATION.md`
-- `IMPLEMENTATION_SUMMARY.md`
-
-## 🤝 Contributing & License
-
-This project is a demonstration of progressive web application principles mixed with AI utility in agriculture. Feel free to fork, modify, and elevate the standard of smart farming software.
-
-Provided as-is for educational and demonstration purposes.
+5. **Access the App**
+   Open `http://localhost:5000` in your browser. Use Mobile View (F12) for the designed experience.
 
 ---
 
-**© 2026 BharatFarm - Smart Agriculture Platform**  
-_Empowering Indian Farmers with Smart Technology_
+## 🔒 Security & AI Proxy
+BharatFarm implements a secure backend proxy to protect API keys and ensure CORS compliance. All AI requests, including the **KrishiBot** and **Vision Scanner**, are routed through `server.js`, where they are authenticated and optimized before reaching external LLMs.
+
+---
+
+## 👥 Development Team
+- **Souvik Dey** - Lead Developer
+- **Partha Sarathi Sarkar** - Full Stack Developer
+- **Samrat Chatterjee** - Backend Developer
+- **Snehasis Chakroborty** - Frontend Developer
+
+---
+
+## 📜 License
+*Demonstration project intended for agricultural empowerment. All rights reserved &copy; 2026 BharatFarm.*
+
+---
+**BharatFarm** – *Empowering Indian Farmers with Smart Technology* 🌾
