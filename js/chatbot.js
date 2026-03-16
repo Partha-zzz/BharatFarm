@@ -122,9 +122,6 @@ Goal: Act as a friendly, knowledgeable, and reliable digital farming assistant f
                         <p><span class="chat-online-dot"></span> AI Farming Assistant</p>
                     </div>
                     <div class="chat-header-actions">
-                        <button class="chat-header-btn" id="chatKeyBtn" title="Change API Key" onclick="chatbotChangeKey()" style="display:none">
-                            <i class="fas fa-key"></i>
-                        </button>
                         <button class="chat-header-btn" id="chatLangBtn" title="Change Language" onclick="chatbotChangeLang()">
                             <i class="fas fa-globe"></i>
                         </button>
@@ -229,32 +226,11 @@ Goal: Act as a friendly, knowledgeable, and reliable digital farming assistant f
     updateSendBtn();
 
     if (!apiKeyReady) {
-      showApiKeySetup();
+      startChat(); // Fallback just in case, but apiKeyReady is now true by default
       return;
     }
 
     showLangSelector();
-  }
-
-  // ── Show API Key Setup ────────────────────
-  function showApiKeySetup() {
-    // No longer needed, server authenticates.
-    startChat();
-  }
-
-  // ── Save API Key ──────────────────────────
-  window.chatbotSaveApiKey = function () {
-    // No longer needed
-  };
-
-  // ── Change API Key (from header) ──────────
-  window.chatbotChangeKey = function () {
-    // No longer needed
-  };
-
-  // ── Get Active API Key ────────────────────
-  function getApiKey() {
-    return "server-handled";
   }
 
   // ── Show Language Selector ─────────────────
@@ -390,13 +366,6 @@ Goal: Act as a friendly, knowledgeable, and reliable digital farming assistant f
 
   // ── OpenRouter API Call ────────────────────
   async function sendToOpenRouter(userText) {
-    const apiKey = getApiKey();
-    if (!apiKey) {
-      apiKeyReady = false;
-      startChat();
-      return;
-    }
-
     isTyping = true;
     updateSendBtn();
     const typingEl = showTyping();

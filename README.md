@@ -7,6 +7,9 @@
 
 **BharatFarm** is a state-of-the-art, full-stack agricultural ecosystem designed to revolutionize how Indian farmers manage their crops. By blending advanced AI capabilities with a premium mobile-first interface, BharatFarm provides actionable insights, real-time assistance, and a direct-to-market trade platform.
 
+## 🎬 Cinematic Experience
+The platform now features a high-performance, scroll-controlled cinematic landing page using GSAP and ScrollTrigger, guiding users through the project's story with 240 high-resolution frames and dynamic feature overlays.
+
 ---
 
 ## 🚀 Key Features
@@ -47,12 +50,15 @@ BharatFarm uses a high-performance **SPA (Single Page Application)** architectur
 ```text
 BharatFarm/
 ├── server.js               # Node.js Backend (AI Proxy, Vision, Payment Logic)
-├── index.html              # Main SPA Entry Point
+├── index.html              # NEW: Cinematic Landing Page (Entry Point)
+├── app.html                # Main SPA Application (Dashboard, Auth, Tools)
 ├── css/                    
+│   ├── landing.css         # Styling for cinematic scroll experience
 │   ├── mobile-ui.css       # Mobile-specific UX enhancements
 │   ├── glassmorphism.css   # Dynamic UI tokens and styles
 │   └── components.css      # Modular UI components
 └── js/                     
+    ├── landing.js          # GSAP ScrollTrigger Sequence Logic
     ├── realtimeVoice.js    # AI Voice Assistant logic
     ├── cropsData.js        # Offline-first crop intelligence database
     ├── scanner.js          # Leaf disease vision analysis
@@ -93,7 +99,7 @@ BharatFarm/
    ```
 
 5. **Access the App**
-   Open `http://localhost:5000` in your browser. Use Mobile View (F12) for the designed experience.
+   Open `http://localhost:5000` in your browser to experience the cinematic landing page. Click **Login / Dashboard** to enter the main application (`app.html`). Use Mobile View (F12) for the designed experience.
 
 ---
 

@@ -157,23 +157,8 @@ async function calculateCosts() {
 }
 
 async function fetchAICostData(cropName) {
-    if (!OPENROUTER_API_KEY || OPENROUTER_API_KEY.trim() === '') return null;
-    
     try {
-        const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-            method: "POST",
-            headers: {
-                "Authorization": `Bearer ${OPENROUTER_API_KEY}`,
-                "Content-Type": "application/json",
-                "HTTP-Referer": window.location.href,
-                "X-Title": "BharatFarm"
-            },
-            body: JSON.stringify({
-                model: "google/gemini-2.0-flash-001", // Fast, accurate model for structured data
-                messages: [
-                    {
-                        role: "system",
-                        content: `You are an expert Indian agricultural economist. Analyze the following input to determine if it is a real farming crop, vegetable, fruit, seed, or spice (including local/regional names in any language, slang, or alternative spellings like "Alu", "Bhindi", etc.). 
+        const systemPrompt = `You are an expert Indian agricultural economist. Analyze the following input to determine if it is a real farming crop, vegetable, fruit, seed, or spice (including local/regional names in any language, slang, or alternative spellings like "Alu", "Bhindi", etc.). 
 If it is NOT an authentic plant-based agricultural product (e.g., if it is an animal, machinery, car, phone, tool, person, or any non-plant item), you MUST return STRICTLY and ONLY {"error": "not_a_crop"}.
 If it IS a valid crop, seed, vegetable, fruit, or spice, provide current average farming cost data for India in pure JSON format. Return ONLY the raw JSON object, without markdown formatting, backticks, or additional text.
 Required JSON keys (MUST all be numbers):
@@ -184,28 +169,26 @@ Required JSON keys (MUST all be numbers):
   "fertilizerPrice": <number: average cost in ₹ per kg of fertilizer>,
   "yieldPerAcre": <number: average yield in kg per acre>,
   "marketPrice": <number: average selling price in ₹ per kg>
-}`
-                    },
-                    {
-                        role: "user",
-                        content: `Input: ${cropName}`
-                    }
-                ]
-            })
+}`;
+
+        const content = await aiCall({
+            messages: [
+                { role: "system", content: systemPrompt },
+                { role: "user", content: `Input: ${cropName}` }
+            ],
+            temperature: 0.1 // Low temperature for consistent JSON output
         });
 
-        if (!response.ok) throw new Error("OpenRouter API request failed");
-        
-        const data = await response.json();
-        let content = data.choices[0].message.content.trim();
-        
+        if (!content) return null;
+
         // Clean up markdown block if model ignored instructions
-        if (content.startsWith('```json')) content = content.substring(7);
-        if (content.startsWith('```')) content = content.substring(3);
-        if (content.endsWith('```')) content = content.substring(0, content.length - 3);
-        
-        const parsed = JSON.parse(content.trim());
-        
+        let cleanContent = content.trim();
+        if (cleanContent.startsWith('```json')) cleanContent = cleanContent.substring(7);
+        if (cleanContent.startsWith('```')) cleanContent = cleanContent.substring(3);
+        if (cleanContent.endsWith('```')) cleanContent = cleanContent.substring(0, cleanContent.length - 3);
+
+        const parsed = JSON.parse(cleanContent.trim());
+
         if (parsed.error) {
             return parsed;
         }
@@ -217,7 +200,7 @@ Required JSON keys (MUST all be numbers):
                 throw new Error(`Invalid data received for ${field}`);
             }
         }
-        
+
         return parsed;
     } catch (error) {
         console.warn("AI Data fetch failed, falling back to local dataset:", error);
