@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const nav = document.querySelector(".landing-nav");
 
     // We store the current frame in an object so GSAP can uniquely animate it
-    const airpods = {
+    const heroState = {
         frame: 0
     };
 
@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
         canvas.style.height = `${winHeight}px`;
 
         // Initial render constraint
-        if (images[airpods.frame] && images[airpods.frame].complete) {
+        if (images[heroState.frame] && images[heroState.frame].complete) {
             render();
         }
     }
@@ -103,7 +103,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 4. Rendering Function
     function render() {
-        const img = images[airpods.frame];
+        const img = images[heroState.frame];
         if (img && img.complete) {
             const dpr = window.devicePixelRatio || 1;
             const winWidth = window.innerWidth;
@@ -138,7 +138,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Timeline spanning the entire scroll-content height
     // We bind the `frame` property so scrolling interpolates 0 -> 239.
-    gsap.to(airpods, {
+    gsap.to(heroState, {
         frame: frameCount - 1,
         snap: "frame", // Snap to whole numbers exclusively (cannot draw fraction of frame)
         ease: "none",
