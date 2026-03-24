@@ -107,6 +107,11 @@ async function analyzeLeaf() {
             logActivity('scan', 'Plant leaf scanned via AI', isHealthy ? 'Healthy Plant' : `Detected ${result.name}`);
             updateUserStatistic('totalScans');
         }
+        
+        // Gamification Hook
+        if (window.bfGamification) {
+            window.bfGamification.trackScan();
+        }
 
         loadingEl.classList.add('hidden');
 

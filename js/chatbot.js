@@ -437,6 +437,11 @@ Goal: Act as a friendly, knowledgeable, and reliable digital farming assistant f
         typingEl.remove();
         isTyping = false;
         updateSendBtn();
+        
+        // Gamification Hook
+        if (window.bfGamification) {
+            window.bfGamification.trackChat();
+        }
 
         appendBotMsg(replyText);
         conversationHistory.push({ role: "assistant", content: replyText });

@@ -249,7 +249,15 @@ const translations = {
         unit_kg: "Per kg",
         unit_quintal: "Per quintal",
         unit_piece: "Per piece",
-        unit_ton: "Per ton"
+        unit_ton: "Per ton",
+
+        // Gamification
+        gami_xp: "Experience",
+        gami_take_quiz: "Take Daily Quiz",
+        gami_correct: "Correct!",
+        gami_incorrect: "Incorrect.",
+        gami_got_it: "Awesome, Got It!",
+        gami_lvl: "Lvl"
     },
     hi: {
         loading_subtitle: "आपका स्मार्ट फार्मिंग डैशबोर्ड तैयार हो रहा है...",
@@ -493,7 +501,15 @@ const translations = {
         unit_kg: "प्रति किलो",
         unit_quintal: "प्रति क्विंटल",
         unit_piece: "प्रति नग",
-        unit_ton: "प्रति टन"
+        unit_ton: "प्रति टन",
+
+        // Gamification
+        gami_xp: "अनुभव",
+        gami_take_quiz: "दैनिक प्रश्नोत्तरी लें",
+        gami_correct: "सही!",
+        gami_incorrect: "गलत।",
+        gami_got_it: "बहुत बढ़िया, समझ गया!",
+        gami_lvl: "स्तर"
     },
     bn: {
         loading_subtitle: "আপনার স্মার্ট ফার্মিং ড্যাশবোর্ড প্রস্তুত হচ্ছে...",
@@ -737,7 +753,15 @@ const translations = {
         unit_kg: "প্রতি কেজি",
         unit_quintal: "প্রতি কুইন্টাল",
         unit_piece: "প্রতি পিস",
-        unit_ton: "প্রতি টন"
+        unit_ton: "প্রতি টন",
+
+        // Gamification
+        gami_xp: "অভিজ্ঞতা",
+        gami_take_quiz: "দৈনিক কুইজ খেলুন",
+        gami_correct: "সঠিক!",
+        gami_incorrect: "ভুল।",
+        gami_got_it: "চমৎকার, বুঝতে পেরেছি!",
+        gami_lvl: "স্তর"
     }
 };
 
@@ -1196,6 +1220,13 @@ function updateDashboardSection(t) {
     updateElementHTML('dashImpactStat1Desc', t.impact_stat1_desc);
     updateElementHTML('dashImpactStat2Title', t.impact_stat2_title);
     updateElementHTML('dashImpactStat2Desc', t.impact_stat2_desc);
+
+    // Gamification Section
+    updateElementHTML('gami-xp-label', t.gami_xp);
+    const gamiBtn = document.getElementById('gami-daily-btn');
+    if(gamiBtn) gamiBtn.textContent = t.gami_take_quiz;
+    const gamiBtnLvl = document.getElementById('gami-level');
+    if(gamiBtnLvl) gamiBtnLvl.innerHTML = `<i class="fas fa-medal"></i> ${t.gami_lvl} ${window.bfGamification ? window.bfGamification.state.level : 1}`;
 }
 
 function updateButtonTextByID(id, text, iconClass) {

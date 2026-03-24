@@ -41,6 +41,7 @@
     <link rel="stylesheet" href="css/footer.css">
     <link rel="stylesheet" href="css/schemes.css">
     <link rel="stylesheet" href="css/wiki.css">
+    <link rel="stylesheet" href="css/gamification.css">
     <script src="js/subscription.js" defer></script>
     <script src="js/marketplaceData.js" defer></script>
     <script src="js/marketplace.js" defer></script>
@@ -513,6 +514,26 @@
                 </div>
 
                 <div class="dash-feature-grid">
+
+                    <!-- Gamification Card -->
+                    <div class="dash-feature-card gamification-card" onclick="openDailyQuiz()">
+                        <div class="g-card-header">
+                            <div class="level-badge" id="gami-level"><i class="fas fa-medal"></i> Lvl 1</div>
+                            <div class="coin-balance"><i class="fas fa-coins coin-icon"></i> <span id="gami-coins">0</span></div>
+                        </div>
+                        <div class="xp-container">
+                            <div class="xp-label">
+                                <span id="gami-xp-label">Experience</span>
+                                <span id="gami-xp-text">0 / 100 XP</span>
+                            </div>
+                            <div class="xp-bar-bg">
+                                <div class="xp-bar-fill" id="gami-xp-fill"></div>
+                            </div>
+                        </div>
+                        <button class="btn-gami btn-daily" onclick="event.stopPropagation(); openDailyQuiz()">
+                            <i class="fas fa-brain"></i> <span id="gami-daily-btn">Take Daily Quiz</span>
+                        </button>
+                    </div>
 
                     <!-- KrishiBot -->
                     <div class="dash-feature-card dash-card-krishibot" onclick="showSection('dashboard')">
@@ -1829,6 +1850,10 @@
             <i class="fas fa-book-medical"></i>
             <span>Wiki</span>
         </button>
+        <button onclick="openDailyQuiz()" id="bottomNavQuiz">
+            <i class="fas fa-brain"></i>
+            <span>Quiz</span>
+        </button>
         <button onclick="showSection('calculator')" id="bottomNavCalc">
             <i class="fas fa-calculator"></i>
             <span>Calc</span>
@@ -1969,6 +1994,41 @@
             </div>
         </div>
     </div> <!-- Close About container if any? Actually just appending -->
+
+    <!-- GAMIFICATION TOAST CONTAINER -->
+    <div id="gami-toast-container" class="gamification-toast-container"></div>
+
+    <!-- DAILY QUIZ MODAL -->
+    <div class="quiz-modal-overlay" id="quizModal" onclick="if(event.target===this) closeQuizModal()">
+        <div class="quiz-modal-content">
+            <div class="quiz-header">
+                <div class="quiz-header-left">
+                    <span class="quiz-topic" id="qm-topic">Soil Health</span>
+                    <span class="quiz-difficulty" id="qm-difficulty">EASY</span>
+                </div>
+                <div class="quiz-header-right">
+                    <div class="reward-tag"><i class="fas fa-star"></i><span id="qm-xp">+50 XP</span></div>
+                    <div class="reward-tag"><i class="fas fa-coins"></i><span id="qm-coin">+10 Coins</span></div>
+                </div>
+            </div>
+            <div class="quiz-body">
+                <h3 class="quiz-question" id="qm-question">Loading question...</h3>
+                <div class="quiz-options" id="qm-options">
+                    <!-- Options injected via JS -->
+                </div>
+                
+                <div class="quiz-footer" id="qm-footer">
+                    <div class="quiz-explanation" id="qm-explanation-text"></div>
+                    <button class="btn btn-primary quiz-btn-close" onclick="closeQuizModal()">Awesome, Got It!</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gamification Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="js/gamification.js"></script>
+    <script src="js/gamification-ui.js"></script>
 
 </body>
 </html>
