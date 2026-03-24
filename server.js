@@ -134,7 +134,89 @@ const server = http.createServer(async (req, res) => {
         return;
     }
 
+    // ── POST /api/schemes ──────────────────────────────────────────────────────
+    if (req.url === '/api/schemes' && req.method === 'POST') {
+        let body = '';
+        req.on('data', chunk => body += chunk.toString());
+        req.on('end', async () => {
+            try {
+                const { landSize, state, crop } = JSON.parse(body);
+                console.log(`\n[/api/schemes] State=${state}, Land=${landSize}ac, Crop=${crop}`);
+
+                const prompt = `You are an expert on Indian government agricultural schemes and subsidies.
+A farmer has the following profile:
+- State: ${state}
+- Land Size: ${landSize} acres
+- Primary Crop: ${crop || 'General (not specified)'}
+
+Return a JSON array of ALL government schemes (both Central and ${state} State-specific) this farmer is ELIGIBLE for.
+Include BOTH central schemes available to all farmers AND specific schemes for ${state}.
+
+For EACH scheme provide EXACTLY these fields:
+{
+  "id": "unique-slug",
+  "name": "Full Official Scheme Name",
+  "type": "Central" or "State" or "Central/State",
+  "description": "2-3 sentences explaining what this scheme offers and its purpose.",
+  "eligibility": {
+    "minLandSize": 0,
+    "maxLandSize": 9999,
+    "states": ["All"] or ["${state}"],
+    "crops": ["All"] or ["Rice","Wheat"]
+  },
+  "benefits": ["Benefit 1 with ₹ amount", "Benefit 2", "Benefit 3"],
+  "link": "https://official.gov.in/portal/url",
+  "applySteps": ["Step 1: Visit official portal", "Step 2: Register with Aadhaar", "Step 3: Submit land documents"]
+}
+
+${state === 'West Bengal' && landSize === 0 
+? `CRITICAL WEST BENGAL REQUIREMENT: Since the land size is 0 (landless) or they are a sharecropper in West Bengal, you MUST RETURN EXACTLY AND ONLY the following two specific schemes:
+1. Name: "Bhumihin Krishak Bandhu (Landless Farmer Scheme)", type: "State", Description: "Main scheme for landless farmers in West Bengal who work on others' land but own no agricultural land.", Benefits: ["₹4,000 per year (₹2000 Rabi, ₹2000 Kharif)"], Apply Steps: ["Through Duare Sarkar camps, BDO office, or Agriculture portal", "Need Aadhaar, Bank account, Self-declaration (no land)"].
+2. Name: "Krishak Bandhu (for sharecroppers also)", type: "State", Description: "Financial assistance for registered sharecroppers (Bhagchasi). Useful if farmer doesn't own land but is a registered sharecropper.", Benefits: ["₹1,000 - ₹5,000 yearly", "₹2 lakh death benefit insurance"].
+DO NOT INCLUDE PM-KISAN, PMFBY, OR ANY OTHER SCHEMES.` 
+: `Always include these central schemes if eligible: PM-KISAN (pmkisan.gov.in), PMFBY (pmfby.gov.in), PM Krishi Sinchai Yojana (pmksy.gov.in), Kisan Credit Card (pmkisan.gov.in/KCC), Soil Health Card (soilhealth.dac.gov.in).\nAlso include major ${state}-specific schemes with their REAL official portal URLs.`}
+
+Return ONLY the raw JSON array. No markdown, no code blocks, no explanation text.`;
+
+                const aiResponseText = await callOpenAI([{ role: 'user', content: prompt }]);
+                console.log(`[/api/schemes] AI response length: ${aiResponseText.length} chars`);
+
+                // Strip markdown code fences and extract JSON
+                let cleanText = aiResponseText
+                    .replace(/```json/gi, '')
+                    .replace(/```/g, '')
+                    .trim();
+
+                // Try to find a JSON array in the response
+                const jsonMatch = cleanText.match(/\[[\s\S]*\]/);
+                if (!jsonMatch) {
+                    console.error('[/api/schemes] No JSON array found. Raw (first 500 chars):', cleanText.substring(0, 500));
+                    throw new Error('No JSON array in AI response');
+                }
+
+                let schemes;
+                try {
+                    schemes = JSON.parse(jsonMatch[0]);
+                } catch (parseErr) {
+                    console.error('[/api/schemes] JSON parse failed:', parseErr.message);
+                    console.error('[/api/schemes] Extracted JSON (first 500):', jsonMatch[0].substring(0, 500));
+                    throw new Error('Failed to parse AI JSON: ' + parseErr.message);
+                }
+
+                console.log(`[/api/schemes] ✅ Returning ${schemes.length} schemes`);
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ success: true, schemes }));
+            } catch (e) {
+                console.error('[/api/schemes] ❌ Error:', e.message);
+                res.writeHead(500, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ success: false, error: e.message }));
+            }
+        });
+        return;
+    }
+
     // ── POST /submit-payment ───────────────────────────────────────────────────
+
     if (req.url === '/submit-payment' && req.method === 'POST') {
         let body = '';
         const limitBytes = 10 * 1024 * 1024; // 10MB limit
@@ -316,6 +398,124 @@ Do not include any markdown formatting like \`\`\`json in your response. Just re
                 console.error('[Analyze] Error:', e.message);
                 res.writeHead(500, { 'Content-Type': 'application/json' });
                 res.end(JSON.stringify({ success: false, error: "Internal server error" }));
+            }
+        });
+        return;
+    }
+
+    // ── POST /api/credits/status ────────────────────────────────────────────────
+    if (req.url === '/api/credits/status' && req.method === 'POST') {
+        let body = '';
+        req.on('data', chunk => body += chunk.toString());
+        req.on('end', () => {
+            try {
+                const { phone } = JSON.parse(body);
+                if (!phone) throw new Error('Phone is required');
+                
+                // Initialize user if not exists
+                if (!global.creditsDB) global.creditsDB = {};
+                if (!global.creditsDB[phone]) {
+                    global.creditsDB[phone] = {
+                        freeAttempts: 5,
+                        creditPoints: 0,
+                        totalSuccessfulViews: 0,
+                        unlockedFarmerIDs: []
+                    };
+                }
+                
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ success: true, profile: global.creditsDB[phone] }));
+            } catch (e) {
+                res.writeHead(400, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ success: false, error: e.message }));
+            }
+        });
+        return;
+    }
+
+    // ── POST /api/credits/unlock ────────────────────────────────────────────────
+    if (req.url === '/api/credits/unlock' && req.method === 'POST') {
+        let body = '';
+        req.on('data', chunk => body += chunk.toString());
+        req.on('end', () => {
+            try {
+                const { phone, farmerId } = JSON.parse(body);
+                if (!phone || !farmerId) throw new Error('Phone and Farmer ID are required');
+                
+                if (!global.creditsDB) global.creditsDB = {};
+                if (!global.creditsDB[phone]) {
+                    global.creditsDB[phone] = { freeAttempts: 5, creditPoints: 0, totalSuccessfulViews: 0, unlockedFarmerIDs: [] };
+                }
+                
+                const profile = global.creditsDB[phone];
+                
+                // Step 1: Check if already unlocked
+                if (profile.unlockedFarmerIDs.includes(farmerId)) {
+                    res.writeHead(200, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ success: true, profile, message: 'Already unlocked' }));
+                    return;
+                }
+                
+                // Step 2: Check free attempts
+                if (profile.freeAttempts > 0) {
+                    profile.freeAttempts -= 1;
+                    profile.unlockedFarmerIDs.push(farmerId);
+                    
+                    res.writeHead(200, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ success: true, profile, message: 'Unlocked with free attempt' }));
+                    return;
+                }
+                
+                // Step 3: Check credit points
+                if (profile.creditPoints >= 20) {
+                    profile.creditPoints -= 20;
+                    profile.unlockedFarmerIDs.push(farmerId);
+                    profile.totalSuccessfulViews += 1;
+                    
+                    let bonusGiven = false;
+                    // Loyalty Reward
+                    if (profile.totalSuccessfulViews === 20) {
+                        profile.creditPoints += 40;
+                        bonusGiven = true;
+                    }
+                    
+                    res.writeHead(200, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ success: true, profile, bonusGiven, message: 'Unlocked with 20 credits' }));
+                    return;
+                }
+                
+                // Step 4: Not enough points
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ success: false, needsRecharge: true, profile, message: 'Insufficient credits. Need 20 points.' }));
+            } catch (e) {
+                res.writeHead(400, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ success: false, error: e.message }));
+            }
+        });
+        return;
+    }
+
+    // ── POST /api/credits/purchase ──────────────────────────────────────────────
+    if (req.url === '/api/credits/purchase' && req.method === 'POST') {
+        let body = '';
+        req.on('data', chunk => body += chunk.toString());
+        req.on('end', () => {
+            try {
+                const { phone, points = 100 } = JSON.parse(body);
+                if (!phone) throw new Error('Phone is required');
+                
+                if (!global.creditsDB) global.creditsDB = {};
+                if (!global.creditsDB[phone]) {
+                    global.creditsDB[phone] = { freeAttempts: 5, creditPoints: 0, totalSuccessfulViews: 0, unlockedFarmerIDs: [] };
+                }
+                
+                global.creditsDB[phone].creditPoints += points;
+                
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ success: true, profile: global.creditsDB[phone], message: `Added ${points} points successfully!` }));
+            } catch (e) {
+                res.writeHead(400, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ success: false, error: e.message }));
             }
         });
         return;

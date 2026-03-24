@@ -143,6 +143,11 @@ async function calculateCosts() {
         };
         localStorage.setItem('bharatfarm_session', JSON.stringify(sessionData));
         
+        if (typeof logActivity === 'function') {
+            logActivity('calculation', `Calculated cost for ${landSize.toFixed(2)} acre(s) of ${crop.name}`, `Est. Profit: ${profitMargin}%`);
+            updateUserStatistic('calculations');
+        }
+        
         if (typeof updateDashboard === 'function') updateDashboard();
         
     } catch (e) {

@@ -103,6 +103,11 @@ async function analyzeLeaf() {
             treatList.innerHTML = '';
         }
 
+        if (typeof logActivity === 'function') {
+            logActivity('scan', 'Plant leaf scanned via AI', isHealthy ? 'Healthy Plant' : `Detected ${result.name}`);
+            updateUserStatistic('totalScans');
+        }
+
         loadingEl.classList.add('hidden');
 
     } catch (error) {

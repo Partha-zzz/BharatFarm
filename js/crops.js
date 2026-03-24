@@ -504,11 +504,21 @@ async function selectCrop(crop) {
         if (aiInsightsPanel && aiTextEl && fullData.roadmap) {
             aiTextEl.innerHTML = buildRoadmapInsightsHTML(fullData);
         }
+
+        if (typeof logActivity === 'function') {
+            logActivity('crop', 'Researched crop: ' + crop.commonName);
+            updateUserStatistic('cropsTracked');
+        }
     } catch (err) {
         console.warn('Unified crop data fetch failed:', err);
         if (aiInsightsPanel) aiInsightsPanel.style.display = 'none';
         // Fallback: generate roadmap with old method
         if (window.generateRoadmap) generateRoadmap(crop.id);
+        
+        if (typeof logActivity === 'function') {
+            logActivity('crop', 'Researched crop: ' + crop.commonName);
+            updateUserStatistic('cropsTracked');
+        }
     }
 
     // Update calculator

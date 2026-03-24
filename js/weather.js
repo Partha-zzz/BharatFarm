@@ -5,7 +5,7 @@
 const CONFIG = {
     WEATHER_API_BASE: 'https://api.open-meteo.com/v1/forecast',
     GEOCODING_API_BASE: 'https://geocoding-api.open-meteo.com/v1/search',
-    DEFAULT_LOCATION: { lat: 22.6624, lon: 87.734, name: 'Jhargram' } // Default map
+    DEFAULT_LOCATION: { lat: 22.0667, lon: 88.0698, name: 'Haldia' } // Default map
     // Future API keys can be added here securely when moving to a paid plan.
 };
 
@@ -59,6 +59,13 @@ function updateWeatherUI(location) {
     } else {
         alertDiv.className = 'weather-alert safe';
         alertDiv.innerHTML = `<i class="fas fa-check-circle"></i><div><h3>SAFE for Farming Activities</h3><p>Weather conditions are suitable for farming.</p></div>`;
+    }
+
+    window.lastWeatherLogged = window.lastWeatherLogged || 0;
+    if (typeof logActivity === 'function' && Date.now() - window.lastWeatherLogged > 60000) {
+        logActivity('weather', 'Checked weather for ' + location);
+        updateUserStatistic('weatherChecks');
+        window.lastWeatherLogged = Date.now();
     }
 
     if (typeof updateDashboard === 'function') {
@@ -133,7 +140,9 @@ function autoDetectLocation() {
     if (navigator.geolocation) {
         document.getElementById('weatherLoading').classList.remove('hidden');
         document.getElementById('weatherContent').style.display = 'none';
-        document.getElementById('locationInput').value = 'Detecting location...';
+        
+        const locInput = document.getElementById('locationInput');
+        if (locInput) locInput.value = 'Detecting location...';
 
         navigator.geolocation.getCurrentPosition(
             async (position) => {
@@ -145,11 +154,12 @@ function autoDetectLocation() {
             },
             (error) => {
                 console.log('Geolocation error:', error.message);
-                document.getElementById('locationInput').value = '';
+                if (locInput) locInput.value = '';
                 document.getElementById('weatherLoading').classList.add('hidden');
                 document.getElementById('weatherContent').style.display = 'block';
                 fetchWeatherByCoords(CONFIG.DEFAULT_LOCATION.lat, CONFIG.DEFAULT_LOCATION.lon, CONFIG.DEFAULT_LOCATION.name);
-            }
+            },
+            { enableHighAccuracy: true }
         );
     } else {
         fetchWeatherByCoords(CONFIG.DEFAULT_LOCATION.lat, CONFIG.DEFAULT_LOCATION.lon, CONFIG.DEFAULT_LOCATION.name);
@@ -237,9 +247,9 @@ async function fetchWeatherByCoords(lat, lon, locationName) {
 
         const data = await res.json();
         
-        // Update marketplace location map link
+        // Update marketplace location map link only if it is currently empty
         const mapInput = document.getElementById('locationMapInput');
-        if (mapInput) {
+        if (mapInput && !mapInput.value.trim()) {
             mapInput.value = `https://www.google.com/maps?q=${lat},${lon}`;
         }
         

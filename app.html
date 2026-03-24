@@ -38,10 +38,13 @@
     <link rel="stylesheet" href="css/section-backgrounds.css">
     <link rel="stylesheet" href="css/mobile-ui.css">
     <link rel="stylesheet" href="css/footer.css">
+    <link rel="stylesheet" href="css/schemes.css">
     <script src="js/subscription.js" defer></script>
     <script src="js/marketplaceData.js" defer></script>
     <script src="js/marketplace.js" defer></script>
     <script src="js/cart.js" defer></script>
+    <script src="js/schemes.js" defer></script>
+    <script src="js/credits.js" defer></script>
 </head>
 
 <body>
@@ -283,12 +286,13 @@
                         <div class="price">₹0<span>/month</span></div>
                     </div>
                     <ul class="features-list">
-                        <li><i class="fas fa-check"></i> Basic Dashboard</li>
-                        <li><i class="fas fa-check"></i> Weather Updates</li>
-                        <li><i class="fas fa-check"></i> Cost Calculator</li>
-                        <li class="disabled"><i class="fas fa-times"></i> Leaf Disease Scanner</li>
-                        <li class="disabled"><i class="fas fa-times"></i> Detailed Activity Roadmap</li>
-                        <li class="disabled"><i class="fas fa-times"></i> Expert Support</li>
+                        <li id="freeDashboard"><i class="fas fa-check"></i> Basic Dashboard</li>
+                        <li id="freeWeather"><i class="fas fa-check"></i> Weather Updates</li>
+                        <li id="freeCalculator"><i class="fas fa-check"></i> Cost Calculator</li>
+                        <li id="freeMarketplace"><i class="fas fa-check"></i> Browse Marketplace</li>
+                        <li id="lockedLeafScanner" class="disabled"><i class="fas fa-times"></i> Leaf Disease Scanner</li>
+                        <li id="lockedRoadmap" class="disabled"><i class="fas fa-times"></i> Detailed Activity Roadmap</li>
+                        <li id="lockedSupport" class="disabled"><i class="fas fa-times"></i> Expert Support</li>
                     </ul>
                     <button class="btn btn-outline btn-block disabled-btn">Current Plan</button>
                 </div>
@@ -301,12 +305,15 @@
                         <div class="price">₹49<span>/month</span></div>
                     </div>
                     <ul class="features-list">
-                        <li><i class="fas fa-check-circle"></i> <strong>Leaf Disease Scanner</strong></li>
-                        <li><i class="fas fa-check-circle"></i> <strong>Farming Activity Roadmap</strong></li>
-                        <li><i class="fas fa-check"></i> Advanced Weather Alerts</li>
-                        <li><i class="fas fa-check"></i> Revenue Predictions</li>
-                        <li><i class="fas fa-check"></i> Priority Support</li>
-                        <li><i class="fas fa-check"></i> Ad-free Experience</li>
+                        <li id="premiumLeafScanner"><i class="fas fa-check-circle"></i> <strong>Leaf Disease Scanner</strong></li>
+                        <li id="premiumRoadmap"><i class="fas fa-check-circle"></i> <strong>Farming Activity Roadmap</strong></li>
+                        <li id="premiumMarketplace"><i class="fas fa-check-circle"></i> <strong>AI-Driven Marketplace</strong></li>
+                        <li id="premiumTrade"><i class="fas fa-check"></i> Direct-to-Buyer Trade</li>
+                        <li id="premiumCommission"><i class="fas fa-check"></i> Zero Commission Sales</li>
+                        <li id="premiumWeather"><i class="fas fa-check"></i> Advanced Weather Alerts</li>
+                        <li id="premiumRevenue"><i class="fas fa-check"></i> Revenue Predictions</li>
+                        <li id="premiumSupport"><i class="fas fa-check"></i> Priority Support</li>
+                        <li id="premiumAdFree"><i class="fas fa-check"></i> Ad-free Experience</li>
                     </ul>
                     <button class="btn btn-primary btn-block glow-effect" onclick="showPaymentModal()">Subscribe
                         Now!</button>
@@ -440,6 +447,9 @@
                     <button class="subscription-btn" onclick="openSubscription()" title="Go Premium">
                         <i class="fas fa-crown"></i> Premium
                     </button>
+                    <button id="creditBadge" class="subscription-btn" style="display:none; background: #fff8e1; color: #f57f17; border-color: #ffe082;" onclick="showRechargeModal()" title="Credit Balance">
+                        <span id="creditBalance"><i class="fas fa-coins"></i> 0 pts</span>
+                    </button>
                     <button class="logout-btn" onclick="handleLogout()">
                         <i class="fas fa-sign-out-alt"></i> Logout
                     </button>
@@ -466,7 +476,7 @@
                     </div>
                 </div>
 
-                <div class="grid grid-5">
+                <div class="dashboard-grid">
                     <div class="card stat-card" onclick="showSection('weather')">
                         <div class="icon weather"><i class="fas fa-cloud-sun"></i></div>
                         <h3>Weather Status</h3>
@@ -503,6 +513,13 @@
                         <h3>Marketplace</h3>
                         <div class="value">Buy & Sell</div>
                         <div class="status safe" style="color: #2e7d32; font-weight: 600;">Open</div>
+                    </div>
+                    <div class="card stat-card" onclick="showSection('schemes')">
+                        <div class="icon schemes" style="background: #e0f2f1; color: #00897b;"><i
+                                class="fas fa-landmark"></i></div>
+                        <h3>Govt Schemes</h3>
+                        <div class="value">Check Eligibility</div>
+                        <div class="status safe" style="color: #00897b; font-weight: 600;">Matchmaker</div>
                     </div>
                 </div>
 
@@ -778,6 +795,106 @@
                                     <p>Your published listings will appear here</p>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </section>
+
+            <!-- SCHEMES SECTION -->
+            <section id="schemes">
+                <button class="section-back-btn" onclick="goBack()" title="Go Back">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <div class="schemes-container">
+                    <div class="schemes-header">
+                        <h2><i class="fas fa-landmark" style="color: var(--primary);"></i> Scheme Matchmaker</h2>
+                        <p>Find government agricultural schemes you are eligible for</p>
+                    </div>
+
+                    <div id="schemesWizard" class="schemes-wizard">
+                        <div class="wizard-progress">
+                            <div class="progress-step active">1</div>
+                            <div class="progress-step">2</div>
+                            <div class="progress-step">3</div>
+                        </div>
+
+                        <!-- Step 1: Land -->
+                        <div id="schemeStep1" class="wizard-step active">
+                            <h3 class="step-title"><i class="fas fa-map"></i> Land Details</h3>
+                            <div class="schemes-form-group">
+                                <label>How much cultivable land do you own? (in Acres)</label>
+                                <input type="number" id="schemeLandSize" placeholder="e.g. 2.5" min="0" step="0.1">
+                                <small style="color: var(--text-muted); margin-top: 5px; display: block;">Enter 0 if you are a landless farmer or sharecropper.</small>
+                            </div>
+                            <div class="wizard-actions" style="justify-content: flex-end;">
+                                <button class="btn-wizard btn-next" onclick="nextSchemesStep()">Next <i class="fas fa-arrow-right"></i></button>
+                            </div>
+                        </div>
+
+                        <!-- Step 2: Location -->
+                        <div id="schemeStep2" class="wizard-step">
+                            <h3 class="step-title"><i class="fas fa-map-marker-alt"></i> Location</h3>
+                            <div class="schemes-form-group">
+                                <label>State</label>
+                                <select id="schemeStateSelect">
+                                    <option value="" disabled selected>Select State</option>
+                                    <option value="Andhra Pradesh">Andhra Pradesh</option>
+                                    <option value="Bihar">Bihar</option>
+                                    <option value="Gujarat">Gujarat</option>
+                                    <option value="Haryana">Haryana</option>
+                                    <option value="Karnataka">Karnataka</option>
+                                    <option value="Madhya Pradesh">Madhya Pradesh</option>
+                                    <option value="Maharashtra">Maharashtra</option>
+                                    <option value="Punjab">Punjab</option>
+                                    <option value="Rajasthan">Rajasthan</option>
+                                    <option value="Tamil Nadu">Tamil Nadu</option>
+                                    <option value="Uttar Pradesh">Uttar Pradesh</option>
+                                    <option value="West Bengal">West Bengal</option>
+                                </select>
+                            </div>
+                            <div class="wizard-actions">
+                                <button class="btn-wizard btn-prev" onclick="prevSchemesStep()"><i class="fas fa-arrow-left"></i> Back</button>
+                                <button class="btn-wizard btn-next" onclick="nextSchemesStep()">Next <i class="fas fa-arrow-right"></i></button>
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Crop -->
+                        <div id="schemeStep3" class="wizard-step">
+                            <h3 class="step-title"><i class="fas fa-seedling"></i> Crop Information</h3>
+                            <div class="schemes-form-group">
+                                <label>What is your primary crop? (Optional)</label>
+                                <input type="text" id="schemeCropSelect" placeholder="e.g. Rice, Wheat, Potato">
+                            </div>
+                            <div class="wizard-actions">
+                                <button class="btn-wizard btn-prev" onclick="prevSchemesStep()"><i class="fas fa-arrow-left"></i> Back</button>
+                                <button class="btn-wizard btn-next" onclick="submitSchemesForm()"><i class="fas fa-search"></i> Find Schemes</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Loader -->
+                    <div id="schemesLoader" class="schemes-loader">
+                        <div class="spinner-wrap"></div>
+                        <h3 id="schemesLoaderTitle">Searching...</h3>
+                        <p style="color: var(--text-secondary); display: none;" id="schemesLoaderMsg"></p>
+                        <div class="loader-ai-dots" style="margin-top: 12px;">
+                            <span></span><span></span><span></span>
+                        </div>
+                    </div>
+
+
+                    <!-- Results Dashboard -->
+                    <div id="schemesResults" class="schemes-results">
+                        <div class="results-header">
+                            <h3><i class="fas fa-clipboard-check" style="color: var(--primary);"></i> Eligible Schemes</h3>
+                            <span id="matchedCount" style="background: rgba(76,175,80,0.1); color: var(--primary); padding: 5px 15px; border-radius: 20px; font-weight: 600;">0 Matched</span>
+                        </div>
+                        <div id="schemesGrid" class="results-grid">
+                            <!-- Cards inserted via JS -->
+                        </div>
+                        <div style="text-align: center; margin-top: 30px;">
+                            <button class="btn btn-outline" style="padding: 10px 20px; font-weight: 600;" onclick="resetSchemesForm()"><i class="fas fa-redo"></i> Check Another Profile</button>
                         </div>
                     </div>
                 </div>
@@ -1697,6 +1814,36 @@
                 <p>Made with <i class="fas fa-heart" style="color: #e74c3c;"></i> for Indian Farmers</p>
             </div>
         </div>
+    </div> <!-- Close About container if any? Actually just appending -->
+
+    <!-- RECHARGE MODAL -->
+    <div class="modal-overlay" id="rechargeModal" style="display: none; z-index: 2000;">
+        <div class="modal-content subscription-modal" style="max-width: 400px;">
+            <button class="close-modal-btn" onclick="closeRechargeModal()"><i class="fas fa-times"></i></button>
+            <div class="subscription-header" style="margin-bottom: 20px;">
+                <h2><i class="fas fa-coins" style="color:#fbc02d;"></i> Purchase Credits</h2>
+                <p>Unlock Farmer Contacts Instantly</p>
+            </div>
+
+            <div class="pricing-card premium" style="transform: none; text-align: center; border: 2px solid #fbc02d;">
+                <div class="popular-tag" style="background: #fbc02d;">SPECIAL OFFER</div>
+                <div class="plan-header">
+                    <h3>100 Credit Points</h3>
+                    <div class="price">₹9<span>/pack</span></div>
+                </div>
+                <ul class="features-list" style="text-align: left; margin: 15px 0 25px 0;">
+                    <li><i class="fas fa-check-circle" style="color:var(--success);"></i> Valid for Lifetime</li>
+                    <li><i class="fas fa-check-circle" style="color:var(--success);"></i> Instantly Unlock 5 Contacts</li>
+                    <li><i class="fas fa-check-circle" style="color:var(--success);"></i> Build Trust with Sellers</li>
+                </ul>
+                <button id="buyCreditsBtn" class="btn btn-primary btn-block glow-effect" style="background: #fbc02d; color: #000; border: none; font-weight: 600;" onclick="purchaseCredits()">
+                    <i class="fas fa-bolt"></i> Pay ₹9 via UPI
+                </button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
     </div>
 </body>
 

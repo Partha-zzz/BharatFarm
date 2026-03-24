@@ -121,11 +121,17 @@ function getCurrentLocationMap() {
             mapInput.value = `https://www.google.com/maps?q=${lat},${lng}`;
             mapInput.placeholder = "Paste Map Link or Get GPS";
         }, error => {
-            alert("Please allow location access to automatically pin your farm.");
+            alert("Unable to fetch exact location. Falling back to default.");
+            const lat = 22.0667;
+            const lng = 88.0698;
+            mapInput.value = `https://www.google.com/maps?q=${lat},${lng}`;
             mapInput.placeholder = "Paste Map Link or Get GPS";
         }, { enableHighAccuracy: true });
     } else {
         alert("Geolocation is not supported by your browser.");
+        const lat = 22.0667;
+        const lng = 88.0698;
+        mapInput.value = `https://www.google.com/maps?q=${lat},${lng}`;
     }
 }
 
@@ -291,7 +297,26 @@ function renderMarketplaceProducts() {
         return;
     }
 
-    grid.innerHTML = filtered.map(p => `
+    grid.innerHTML = filtered.map(p => {
+        let contactHtml = '';
+        if (typeof currentCreditProfile !== 'undefined' && currentCreditProfile && currentCreditProfile.unlockedFarmerIDs.includes(p.id)) {
+            // Already unlocked
+            contactHtml = `
+                <div style="display:flex; flex-direction:column; gap: 8px; width:100%; animation: fadeIn 0.4s ease-out; margin-top: 5px;">
+                    <a href="https://wa.me/${p.whatsapp || p.contact.replace(/\\D/g, '')}" target="_blank" style="background: linear-gradient(135deg, #25D366, #128C7E); color: white; border-radius: 12px; padding: 12px; text-decoration: none; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3);">
+                        <i class="fab fa-whatsapp" style="font-size: 1.2rem;"></i> WhatsApp Chat
+                    </a>
+                    <a href="tel:${p.contact}" style="background: linear-gradient(135deg, #007bff, #0056b3); color: white; border-radius: 12px; padding: 12px; text-decoration: none; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);">
+                        <i class="fas fa-phone-alt" style="font-size: 1.1rem;"></i> Call Farmer
+                    </a>
+                </div>
+            `;
+        } else {
+            // Locked
+            contactHtml = `<button id="view-btn-${p.id}" class="p-btn p-btn-view-contact" style="width:100%; background:#fbc02d; color:#000; border:none; border-radius:8px; padding:10px; font-weight:600; cursor:pointer;" onclick="handleViewContact('${p.id}', '${p.contact}', '${p.whatsapp || p.contact.replace(/\\D/g, '')}')"><i class="fas fa-eye"></i> View Contact</button>`;
+        }
+
+        return `
         <div class="premium-card">
             ${p.verified ? '<div class="verified-seal" title="Govt Verified"><i class="fas fa-shield-alt"></i></div>' : ''}
             <div class="premium-card-img-wrapper">
@@ -306,26 +331,24 @@ function renderMarketplaceProducts() {
                 <div class="premium-card-title">${p.name}</div>
                 <div class="premium-card-info">
                     <div class="info-badge"><i class="fas fa-user-tie"></i> ${p.farmerName || 'Registered Farmer'}</div>
-                    <div class="info-badge"><i class="fas fa-map-marker-alt"></i> ${p.location}</div>
+                    ${p.mapLink ? 
+                        `<a href="${p.mapLink.startsWith('http') ? p.mapLink : 'https://' + p.mapLink}" target="_blank" class="info-badge" style="text-decoration:none; color:inherit; cursor:pointer; background:#e3f2fd; border-color:#90caf9;" title="View exact location on Google Maps"><i class="fas fa-map-marked-alt" style="color:#1976d2;"></i> ${p.location}</a>` :
+                        `<div class="info-badge"><i class="fas fa-map-marker-alt"></i> ${p.location}</div>`
+                    }
                     <div class="info-badge"><i class="fas fa-cubes"></i> ${p.quantity}</div>
                 </div>
                 <div class="premium-card-footer">
                     <div class="premium-card-price">&#8377;${p.price.toLocaleString('en-IN')}<span>/${p.unit}</span></div>
-                    <div class="premium-action-btns">
-                        <button class="p-btn p-btn-cart" onclick="addToCart('${p.id}')" title="Add to Cart">
-                            <i class="fas fa-cart-plus"></i>
+                    <div class="premium-action-btns" id="contact-actions-${p.id}" style="display:flex; flex-direction:column; gap:8px;">
+                        <button class="p-btn p-btn-cart" style="width:100%; border-radius:8px;" onclick="addToCart('${p.id}')" title="Add to Cart">
+                            <i class="fas fa-cart-plus"></i> Add to Cart
                         </button>
-                        <a href="https://wa.me/${p.whatsapp || p.contact.replace(/\D/g, '')}"
-                           target="_blank" class="p-btn p-btn-wa" title="WhatsApp">
-                            <i class="fab fa-whatsapp"></i>
-                        </a>
-                        <a href="tel:${p.contact}" class="p-btn p-btn-call" title="Call">
-                            <i class="fas fa-phone"></i>
-                        </a>
+                        ${contactHtml}
                     </div>
                 </div>
             </div>
-        </div>`).join('');
+        </div>`;
+    }).join('');
 }
 
 // ─── Render Farmer's Own Listings ────────────────────────────────────────────
