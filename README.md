@@ -128,10 +128,10 @@ By adopting the BharatFarm ecosystem, a typical rural farming community can expe
 
 | Developer | Role | Profile |
 | :--- | :--- | :--- |
-| **Souvik Dey** | Front End/Web Designer & Problem Statement Originator | [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?logo=linkedin)](https://www.linkedin.com/in/souvik-dey-400497366/) |
+| **Souvik Dey** | Lead Developer,Backend & Front End/Web Designer & Problem Statement Originator | [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?logo=linkedin)](https://www.linkedin.com/in/souvik-dey-400497366/) |
 | **Partha Sarathi Sarkar**| Full Stack & GenAI Prompt Engineer | [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?logo=linkedin)](https://www.linkedin.com/in/partha-sarathi-sarkar-7385a8367/) |
-| **Samrat Chatterjee** | Backend Lead & AI Integration Architect | [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?logo=linkedin)](https://www.linkedin.com/in/samrat-chatterjee-2aa543368/) |
-| **Snehasis Chakroborty**| UI/UX Motion Designer | [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?logo=linkedin)](https://www.linkedin.com/in/snehasis-chakraborty-2b68823a6/) |
+| **Samrat Chatterjee** | AI Integration Architect | [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?logo=linkedin)](https://www.linkedin.com/in/samrat-chatterjee-2aa543368/) |
+| **Snehasis Chakroborty**| UI/UX Motion Designer & Prompt Engineer | [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?logo=linkedin)](https://www.linkedin.com/in/snehasis-chakraborty-2b68823a6/) |
 
 ---
 
