@@ -42,11 +42,16 @@
 - **🍃 AI Leaf Scanner:** Diagnoses plant diseases with human-like precision, recommending exact fertilizers and treatments instantly.
 - **📚 Crop Health Wiki:** A comprehensive, searchable database of 30+ crop diseases, pests, and soil conditions seamlessly integrated with curated, localized treatment recommendations.
 
-### 2. 🌍 Localization & Accessibility
+### 2. 🎮 Farmer Engagement System
+- **📈 Gamified Progress:** Empowers farmers by rewarding educational interactions. Users earn **XP, Coins, and Badges** natively stored in the ecosystem.
+- **🧠 Daily Agri-Quizzes:** Features an interactive daily quiz system testing knowledge on soil health, pest control, and market strategy, complete with rich GSAP animations and explanations.
+- **🤝 Cross-Feature Hooks:** Integrating directly into the platform, users are automatically awarded XP for utilizing the AI Leaf Scanner and KrishiBot.
+
+### 3. 🌍 Localization & Accessibility
 - **🇮🇳 Native First:** Full UI localization for the major agricultural hubs of India. Switch between English, Hindi, and Bengali with a single click.
 - **Accessibility Tokens:** High-contrast design and voice-first logic ensure that every farmer, regardless of literacy level or visual ability, can use the platform.
 
-### 3. 📊 Precision Analytics
+### 4. 📊 Precision Analytics
 - **🌤️ Smart Weather:** Localized weather data with proximity-based safety alerts for farming operations.
 - **💰 Financial Suite:** Professional cost and revenue calculators supporting local Indian land measurement units (**Acre, Bigha, Katha**).
 - **🗺️ Activity Roadmap:** AI-generated day-by-day schedules tailored specifically to the selected crop's lifecycle.
