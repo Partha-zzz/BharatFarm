@@ -25,7 +25,7 @@ async function analyzeLeaf() {
     if (prevDebug) prevDebug.remove();
 
     try {
-        console.log('Sending image to Gemini API...');
+
 
         // 1. Get Base64 image data from the UI Image Element
         const base64Image = imgElement.src;
@@ -51,7 +51,7 @@ async function analyzeLeaf() {
                 break;
             } catch (err) {
                 if (retries === 0) throw err;
-                console.log("Fetch failed, retrying in 2 seconds...");
+                console.warn("Fetch failed, retrying in 2 seconds...");
                 await new Promise(r => setTimeout(r, 2000));
                 retries--;
             }
@@ -62,7 +62,7 @@ async function analyzeLeaf() {
         }
 
         const data = await response.json();
-        console.log('Gemini Predictions:', data);
+
 
         if (!data.success) {
             showError(data.error || "Could not analyze the leaf image.");

@@ -596,7 +596,7 @@ function selectLanguage(lang) {
     // Apply translations
     updateLanguage();
     
-    console.log('Language selected:', lang);
+
 }
 
 // ============================================
@@ -740,7 +740,7 @@ function updateLanguage() {
     // Update Schemes Section
     updateSchemesSection(t);
     
-    console.log('Language updated to:', currentLanguage);
+
 }
 
 // ============================================
@@ -940,5 +940,4 @@ window.updateLanguage = updateLanguage;
 window.updateSchemesSection = updateSchemesSection;
 window.currentLanguage = currentLanguage;
 window.translations = translations;
-
-console.log('Language.js loaded successfully');
+

@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="css/auth.css">
     <link rel="stylesheet" href="css/header.css">
     <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/dashboard-mobile.css">
     <link rel="stylesheet" href="css/scanner.css">
     <link rel="stylesheet" href="css/weather.css">
     <link rel="stylesheet" href="css/crops.css">
@@ -29,10 +30,10 @@
     <link rel="stylesheet" href="css/about.css">
     <link rel="stylesheet" href="css/user-guide.css">
     <link rel="stylesheet" href="css/profile.css">
-    <link rel="stylesheet" href="css/session-dashboard.css">
+
     <link rel="stylesheet" href="css/subscription.css">
     <link rel="stylesheet" href="css/responsive.css">
-    <link rel="stylesheet" href="css/mobile.css">
+
     <link rel="stylesheet" href="css/chatbot.css">
     <link rel="stylesheet" href="css/marketplace.css">
     <link rel="stylesheet" href="css/section-backgrounds.css">
@@ -458,70 +459,177 @@
         <main>
             <!-- DASHBOARD -->
             <section id="dashboard" class="active">
-                <div class="dashboard-hero"
-                    style="background-image: url('https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=1920&q=80'); background-size: cover; background-position: center; position: relative; padding: 4rem 2rem; border-radius: var(--border-radius-lg); overflow: hidden;">
-                    <!-- Dark overlay for better text readability -->
-                    <div
-                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, rgba(0, 0, 0, 0.6), rgba(0, 50, 0, 0.5)); z-index: 1;">
+
+                <!-- ── HERO ──────────────────────────────────── -->
+                <div class="dash-hero">
+                    <div class="dash-hero-bg">
+                        <img src="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=1920&q=80" alt="Farm" loading="eager">
                     </div>
-                    <!-- Content -->
-                    <div style="position: relative; z-index: 2;">
-                        <h2 style="color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.8);"><i
-                                class="fas fa-tractor"></i> Welcome, <span id="welcomeName">Farmer</span>!</h2>
-                        <p
-                            style="color: rgba(255,255,255,0.95); text-shadow: 1px 1px 3px rgba(0,0,0,0.8); font-size: 1.1rem;">
-                            Your smart farming companion for better crop planning and higher productivity</p>
+                    <div class="dash-hero-overlay"></div>
+
+                    <div class="dash-hero-content">
+                        <h2 class="dash-hero-title">
+                            Your AI Companion for<br>
+                            <span class="dash-hero-accent">Smarter Farming</span>
+                        </h2>
+                        <p class="dash-hero-sub">Welcome, <strong><span id="welcomeName">Farmer</span></strong>! Empowering Indian agriculture with real-time intelligence, voice-first
+                            assistance, and direct market access.</p>
+                        <div class="dash-hero-cta">
+                            <button class="dash-btn dash-btn-primary" onclick="showSection('crops')">
+                                <i class="fas fa-seedling"></i> Get Started
+                            </button>
+                            <button class="dash-btn dash-btn-outline" onclick="showSection('scanner')">
+                                <i class="fas fa-leaf"></i> Explore Ecosystem
+                            </button>
+                        </div>
                     </div>
                 </div>
 
-                <div class="dashboard-grid">
-                    <div class="card stat-card" onclick="showSection('weather')">
-                        <div class="icon weather"><i class="fas fa-cloud-sun"></i></div>
-                        <h3>Weather Status</h3>
-                        <div class="value" id="dashWeatherStatus">Loading...</div>
-                        <div class="status safe" id="dashWeatherSafety">Checking...</div>
+                <!-- Info cards row (positioned over hero on desktop, below on mobile) -->
+                <div class="dash-info-row">
+                    <div class="dash-float-card dash-float-weather" onclick="showSection('weather')">
+                        <div class="dash-float-icon"><i class="fas fa-cloud-sun-rain"></i></div>
+                        <div class="dash-float-body">
+                            <span class="dash-float-label">Weather Alert</span>
+                            <span class="dash-float-value" id="dashWeatherStatus">Loading...</span>
+                            <span class="dash-float-status" id="dashWeatherSafety">Checking...</span>
+                        </div>
                     </div>
-                    <div class="card stat-card" onclick="showSection('scanner')">
-                        <div class="icon scanner"><i class="fas fa-camera"></i></div>
-                        <h3>Leaf Scanner</h3>
-                        <div class="value">Scan Now</div>
-                        <div class="status safe">Detect Disease</div>
-                    </div>
-                    <div class="card stat-card" onclick="showSection('roadmap')">
-                        <div class="icon activity"><i class="fas fa-tasks"></i></div>
-                        <h3>Next Activity</h3>
-                        <div class="value" id="dashNextActivity">Select crop</div>
-                        <div class="status safe">View Roadmap</div>
-                    </div>
-                    <div class="card stat-card" onclick="showSection('calculator')">
-                        <div class="icon cost"><i class="fas fa-rupee-sign"></i></div>
-                        <h3>Input Cost</h3>
-                        <div class="value" id="dashTotalCost">-</div>
-                        <div class="status safe">Calculate</div>
-                    </div>
-                    <div class="card stat-card" onclick="showSection('calculator')">
-                        <div class="icon revenue"><i class="fas fa-chart-line"></i></div>
-                        <h3>Revenue</h3>
-                        <div class="value" id="dashRevenue">-</div>
-                        <div class="status safe">View Details</div>
-                    </div>
-                    <div class="card stat-card" onclick="showSection('marketplace')">
-                        <div class="icon marketplace" style="background: #e8f5e9; color: #2e7d32;"><i
-                                class="fas fa-store"></i></div>
-                        <h3>Marketplace</h3>
-                        <div class="value">Buy & Sell</div>
-                        <div class="status safe" style="color: #2e7d32; font-weight: 600;">Open</div>
-                    </div>
-                    <div class="card stat-card" onclick="showSection('schemes')">
-                        <div class="icon schemes" style="background: #e0f2f1; color: #00897b;"><i
-                                class="fas fa-landmark"></i></div>
-                        <h3>Govt Schemes</h3>
-                        <div class="value">Check Eligibility</div>
-                        <div class="status safe" style="color: #00897b; font-weight: 600;">Matchmaker</div>
+
+                    <div class="dash-float-card dash-float-soil" onclick="showSection('crops')" style="cursor:pointer">
+                        <div class="dash-float-icon"><i class="fas fa-heartbeat"></i></div>
+                        <div class="dash-float-body">
+                            <span class="dash-float-label">Next Activity</span>
+                            <span class="dash-float-value" id="dashNextActivity">Select crop</span>
+                            <span class="dash-float-status safe">View Roadmap</span>
+                        </div>
                     </div>
                 </div>
 
-                <div class="card">
+                <!-- ── FEATURE GRID ──────────────────────────── -->
+                <div class="dash-section-header">
+                    <span class="dash-section-tag">THE ECOSYSTEM</span>
+                    <h2 class="dash-section-title">Cultivating the Future</h2>
+                </div>
+
+                <div class="dash-feature-grid">
+
+                    <!-- KrishiBot -->
+                    <div class="dash-feature-card dash-card-krishibot" onclick="showSection('dashboard')">
+                        <div class="dash-feature-text">
+                            <h3>KrishiBot: Voice First AI</h3>
+                            <p>Talk to your farm. Get advice in your local dialect on irrigation, pest control, and market trends.</p>
+                            <div class="dash-waveform">
+                                <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+                            </div>
+                            <button class="dash-feature-cta" onclick="event.stopPropagation(); if(typeof openVoiceOverlay!=='undefined') openVoiceOverlay()">
+                                <i class="fas fa-microphone"></i><span class="cta-label"> Talk Now</span>
+                            </button>
+                        </div>
+                        <div class="dash-feature-visual dash-visual-krishibot">
+                            <img src="https://images.unsplash.com/photo-1615811361523-6bd03d7748e7?w=500&q=80" alt="Farmer using smartphone" loading="lazy">
+                        </div>
+                    </div>
+
+                    <!-- Leaf Scanner -->
+                    <div class="dash-feature-card dash-card-scanner" onclick="showSection('scanner')">
+                        <div class="dash-feature-visual dash-visual-scanner">
+                            <img src="https://images.unsplash.com/photo-1471193945509-9ad0617afabf?w=500&q=80" alt="Leaf disease scanning" loading="lazy">
+                        </div>
+                        <div class="dash-feature-text">
+                            <h3>Leaf Scanner</h3>
+                            <p>Instant Gemini-powered crop disease diagnosis from a single photograph.</p>
+                            <button class="dash-feature-cta" onclick="event.stopPropagation(); showSection('scanner')">
+                                <i class="fas fa-camera"></i> Launch Scan
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Smart Market -->
+                    <div class="dash-feature-card dash-card-market" onclick="showSection('marketplace')">
+                        <div class="dash-feature-text">
+                            <h3>Smart Market</h3>
+                            <p>Sell direct to urban clusters. Cut the middleman.</p>
+                            <div class="dash-market-avatars">
+                                <span class="dash-avatar">👨‍🌾</span>
+                                <span class="dash-avatar">👩‍🌾</span>
+                                <span class="dash-avatar">🧑‍🌾</span>
+                                <span class="dash-avatar-count">+89</span>
+                            </div>
+                            <button class="dash-feature-cta" onclick="event.stopPropagation(); showSection('marketplace')">
+                                <i class="fas fa-store"></i> Open Market
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Hyperlocal Analytics -->
+                    <div class="dash-feature-card dash-card-analytics" onclick="showSection('calculator')">
+                        <div class="dash-feature-text">
+                            <h3>Hyperlocal Analytics</h3>
+                            <p>Soil moisture, nutrient levels, and precision weather forecasting for your specific coordinates.</p>
+                            <div class="dash-analytics-stats">
+                                <div class="dash-stat-pill">
+                                    <span class="dash-stat-label">Input Cost</span>
+                                    <span class="dash-stat-value" id="dashTotalCost">-</span>
+                                </div>
+                                <div class="dash-stat-pill">
+                                    <span class="dash-stat-label">Revenue</span>
+                                    <span class="dash-stat-value" id="dashRevenue">-</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="dash-feature-visual dash-visual-analytics">
+                            <svg class="dash-chart-svg" viewBox="0 0 120 60" preserveAspectRatio="none">
+                                <polyline points="0,55 20,45 35,50 50,30 65,35 80,15 100,25 120,10" fill="none" stroke="rgba(76,175,80,0.6)" stroke-width="2"/>
+                                <polyline points="0,55 20,45 35,50 50,30 65,35 80,15 100,25 120,10" fill="url(#chartGrad)" stroke="none"/>
+                                <defs><linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(76,175,80,0.3)"/><stop offset="100%" stop-color="rgba(76,175,80,0)"/></linearGradient></defs>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Quick Links Row -->
+                    <div class="dash-feature-card dash-card-schemes" onclick="showSection('schemes')">
+                        <div class="dash-feature-text">
+                            <h3><i class="fas fa-landmark"></i> Govt Schemes</h3>
+                            <p>Check eligibility for PM-KISAN, PMFBY, and state-specific subsidies.</p>
+                            <button class="dash-feature-cta" onclick="event.stopPropagation(); showSection('schemes')">
+                                <i class="fas fa-search"></i> Matchmaker
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── IMPACT SECTION ── -->
+                <div class="dash-impact-section">
+                    <div class="dash-impact-text">
+                        <h2 class="dash-impact-title">From Soil to<br>Soul.</h2>
+                        <p class="dash-impact-desc">We don't just provide data; we provide a bridge between the
+                            hardworking farmer and the conscious consumer. Join an ecosystem that respects the land and
+                            rewards the labor.</p>
+                        <div class="dash-impact-stats">
+                            <div class="dash-impact-stat">
+                                <div class="dash-impact-stat-icon"><i class="fas fa-leaf"></i></div>
+                                <div>
+                                    <strong>Sustainability First</strong>
+                                    <p>Reducing fertilizer waste by 30% through AI precision</p>
+                                </div>
+                            </div>
+                            <div class="dash-impact-stat">
+                                <div class="dash-impact-stat-icon"><i class="fas fa-rupee-sign"></i></div>
+                                <div>
+                                    <strong>Fair Pricing</strong>
+                                    <p>Direct distribution ensures farmers get 85% of retail price</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dash-impact-image">
+                        <img src="https://images.unsplash.com/photo-1473773508845-188df298d2d1?w=800&q=80" alt="Sustainable Farming" loading="lazy">
+                    </div>
+                </div>
+
+                <!-- ── QUICK TIPS & SESSION (existing) ── -->
+                <div class="card dash-tips-card">
                     <div class="card-header"><i class="fas fa-lightbulb"></i>
                         <h2>Quick Tips for Today</h2>
                     </div>

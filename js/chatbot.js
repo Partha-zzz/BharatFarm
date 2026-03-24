@@ -407,7 +407,7 @@ Goal: Act as a friendly, knowledgeable, and reliable digital farming assistant f
               break;
             } catch (err) {
               if (retries === 0) throw err;
-              console.log("[KrishiBot] Fetch failed, retrying in 2 seconds...");
+              console.warn("[KrishiBot] Fetch failed, retrying in 2 seconds...");
               await new Promise(r => setTimeout(r, 2000));
               retries--;
             }

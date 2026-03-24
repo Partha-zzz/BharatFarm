@@ -92,7 +92,7 @@ function initUserGuide() {
         startBtn.title = 'Start User Guide';
         startBtn.onclick = function () { startGuide(); };
         document.body.appendChild(startBtn);
-        console.log('User guide button created');
+
     }
 
     // Auto-start guide for new users
@@ -323,4 +323,4 @@ window.prevGuideStep = prevGuideStep;
 window.endGuide = endGuide;
 window.filterActivities = filterActivities;
 
-console.log('User-guide.js loaded - functions available');
+
