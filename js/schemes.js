@@ -167,10 +167,10 @@ function renderMatchedSchemes(schemes, state, landSize, crop, isFallback = false
     }
 
     const fallbackBadge = isFallback
-        ? `<div style="background: rgba(76,175,80,0.08); color: #2e7d32; border: 1px solid rgba(76,175,80,0.2); border-radius: 10px; padding: 12px 18px; margin-bottom: 24px; font-size: 0.95rem; display: flex; align-items: center; gap: 10px; font-weight: 500;">
+        ? `<div style="grid-column: 1 / -1; background: rgba(76,175,80,0.08); color: #2e7d32; border: 1px solid rgba(76,175,80,0.2); border-radius: 10px; padding: 12px 18px; margin-bottom: 24px; font-size: 0.95rem; display: flex; align-items: center; gap: 10px; font-weight: 500;">
                <i class="fas fa-info-circle" style="color: var(--primary);"></i> Based on your profile, here are the applicable government schemes.
            </div>`
-        : `<div style="background: linear-gradient(90deg, rgba(76,175,80,0.1), rgba(33,150,243,0.1)); border: 1px solid rgba(76,175,80,0.25); border-radius: 12px; padding: 12px 18px; margin-bottom: 24px; font-size: 0.95rem; display: flex; align-items: center; gap: 12px; color: #1b5e20; font-weight: 500;">
+        : `<div style="grid-column: 1 / -1; background: linear-gradient(90deg, rgba(76,175,80,0.1), rgba(33,150,243,0.1)); border: 1px solid rgba(76,175,80,0.25); border-radius: 12px; padding: 12px 18px; margin-bottom: 24px; font-size: 0.95rem; display: flex; align-items: center; gap: 12px; color: #1b5e20; font-weight: 500;">
                <i class="fas fa-magic" style="color: #2196f3;"></i> Smart-Matched schemes specifically for <strong style="margin: 0 4px; color: #2e7d32;">${state}</strong> farmers.
            </div>`;
 
@@ -281,7 +281,28 @@ function renderError(message) {
 
 function trackSchemeApply(id, name) {
     console.log(`[Schemes] User clicked Apply for: ${name} (${id})`);
-    // Could be extended to analytics
+    
+    // Save to local analytics
+    try {
+        let appliedSchemes = JSON.parse(localStorage.getItem('appliedSchemes') || '[]');
+        
+        // Prevent duplicate entries for the exact same scheme click today
+        const today = new Date().toISOString().split('T')[0];
+        const existing = appliedSchemes.find(s => s.id === id && s.date === today);
+        
+        if (!existing) {
+            appliedSchemes.push({
+                id: id,
+                name: name,
+                date: today,
+                timestamp: new Date().toISOString()
+            });
+            localStorage.setItem('appliedSchemes', JSON.stringify(appliedSchemes));
+            console.log(`[Analytics] Tracked application for: ${name}`);
+        }
+    } catch(e) {
+        console.error('[Analytics] Error saving scheme application data:', e);
+    }
 }
 
 // ── Toast Helper ─────────────────────────────────────────────
