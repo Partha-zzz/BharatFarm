@@ -21,12 +21,6 @@
 <div align="center">
   <img src="assets/screenshots/dashboard.png" width="800" alt="BharatFarm Dashboard">
   <p><i>The Premium AI-Powered Dashboard featuring real-time KrishiBot and Leaf Scanner</i></p>
-  
-  <br/>
-  
-  <img src="assets/screenshots/mobile-bot.png" width="300" alt="Mobile Voice Assistant">
-  <p><i>Multilingual KrishiBot: Voice-First Intelligence for every farmer</i></p>
-</div>
 
 ---
 
