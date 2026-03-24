@@ -768,6 +768,13 @@ function showLanguageModal() {
     }
 }
 
+function closeLanguageModal() {
+    const modal = document.getElementById('languageModal');
+    if (modal) {
+        modal.classList.remove('active');
+    }
+}
+
 // ============================================
 // SELECT LANGUAGE
 // ============================================
@@ -1255,6 +1262,7 @@ function updateMarketplaceSection(t) {
 // ============================================
 window.selectLanguage = selectLanguage;
 window.showLanguageModal = showLanguageModal;
+window.closeLanguageModal = closeLanguageModal;
 window.updateLanguage = updateLanguage;
 window.updateSchemesSection = updateSchemesSection;
 window.currentLanguage = currentLanguage;

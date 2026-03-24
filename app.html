@@ -40,6 +40,7 @@
     <link rel="stylesheet" href="css/mobile-ui.css">
     <link rel="stylesheet" href="css/footer.css">
     <link rel="stylesheet" href="css/schemes.css">
+    <link rel="stylesheet" href="css/wiki.css">
     <script src="js/subscription.js" defer></script>
     <script src="js/marketplaceData.js" defer></script>
     <script src="js/marketplace.js" defer></script>
@@ -240,8 +241,9 @@
         </div>
     </div>
     <!-- LANGUAGE SELECTION MODAL -->
-    <div class="language-modal" id="languageModal">
+    <div class="language-modal" id="languageModal" onclick="if(event.target===this) closeLanguageModal()">
         <div class="language-box">
+            <button class="close-modal-btn" style="position: absolute; right: 20px; top: 20px; background: none; border: none; font-size: 1.5rem; color: var(--text-muted); cursor: pointer;" onclick="closeLanguageModal()"><i class="fas fa-times"></i></button>
             <h2><i class="fas fa-globe"></i> Select Language</h2>
             <p>Choose your preferred language / अपनी भाषा चुनें / আপনার ভাষা নির্বাচন করুন</p>
             <div class="language-options">
@@ -582,6 +584,17 @@
                                 <polyline points="0,55 20,45 35,50 50,30 65,35 80,15 100,25 120,10" fill="url(#chartGrad)" stroke="none"/>
                                 <defs><linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(76,175,80,0.3)"/><stop offset="100%" stop-color="rgba(76,175,80,0)"/></linearGradient></defs>
                             </svg>
+                        </div>
+                    </div>
+
+                    <!-- Crop Health Wiki -->
+                    <div class="dash-feature-card dash-card-wiki" onclick="showSection('wiki')">
+                        <div class="dash-feature-text">
+                            <h3><i class="fas fa-book-medical"></i> <span id="dashCwTitle">Crop Health Wiki</span></h3>
+                            <p id="dashCwDesc">AI-powered encyclopedia for plant diseases, pests, and soil health.</p>
+                            <button class="dash-feature-cta" onclick="event.stopPropagation(); showSection('wiki')" id="dashCwBtn">
+                                <i class="fas fa-book-open"></i> <span id="dashCwCtaLabel">Open Wiki</span>
+                            </button>
                         </div>
                     </div>
 
@@ -1689,6 +1702,42 @@
                 </div>
             </section>
 
+            <!-- CROP HEALTH WIKI -->
+            <section id="wiki">
+                <button class="section-back-btn" onclick="goBack()" title="Go Back">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+
+                <div class="wiki-hero">
+                    <div class="wiki-hero-bg"></div>
+                    <div class="wiki-hero-overlay"></div>
+                    <div class="wiki-hero-content">
+                        <div class="ai-branding-badge"><i class="fas fa-brain"></i> AI-Powered Knowledge Base</div>
+                        <h2>Crop Health Wiki</h2>
+                        <p>Comprehensive knowledge base for plant diseases, pests, and soil health</p>
+                    </div>
+                </div>
+
+                <div class="wiki-sticky-bar">
+                    <div class="wiki-controls-refined">
+                        <div class="search-wrapper">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="wikiSearch" placeholder="Search diseases, crops..." onkeyup="searchWiki(this.value)">
+                        </div>
+                        <div class="category-chips-container" id="wikiCategories">
+                            <button class="chip active" onclick="filterWiki('all', this)">All</button>
+                            <button class="chip" onclick="filterWiki('plant', this)"><i class="fas fa-seedling"></i> Plant</button>
+                            <button class="chip" onclick="filterWiki('pest', this)"><i class="fas fa-bug"></i> Pest</button>
+                            <button class="chip" onclick="filterWiki('soil', this)"><i class="fas fa-water"></i> Soil</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="wiki-grid" id="wikiGrid">
+                    <div class="wiki-loading"><i class="fas fa-spinner fa-spin"></i> Loading disease database...</div>
+                </div>
+            </section>
+
             <!-- NOTIFICATIONS -->
             <section id="notifications">
                 <button class="section-back-btn" onclick="goBack()" title="Go Back">
@@ -1776,6 +1825,10 @@
             <i class="fas fa-seedling"></i>
             <span>Crops</span>
         </button>
+        <button onclick="showSection('wiki')" id="bottomNavWiki">
+            <i class="fas fa-book-medical"></i>
+            <span>Wiki</span>
+        </button>
         <button onclick="showSection('calculator')" id="bottomNavCalc">
             <i class="fas fa-calculator"></i>
             <span>Calc</span>
@@ -1798,6 +1851,7 @@
     <script src="js/crops.js"></script>
     <script src="js/calculator.js"></script>
     <script src="js/roadmap.js"></script>
+    <script src="js/wiki.js"></script>
     <script src="js/notifications.js"></script>
     <script src="js/dashboard.js?v=2"></script>
     <script src="js/profile.js"></script>
