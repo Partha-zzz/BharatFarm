@@ -298,23 +298,6 @@ function renderMarketplaceProducts() {
     }
 
     grid.innerHTML = filtered.map(p => {
-        let contactHtml = '';
-        if (typeof currentCreditProfile !== 'undefined' && currentCreditProfile && currentCreditProfile.unlockedFarmerIDs.includes(p.id)) {
-            // Already unlocked
-            contactHtml = `
-                <div style="display:flex; flex-direction:column; gap: 8px; width:100%; animation: fadeIn 0.4s ease-out; margin-top: 5px;">
-                    <a href="https://wa.me/${p.whatsapp || p.contact.replace(/\\D/g, '')}" target="_blank" style="background: linear-gradient(135deg, #25D366, #128C7E); color: white; border-radius: 12px; padding: 12px; text-decoration: none; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3);">
-                        <i class="fab fa-whatsapp" style="font-size: 1.2rem;"></i> WhatsApp Chat
-                    </a>
-                    <a href="tel:${p.contact}" style="background: linear-gradient(135deg, #007bff, #0056b3); color: white; border-radius: 12px; padding: 12px; text-decoration: none; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);">
-                        <i class="fas fa-phone-alt" style="font-size: 1.1rem;"></i> Call Farmer
-                    </a>
-                </div>
-            `;
-        } else {
-            // Locked
-            contactHtml = `<button id="view-btn-${p.id}" class="p-btn p-btn-view-contact" style="width:100%; background:#fbc02d; color:#000; border:none; border-radius:8px; padding:10px; font-weight:600; cursor:pointer;" onclick="handleViewContact('${p.id}', '${p.contact}', '${p.whatsapp || p.contact.replace(/\\D/g, '')}')"><i class="fas fa-eye"></i> View Contact</button>`;
-        }
 
         return `
         <div class="premium-card">
@@ -343,7 +326,14 @@ function renderMarketplaceProducts() {
                         <button class="p-btn p-btn-cart" style="width:100%; border-radius:8px;" onclick="addToCart('${p.id}')" title="Add to Cart">
                             <i class="fas fa-cart-plus"></i> Add to Cart
                         </button>
-                        ${contactHtml}
+                        <div style="display:flex; flex-direction:column; gap: 8px; width:100%; animation: fadeIn 0.4s ease-out; margin-top: 5px;">
+                            <a href="https://wa.me/${p.whatsapp || p.contact.replace(/\D/g, '')}" target="_blank" style="background: linear-gradient(135deg, #25D366, #128C7E); color: white; border-radius: 12px; padding: 12px; text-decoration: none; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3);">
+                                <i class="fab fa-whatsapp" style="font-size: 1.2rem;"></i> WhatsApp Chat
+                            </a>
+                            <a href="tel:${p.contact}" style="background: linear-gradient(135deg, #007bff, #0056b3); color: white; border-radius: 12px; padding: 12px; text-decoration: none; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);">
+                                <i class="fas fa-phone-alt" style="font-size: 1.1rem;"></i> Call Farmer
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
