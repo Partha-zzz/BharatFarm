@@ -5,8 +5,13 @@
 /* ── Floating Toggle Button ── */
 #chatbotToggle {
   position: fixed;
+<<<<<<< HEAD
   bottom: 100px;
   right: 28px;
+=======
+  bottom: 30px;
+  right: 30px;
+>>>>>>> a7755fd2a3aa0207d4d297713660c27b66b4b548
   z-index: 9999;
   width: 62px;
   height: 62px;
@@ -98,8 +103,13 @@ body:has(.app-container.active) .voice-fab {
 /* ── Chat Panel ── */
 #chatbotPanel {
   position: fixed;
+<<<<<<< HEAD
   bottom: 115px;
   right: 28px;
+=======
+  bottom: 100px;
+  right: 30px;
+>>>>>>> a7755fd2a3aa0207d4d297713660c27b66b4b548
   z-index: 9998;
   width: 370px;
   max-width: calc(100vw - 32px);
