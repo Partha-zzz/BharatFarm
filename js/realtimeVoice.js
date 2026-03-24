@@ -162,6 +162,11 @@
 
         // Bind Events
         talkBtn.addEventListener("click", () => overlay.style.display = "flex");
+<<<<<<< HEAD
+=======
+        // Expose globally so the dashboard mic button can open it
+        window.openVoiceOverlay = function() { overlay.style.display = "flex"; };
+>>>>>>> a7755fd2a3aa0207d4d297713660c27b66b4b548
         document.getElementById("voiceCloseBtn").addEventListener("click", stopAndClose);
         startStopBtn.addEventListener("click", () => {
             if (state === 'idle' || state === 'error') {
@@ -262,8 +267,12 @@
             history: conversationHistory.slice(-6)
         };
 
+<<<<<<< HEAD
         console.log('[KrishiBot] → Calling proxy:', PROXY_URL);
         console.log('[KrishiBot] → Payload:', JSON.stringify(payload));
+=======
+
+>>>>>>> a7755fd2a3aa0207d4d297713660c27b66b4b548
 
         try {
             const response = await fetch(PROXY_URL, {
@@ -272,7 +281,11 @@
                 body: JSON.stringify(payload)
             });
 
+<<<<<<< HEAD
             console.log('[KrishiBot] ← Proxy status:', response.status);
+=======
+
+>>>>>>> a7755fd2a3aa0207d4d297713660c27b66b4b548
 
             conversationHistory.push({ role: 'user', text: text });
 
@@ -285,7 +298,11 @@
             const data = await response.json();
             const aiResponseText = data.response || "I'm sorry, I couldn't process that.";
 
+<<<<<<< HEAD
             console.log('[KrishiBot] ← AI said:', aiResponseText.substring(0, 80));
+=======
+
+>>>>>>> a7755fd2a3aa0207d4d297713660c27b66b4b548
             logDebug(`AI Response received.`);
             conversationHistory.push({ role: 'ai', text: aiResponseText });
             speakResponse(aiResponseText);

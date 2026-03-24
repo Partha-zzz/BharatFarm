@@ -415,7 +415,6 @@ Respond ONLY in raw JSON matching this structure:
                 res.end(JSON.stringify({ success: false, error: "Dataset not found" }));
                 return;
             }
-            
             const rawData = fs.readFileSync(dataPath, 'utf-8');
             let diseases = JSON.parse(rawData);
 
@@ -459,6 +458,43 @@ Respond ONLY in raw JSON matching this structure:
         return;
     }
 
+    // ── GET /api/quizzes ──────────────────────────────────────────────────────
+    if (req.url.startsWith('/api/quizzes') && req.method === 'GET') {
+        try {
+            const dataPath = path.join(__dirname, 'data', 'quizzes.json');
+            if (fs.existsSync(dataPath)) {
+                const rawData = fs.readFileSync(dataPath, 'utf-8');
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ success: true, count: JSON.parse(rawData).length, data: JSON.parse(rawData) }));
+            } else {
+                res.writeHead(404, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ success: false, error: "Dataset not found" }));
+            }
+        } catch (e) {
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ success: false, error: e.message }));
+        }
+        return;
+    }
+
+    // ── GET /api/achievements ──────────────────────────────────────────────────
+    if (req.url.startsWith('/api/achievements') && req.method === 'GET') {
+        try {
+            const dataPath = path.join(__dirname, 'data', 'achievements.json');
+            if (fs.existsSync(dataPath)) {
+                const rawData = fs.readFileSync(dataPath, 'utf-8');
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(rawData); // already JSON string
+            } else {
+                res.writeHead(404, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ success: false, error: "Dataset not found" }));
+            }
+        } catch (e) {
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ success: false, error: e.message }));
+        }
+        return;
+    }
     // ── Static file serving ────────────────────────────────────────────────────
     let filePath = '.' + req.url;
     if (filePath === './') filePath = './index.html';

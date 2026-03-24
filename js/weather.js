@@ -153,7 +153,7 @@ function autoDetectLocation() {
                 fetchWeatherByCoords(lat, lon, userLocationName);
             },
             (error) => {
-                console.log('Geolocation error:', error.message);
+                console.error('Geolocation error:', error.message);
                 if (locInput) locInput.value = '';
                 document.getElementById('weatherLoading').classList.add('hidden');
                 document.getElementById('weatherContent').style.display = 'block';
@@ -189,7 +189,7 @@ async function reverseGeocode(lat, lon) {
             document.getElementById('locationInput').value = userLocationName;
         }
     } catch (err) {
-        console.log('Reverse geocoding error:', err);
+        console.error('Reverse geocoding error:', err);
     }
 }
 
@@ -227,7 +227,7 @@ async function fetchWeatherByLocation(locationName) {
         await fetchWeatherByCoords(lat, lon, resolvedName);
 
     } catch (error) {
-        console.log('Weather fetch error:', error);
+        console.error('Weather fetch error:', error);
         document.getElementById('weatherLoading').classList.add('hidden');
         document.getElementById('weatherContent').style.display = 'block';
         alert('Unable to fetch weather. Please check your internet connection.');
@@ -261,7 +261,7 @@ async function fetchWeatherByCoords(lat, lon, locationName) {
         processOpenMeteoData(data, finalDecidedName);
 
     } catch (error) {
-        console.log('Open-Meteo error:', error);
+        console.error('Open-Meteo error:', error);
         document.getElementById('weatherLoading').classList.add('hidden');
         document.getElementById('weatherContent').style.display = 'block';
         alert('Unable to fetch weather data. Please check your internet connection.');

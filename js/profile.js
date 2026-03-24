@@ -38,7 +38,11 @@ function initUserProfile() {
 // Get user profile
 function getUserProfile() {
     const currentUserData = localStorage.getItem('bharatfarm_current_user');
+<<<<<<< HEAD
     console.log('Current user data from localStorage:', currentUserData);
+=======
+
+>>>>>>> a7755fd2a3aa0207d4d297713660c27b66b4b548
 
     if (!currentUserData) return null;
 
@@ -46,7 +50,11 @@ function getUserProfile() {
     let currentUser;
     try {
         currentUser = JSON.parse(currentUserData);
+<<<<<<< HEAD
         console.log('Parsed current user:', currentUser);
+=======
+
+>>>>>>> a7755fd2a3aa0207d4d297713660c27b66b4b548
     } catch (e) {
         console.error('Error parsing current user:', e);
         return null;
@@ -222,10 +230,17 @@ function getActivities(filterType = 'all', limit = 50) {
 
 // Display profile page
 function showProfilePage() {
+<<<<<<< HEAD
     console.log('showProfilePage called');
 
     const user = getUserProfile();
     console.log('User profile:', user);
+=======
+
+
+    const user = getUserProfile();
+
+>>>>>>> a7755fd2a3aa0207d4d297713660c27b66b4b548
 
     if (!user) {
         console.error('No user found - this should not happen if logged in');
@@ -295,10 +310,17 @@ function showProfilePage() {
         displayActivities('all');
 
         // Show profile section
+<<<<<<< HEAD
         console.log('Calling showSection with profile');
         if (typeof showSection === 'function') {
             showSection('profile');
             console.log('Profile section should now be visible');
+=======
+
+        if (typeof showSection === 'function') {
+            showSection('profile');
+
+>>>>>>> a7755fd2a3aa0207d4d297713660c27b66b4b548
         } else {
             console.error('showSection function not found');
         }
@@ -518,4 +540,8 @@ function exportActivityPDF() {
     });
 }
 
+<<<<<<< HEAD
 console.log('Profile.js loaded - showProfilePage is available:', typeof showProfilePage);
+=======
+
+>>>>>>> a7755fd2a3aa0207d4d297713660c27b66b4b548

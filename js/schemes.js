@@ -104,7 +104,11 @@ async function submitSchemesForm() {
         loader.classList.remove('active');
 
         // Fallback to local JSON data
+<<<<<<< HEAD
         console.log('[Schemes] Falling back to local JSON data...');
+=======
+        console.warn('[Schemes] Falling back to local JSON data...');
+>>>>>>> a7755fd2a3aa0207d4d297713660c27b66b4b548
         try {
             const fallbackRes = await fetch('js/schemesData.json');
             const allSchemes  = await fallbackRes.json();
@@ -280,7 +284,11 @@ function renderError(message) {
 // ── Track Apply Click (Analytics) ───────────────────────────
 
 function trackSchemeApply(id, name) {
+<<<<<<< HEAD
     console.log(`[Schemes] User clicked Apply for: ${name} (${id})`);
+=======
+
+>>>>>>> a7755fd2a3aa0207d4d297713660c27b66b4b548
     
     // Save to local analytics
     try {
@@ -298,7 +306,11 @@ function trackSchemeApply(id, name) {
                 timestamp: new Date().toISOString()
             });
             localStorage.setItem('appliedSchemes', JSON.stringify(appliedSchemes));
+<<<<<<< HEAD
             console.log(`[Analytics] Tracked application for: ${name}`);
+=======
+
+>>>>>>> a7755fd2a3aa0207d4d297713660c27b66b4b548
         }
     } catch(e) {
         console.error('[Analytics] Error saving scheme application data:', e);
