@@ -28,7 +28,7 @@
     <link rel="stylesheet" href="css/roadmap.css">
     <link rel="stylesheet" href="css/notifications.css">
     <link rel="stylesheet" href="css/about.css">
-    <link rel="stylesheet" href="css/user-guide.css">
+
     <link rel="stylesheet" href="css/profile.css">
 
     <link rel="stylesheet" href="css/subscription.css">
@@ -438,19 +438,17 @@
                     <button class="language-toggle" onclick="showLanguageModal()" title="Change Language">
                         <i class="fas fa-globe"></i>
                     </button>
-                    <button class="theme-toggle" onclick="showProfilePage()" title="My Profile"
-                        style="padding: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; position: relative;">
-                        <!-- Users can add their desired image here or upload via the profile page -->
+                    <button class="theme-toggle" onclick="showProfilePage()" title="My Profile" id="headerProfileBtn">
                         <img id="headerProfileImg" src="" alt="Profile"
                             style="width: 100%; height: 100%; object-fit: cover; display: none;">
                         <i id="headerProfileIcon" class="fas fa-user" style="font-size: 1.2rem;"></i>
                     </button>
-                    <button class="subscription-btn" onclick="openSubscription()" title="Go Premium">
-                        <i class="fas fa-crown"></i> Premium
+                    <button class="subscription-btn" onclick="openSubscription()" id="headerPremiumBtn">
+                        <i class="fas fa-crown"></i> <span id="headerPremiumLabel">Premium</span>
                     </button>
 
-                    <button class="logout-btn" onclick="handleLogout()">
-                        <i class="fas fa-sign-out-alt"></i> Logout
+                    <button class="logout-btn" onclick="handleLogout()" id="headerLogoutBtn">
+                        <i class="fas fa-sign-out-alt"></i> <span id="headerLogoutLabel">Logout</span>
                     </button>
                 </div>
             </div>
@@ -469,16 +467,16 @@
 
                     <div class="dash-hero-content">
                         <h2 class="dash-hero-title">
-                            Your AI Companion for<br>
-                            <span class="dash-hero-accent">Smarter Farming</span>
+                            <span id="dashHeroTitle">Your AI Companion for</span><br>
+                            <span class="dash-hero-accent" id="dashHeroAccent">Smarter Farming</span>
                         </h2>
-                        <p class="dash-hero-sub">Welcome, <strong><span id="welcomeName">Farmer</span></strong>! Empowering Indian agriculture with real-time intelligence, voice-first
+                        <p class="dash-hero-sub" id="dashHeroSub">Welcome, <strong><span id="welcomeName">Farmer</span></strong>! Empowering Indian agriculture with real-time intelligence, voice-first
                             assistance, and direct market access.</p>
                         <div class="dash-hero-cta">
-                            <button class="dash-btn dash-btn-primary" onclick="showSection('crops')">
+                            <button class="dash-btn dash-btn-primary" onclick="showSection('crops')" id="dashHeroBtnStart">
                                 <i class="fas fa-seedling"></i> Get Started
                             </button>
-                            <button class="dash-btn dash-btn-outline" onclick="showSection('scanner')">
+                            <button class="dash-btn dash-btn-outline" onclick="showSection('scanner')" id="dashHeroBtnExplore">
                                 <i class="fas fa-leaf"></i> Explore Ecosystem
                             </button>
                         </div>
@@ -490,7 +488,7 @@
                     <div class="dash-float-card dash-float-weather" onclick="showSection('weather')">
                         <div class="dash-float-icon"><i class="fas fa-cloud-sun-rain"></i></div>
                         <div class="dash-float-body">
-                            <span class="dash-float-label">Weather Alert</span>
+                            <span class="dash-float-label" id="dashFloatWeatherLabel">Weather Alert</span>
                             <span class="dash-float-value" id="dashWeatherStatus">Loading...</span>
                             <span class="dash-float-status" id="dashWeatherSafety">Checking...</span>
                         </div>
@@ -499,17 +497,17 @@
                     <div class="dash-float-card dash-float-soil" onclick="showSection('crops')" style="cursor:pointer">
                         <div class="dash-float-icon"><i class="fas fa-heartbeat"></i></div>
                         <div class="dash-float-body">
-                            <span class="dash-float-label">Next Activity</span>
+                            <span class="dash-float-label" id="dashFloatActivityLabel">Next Activity</span>
                             <span class="dash-float-value" id="dashNextActivity">Select crop</span>
-                            <span class="dash-float-status safe">View Roadmap</span>
+                            <span class="dash-float-status safe" id="dashNextActivityStatus">View Roadmap</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- ── FEATURE GRID ──────────────────────────── -->
                 <div class="dash-section-header">
-                    <span class="dash-section-tag">THE ECOSYSTEM</span>
-                    <h2 class="dash-section-title">Cultivating the Future</h2>
+                    <span class="dash-section-tag" id="dashEcosystemTag">THE ECOSYSTEM</span>
+                    <h2 class="dash-section-title" id="dashEcosystemTitle">Cultivating the Future</h2>
                 </div>
 
                 <div class="dash-feature-grid">
@@ -517,13 +515,13 @@
                     <!-- KrishiBot -->
                     <div class="dash-feature-card dash-card-krishibot" onclick="showSection('dashboard')">
                         <div class="dash-feature-text">
-                            <h3>KrishiBot: Voice First AI</h3>
-                            <p>Talk to your farm. Get advice in your local dialect on irrigation, pest control, and market trends.</p>
+                            <h3 id="dashKbTitle">KrishiBot: Voice First AI</h3>
+                            <p id="dashKbDesc">Talk to your farm. Get advice in your local dialect on irrigation, pest control, and market trends.</p>
                             <div class="dash-waveform">
                                 <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
                             </div>
-                            <button class="dash-feature-cta" onclick="event.stopPropagation(); if(typeof openVoiceOverlay!=='undefined') openVoiceOverlay()">
-                                <i class="fas fa-microphone"></i><span class="cta-label"> Talk Now</span>
+                            <button class="dash-feature-cta" onclick="event.stopPropagation(); if(typeof openVoiceOverlay!=='undefined') openVoiceOverlay()" id="dashKbBtn">
+                                <i class="fas fa-microphone"></i><span class="cta-label" id="dashKbCtaLabel"> Talk Now</span>
                             </button>
                         </div>
                         <div class="dash-feature-visual dash-visual-krishibot">
@@ -537,10 +535,10 @@
                             <img src="https://images.unsplash.com/photo-1471193945509-9ad0617afabf?w=500&q=80" alt="Leaf disease scanning" loading="lazy">
                         </div>
                         <div class="dash-feature-text">
-                            <h3>Leaf Scanner</h3>
-                            <p>Instant Gemini-powered crop disease diagnosis from a single photograph.</p>
-                            <button class="dash-feature-cta" onclick="event.stopPropagation(); showSection('scanner')">
-                                <i class="fas fa-camera"></i> Launch Scan
+                            <h3 id="dashLsTitle">Leaf Scanner</h3>
+                            <p id="dashLsDesc">Instant Gemini-powered crop disease diagnosis from a single photograph.</p>
+                            <button class="dash-feature-cta" onclick="event.stopPropagation(); showSection('scanner')" id="dashLsBtn">
+                                <i class="fas fa-camera"></i> <span id="dashLsCtaLabel">Launch Scan</span>
                             </button>
                         </div>
                     </div>
@@ -548,16 +546,16 @@
                     <!-- Smart Market -->
                     <div class="dash-feature-card dash-card-market" onclick="showSection('marketplace')">
                         <div class="dash-feature-text">
-                            <h3>Smart Market</h3>
-                            <p>Sell direct to urban clusters. Cut the middleman.</p>
+                            <h3 id="dashSmTitle">Smart Market</h3>
+                            <p id="dashSmDesc">Sell direct to urban clusters. Cut the middleman.</p>
                             <div class="dash-market-avatars">
                                 <span class="dash-avatar">👨‍🌾</span>
                                 <span class="dash-avatar">👩‍🌾</span>
                                 <span class="dash-avatar">🧑‍🌾</span>
                                 <span class="dash-avatar-count">+89</span>
                             </div>
-                            <button class="dash-feature-cta" onclick="event.stopPropagation(); showSection('marketplace')">
-                                <i class="fas fa-store"></i> Open Market
+                            <button class="dash-feature-cta" onclick="event.stopPropagation(); showSection('marketplace')" id="dashSmBtn">
+                                <i class="fas fa-store"></i> <span id="dashSmCtaLabel">Open Market</span>
                             </button>
                         </div>
                     </div>
@@ -565,15 +563,15 @@
                     <!-- Hyperlocal Analytics -->
                     <div class="dash-feature-card dash-card-analytics" onclick="showSection('calculator')">
                         <div class="dash-feature-text">
-                            <h3>Hyperlocal Analytics</h3>
-                            <p>Soil moisture, nutrient levels, and precision weather forecasting for your specific coordinates.</p>
+                            <h3 id="dashHaTitle">Hyperlocal Analytics</h3>
+                            <p id="dashHaDesc">Soil moisture, nutrient levels, and precision weather forecasting for your specific coordinates.</p>
                             <div class="dash-analytics-stats">
                                 <div class="dash-stat-pill">
-                                    <span class="dash-stat-label">Input Cost</span>
+                                    <span class="dash-stat-label" id="dashHaInputLabel">Input Cost</span>
                                     <span class="dash-stat-value" id="dashTotalCost">-</span>
                                 </div>
                                 <div class="dash-stat-pill">
-                                    <span class="dash-stat-label">Revenue</span>
+                                    <span class="dash-stat-label" id="dashHaRevenueLabel">Revenue</span>
                                     <span class="dash-stat-value" id="dashRevenue">-</span>
                                 </div>
                             </div>
@@ -590,10 +588,10 @@
                     <!-- Quick Links Row -->
                     <div class="dash-feature-card dash-card-schemes" onclick="showSection('schemes')">
                         <div class="dash-feature-text">
-                            <h3><i class="fas fa-landmark"></i> Govt Schemes</h3>
-                            <p>Check eligibility for PM-KISAN, PMFBY, and state-specific subsidies.</p>
-                            <button class="dash-feature-cta" onclick="event.stopPropagation(); showSection('schemes')">
-                                <i class="fas fa-search"></i> Matchmaker
+                            <h3><i class="fas fa-landmark"></i> <span id="dashGsTitle">Govt Schemes</span></h3>
+                            <p id="dashGsDesc">Check eligibility for PM-KISAN, PMFBY, and state-specific subsidies.</p>
+                            <button class="dash-feature-cta" onclick="event.stopPropagation(); showSection('schemes')" id="dashGsBtn">
+                                <i class="fas fa-search"></i> <span id="dashGsCtaLabel">Matchmaker</span>
                             </button>
                         </div>
                     </div>
@@ -602,23 +600,23 @@
                 <!-- ── IMPACT SECTION ── -->
                 <div class="dash-impact-section">
                     <div class="dash-impact-text">
-                        <h2 class="dash-impact-title">From Soil to<br>Soul.</h2>
-                        <p class="dash-impact-desc">We don't just provide data; we provide a bridge between the
+                        <h2 class="dash-impact-title" id="dashImpactTitle">From Soil to<br>Soul.</h2>
+                        <p class="dash-impact-desc" id="dashImpactDesc">We don't just provide data; we provide a bridge between the
                             hardworking farmer and the conscious consumer. Join an ecosystem that respects the land and
                             rewards the labor.</p>
                         <div class="dash-impact-stats">
                             <div class="dash-impact-stat">
                                 <div class="dash-impact-stat-icon"><i class="fas fa-leaf"></i></div>
                                 <div>
-                                    <strong>Sustainability First</strong>
-                                    <p>Reducing fertilizer waste by 30% through AI precision</p>
+                                    <strong id="dashImpactStat1Title">Sustainability First</strong>
+                                    <p id="dashImpactStat1Desc">Reducing fertilizer waste by 30% through AI precision</p>
                                 </div>
                             </div>
                             <div class="dash-impact-stat">
                                 <div class="dash-impact-stat-icon"><i class="fas fa-rupee-sign"></i></div>
                                 <div>
-                                    <strong>Fair Pricing</strong>
-                                    <p>Direct distribution ensures farmers get 85% of retail price</p>
+                                    <strong id="dashImpactStat2Title">Fair Pricing</strong>
+                                    <p id="dashImpactStat2Desc">Direct distribution ensures farmers get 85% of retail price</p>
                                 </div>
                             </div>
                         </div>
@@ -752,21 +750,21 @@
                 <!-- Role Tabs -->
                 <div class="mk-tabs-bar">
                     <button class="mk-tab active" id="tabBuyer" onclick="switchMkTab('buyer')">
-                        <i class="fas fa-shopping-basket"></i> Browse Market
+                        <i class="fas fa-shopping-basket"></i> <span id="mkTabBrowseLabel">Browse Market</span>
                     </button>
                     <button class="mk-tab" id="tabFarmer" onclick="switchMkTab('farmer')">
-                        <i class="fas fa-tractor"></i> Sell Produce
+                        <i class="fas fa-tractor"></i> <span id="mkTabSellLabel">Sell Produce</span>
                     </button>
                     <div class="mk-tabs-right">
-                        <button class="cart-icon-btn" onclick="openCartDrawer()" title="View Cart">
+                        <button class="cart-icon-btn" onclick="openCartDrawer()" id="cartBtn">
                             <i class="fas fa-shopping-cart"></i>
                             <span class="cart-badge" id="cartBadge" style="display:none;">0</span>
                         </button>
                         <div class="mk-role-badge" id="mkRoleBadge">
                             <i class="fas fa-user-circle"></i> <span id="mkRoleLabel">Buyer</span>
                         </div>
-                        <button class="mk-switch-role-btn" onclick="switchRole()">
-                            <i class="fas fa-exchange-alt"></i> Switch Role
+                        <button class="mk-switch-role-btn" onclick="switchRole()" id="mkSwitchRoleBtn">
+                            <i class="fas fa-exchange-alt"></i> <span id="mkSwitchRoleLabel">Switch Role</span>
                         </button>
                     </div>
                 </div>
@@ -792,12 +790,12 @@
                     <div class="farmer-tab-layout">
                         <div class="farmer-form-panel">
                             <div class="farmer-form-header">
-                                <i class="fas fa-plus-circle"></i> Add New Listing
+                                <i class="fas fa-plus-circle"></i> <span id="mkAddListingTitle">Add New Listing</span>
                             </div>
                             <form id="farmerSellForm" onsubmit="handleSellSubmit(event)" class="farmer-sell-form">
                                 <div class="sell-form-row">
                                     <div class="sell-form-group" style="flex: 1;">
-                                        <label>Product Name</label>
+                                        <label id="mkLabelProductName">Product Name</label>
                                         <input list="cropNamesList" name="name" id="sellProductName" required
                                             placeholder="Type or select a crop..." oninput="updateSellProductImage()"
                                             autocomplete="off">
@@ -815,33 +813,33 @@
                                 </div>
                                 <div class="sell-form-row">
                                     <div class="sell-form-group">
-                                        <label>Category</label>
-                                        <select name="category" required>
-                                            <option value="vegetables">Vegetables</option>
-                                            <option value="fruits">Fruits</option>
-                                            <option value="grains">Grains &amp; Pulses</option>
-                                            <option value="seeds">Seeds &amp; Fertilizers</option>
-                                            <option value="machinery">Machinery</option>
+                                        <label id="mkLabelCategory">Category</label>
+                                        <select name="category" id="mkSelectCategory" required>
+                                            <option value="vegetables" id="optVeg">Vegetables</option>
+                                            <option value="fruits" id="optFruits">Fruits</option>
+                                            <option value="grains" id="optGrains">Grains &amp; Pulses</option>
+                                            <option value="seeds" id="optSeeds">Seeds &amp; Fertilizers</option>
+                                            <option value="machinery" id="optMachinery">Machinery</option>
                                         </select>
                                     </div>
                                     <div class="sell-form-group">
-                                        <label>Price (Rs.)</label>
-                                        <input type="number" name="price" placeholder="e.g. 65" required min="1">
+                                        <label id="mkLabelPrice">Price (Rs.)</label>
+                                        <input type="number" name="price" placeholder="e.g. 65" id="mkInputPrice" required min="1">
                                     </div>
                                 </div>
                                 <div class="sell-form-row">
                                     <div class="sell-form-group">
-                                        <label>Unit</label>
-                                        <select name="unit">
-                                            <option value="kg">Per kg</option>
-                                            <option value="quintal">Per quintal</option>
-                                            <option value="piece">Per piece</option>
-                                            <option value="ton">Per ton</option>
+                                        <label id="mkLabelUnit">Unit</label>
+                                        <select name="unit" id="mkSelectUnit">
+                                            <option value="kg" id="unitKg">Per kg</option>
+                                            <option value="quintal" id="unitQuintal">Per quintal</option>
+                                            <option value="piece" id="unitPiece">Per piece</option>
+                                            <option value="ton" id="unitTon">Per ton</option>
                                         </select>
                                     </div>
                                     <div class="sell-form-group">
-                                        <label>Quantity</label>
-                                        <input type="text" name="quantity" placeholder="e.g. 500 kg" required>
+                                        <label id="mkLabelQuantity">Quantity</label>
+                                        <input type="text" name="quantity" placeholder="e.g. 500 kg" id="mkInputQuantity" required>
                                     </div>
                                 </div>
                                 <div class="sell-form-row">
@@ -852,23 +850,19 @@
                                             <option value="Andhra Pradesh">Andhra Pradesh</option>
                                             <option value="Bihar">Bihar</option>
                                             <option value="Gujarat">Gujarat</option>
-                                            <option value="Haryana">Haryana</option>
-                                            <option value="Karnataka">Karnataka</option>
-                                            <option value="Madhya Pradesh">Madhya Pradesh</option>
-                                            <option value="Maharashtra">Maharashtra</option>
-                                            <option value="Punjab">Punjab</option>
-                                            <option value="Rajasthan">Rajasthan</option>
-                                            <option value="Tamil Nadu">Tamil Nadu</option>
-                                            <option value="Uttar Pradesh">Uttar Pradesh</option>
-                                            <option value="West Bengal">West Bengal</option>
+                                            <option value="">Select State</option>
                                         </select>
                                     </div>
                                     <div class="sell-form-group">
-                                        <label>District</label>
+                                        <label id="mkLabelDistrict">District</label>
                                         <select name="district" id="districtSelect" required>
-                                            <option value="" disabled selected>Select District</option>
+                                            <option value="">Select District</option>
                                         </select>
                                     </div>
+                                </div>
+                                <div class="sell-form-group">
+                                    <label id="mkLabelLocality">Locality</label>
+                                    <input type="text" name="locality" placeholder="Enter village or area name" id="mkInputLocality" required>
                                 </div>
                                 <div class="sell-form-group">
                                     <label>Location (Google Maps Link)</label>
@@ -1731,7 +1725,7 @@
                         <li><a href="info.html?page=disclaimer">Disclaimer</a></li>
                         <li><a href="info.html?page=faq">FAQs</a></li>
                         <li><a href="info.html?page=methodology">AI Methodology</a></li>
-                        <li><a href="info.html?page=guide">User Guide</a></li>
+
                     </ul>
                 </div>
 
@@ -1807,7 +1801,7 @@
     <script src="js/notifications.js"></script>
     <script src="js/dashboard.js?v=2"></script>
     <script src="js/profile.js"></script>
-    <script src="js/user-guide.js"></script>
+
     <script src="js/app.js"></script>
     <script src="js/lang.js"></script>
     <script src="js/chatbot.js"></script>
