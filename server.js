@@ -404,6 +404,59 @@ Do not include any markdown formatting like \`\`\`json in your response. Just re
     }
 
 
+    // ── GET /api/wiki ─────────────────────────────────────────────────────────
+    if (req.url.startsWith('/api/wiki') && req.method === 'GET') {
+        try {
+            const dataPath = path.join(__dirname, 'data', 'agriculture_diseases.json');
+            if (!fs.existsSync(dataPath)) {
+                res.writeHead(404, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ success: false, error: "Dataset not found" }));
+                return;
+            }
+
+            const rawData = fs.readFileSync(dataPath, 'utf-8');
+            let diseases = JSON.parse(rawData);
+
+            const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
+            const query = parsedUrl.searchParams.get('q');
+            const pathParts = parsedUrl.pathname.split('/').filter(Boolean);
+
+            // Route: /api/wiki/disease/:id
+            if (pathParts[2] === 'disease' && pathParts[3]) {
+                const diseaseId = pathParts[3];
+                const found = diseases.find(d => d.id === diseaseId);
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ success: true, data: found || null }));
+                return;
+            }
+
+            // Route: /api/wiki/:crop
+            if (pathParts[2] && pathParts[2] !== 'search') {
+                const cropFilter = decodeURIComponent(pathParts[2]).toLowerCase();
+                diseases = diseases.filter(d => d.crop.toLowerCase() === cropFilter);
+            }
+
+            // Route: /api/wiki/search?q=...
+            if (query) {
+                const searchQ = query.toLowerCase();
+                diseases = diseases.filter(d => 
+                    d.name_en.toLowerCase().includes(searchQ) || 
+                    (d.name_bn && d.name_bn.toLowerCase().includes(searchQ)) ||
+                    d.crop.toLowerCase().includes(searchQ) ||
+                    d.description.toLowerCase().includes(searchQ)
+                );
+            }
+
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ success: true, count: diseases.length, data: diseases }));
+        } catch (e) {
+            console.error('[/api/wiki] Error:', e.message);
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ success: false, error: e.message }));
+        }
+        return;
+    }
+
     // ── Static file serving ────────────────────────────────────────────────────
     let filePath = '.' + req.url;
     if (filePath === './') filePath = './index.html';

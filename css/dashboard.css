@@ -170,8 +170,9 @@
 .dash-card-market    { grid-column: 1; grid-row: 2; }
 .dash-card-analytics { grid-column: 2; grid-row: 2; min-height: 240px; }
 
-/* Row 3: Schemes (full width) */
-.dash-card-schemes   { grid-column: 1 / -1; grid-row: 3; }
+/* Row 3: Wiki + Schemes */
+.dash-card-wiki      { grid-column: 1; grid-row: 3; }
+.dash-card-schemes   { grid-column: 2; grid-row: 3; }
 
 /* ── CARD BASE ─────────────────────────────── */
 .dash-feature-card {
