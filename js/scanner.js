@@ -25,11 +25,7 @@ async function analyzeLeaf() {
     if (prevDebug) prevDebug.remove();
 
     try {
-<<<<<<< HEAD
         console.log('Sending image to Gemini API...');
-=======
-
->>>>>>> a7755fd2a3aa0207d4d297713660c27b66b4b548
 
         // 1. Get Base64 image data from the UI Image Element
         const base64Image = imgElement.src;
@@ -55,11 +51,7 @@ async function analyzeLeaf() {
                 break;
             } catch (err) {
                 if (retries === 0) throw err;
-<<<<<<< HEAD
                 console.log("Fetch failed, retrying in 2 seconds...");
-=======
-                console.warn("Fetch failed, retrying in 2 seconds...");
->>>>>>> a7755fd2a3aa0207d4d297713660c27b66b4b548
                 await new Promise(r => setTimeout(r, 2000));
                 retries--;
             }
@@ -70,11 +62,7 @@ async function analyzeLeaf() {
         }
 
         const data = await response.json();
-<<<<<<< HEAD
         console.log('Gemini Predictions:', data);
-=======
-
->>>>>>> a7755fd2a3aa0207d4d297713660c27b66b4b548
 
         if (!data.success) {
             showError(data.error || "Could not analyze the leaf image.");
@@ -89,7 +77,6 @@ async function analyzeLeaf() {
         document.getElementById('scanResult').style.display = 'block';
 
         const statusEl = document.getElementById('diseaseStatus');
-<<<<<<< HEAD
         const nameEl = document.getElementById('diseaseName');
         const fertHeader = document.getElementById('fertHeader');
         const treatHeader = document.getElementById('treatHeader');
@@ -125,18 +112,6 @@ async function analyzeLeaf() {
 
         const fertList = document.getElementById('fertilizerRecommendations');
         if (result.fertilizers && Array.isArray(result.fertilizers) && !isNonLeaf) {
-=======
-        const isHealthy = result.status === 'healthy';
-
-        statusEl.textContent = isHealthy ? 'Healthy Plant' : 'Issue Detected';
-        statusEl.className = 'disease-badge ' + (isHealthy ? 'healthy' : 'diseased');
-
-        document.getElementById('diseaseName').textContent = result.name;
-        document.getElementById('diseaseDescription').textContent = result.description;
-
-        const fertList = document.getElementById('fertilizerRecommendations');
-        if (result.fertilizers && Array.isArray(result.fertilizers)) {
->>>>>>> a7755fd2a3aa0207d4d297713660c27b66b4b548
             fertList.innerHTML = result.fertilizers.map(f =>
                 `<div class="recommendation-item"><i class="fas fa-check-circle"></i><span>${f}</span></div>`
             ).join('');
@@ -145,11 +120,7 @@ async function analyzeLeaf() {
         }
 
         const treatList = document.getElementById('treatmentTips');
-<<<<<<< HEAD
         if (result.treatments && Array.isArray(result.treatments) && !isNonLeaf) {
-=======
-        if (result.treatments && Array.isArray(result.treatments)) {
->>>>>>> a7755fd2a3aa0207d4d297713660c27b66b4b548
             treatList.innerHTML = result.treatments.map(t =>
                 `<div class="recommendation-item"><i class="fas fa-check-circle"></i><span>${t}</span></div>`
             ).join('');
@@ -161,14 +132,6 @@ async function analyzeLeaf() {
             logActivity('scan', 'Plant leaf scanned via AI', isHealthy ? 'Healthy Plant' : `Detected ${result.name}`);
             updateUserStatistic('totalScans');
         }
-<<<<<<< HEAD
-=======
-        
-        // Gamification Hook
-        if (window.bfGamification) {
-            window.bfGamification.trackScan();
-        }
->>>>>>> a7755fd2a3aa0207d4d297713660c27b66b4b548
 
         loadingEl.classList.add('hidden');
 

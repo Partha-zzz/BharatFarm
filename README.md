@@ -5,8 +5,7 @@
 <div align="center">
   <img src="https://img.shields.io/badge/Hackathon-Finalist-FFD700?style=for-the-badge&logoColor=white" alt="Hackathon Finalist">
   <img src="https://img.shields.io/badge/Impact-Social%20Good-28A745?style=for-the-badge&logoColor=white" alt="Social Impact">
-  <img src="https://img.shields.io/badge/Powered%20by-Gemini%202.0%20Flash-4285F4?style=for-the-badge&logoColor=white" alt="Gemini AI">
-  <img src="https://img.shields.io/badge/Language-English%20|%20Hindi%20|%20Bengali-orange?style=for-the-badge" alt="Multilingual">
+  <img src="https://img.shields.io/badge/Powered%20by-Gemini%20AI-4285F4?style=for-the-badge&logoColor=white" alt="Gemini AI">
   <img src="https://img.shields.io/badge/UI-Cinematic%20GSAP-FF4B4B?style=for-the-badge&logoColor=white" alt="Cinematic UX">
 </div>
 
@@ -16,45 +15,30 @@
 
 ---
 
-## 🎨 Visual Showcase
-
-<div align="center">
-  <img src="assets/screenshots/dashboard.png" width="800" alt="BharatFarm Dashboard">
-  <p><i>The Premium AI-Powered Dashboard featuring real-time KrishiBot and Leaf Scanner</i></p>
-
----
-
 ## 🚨 The Problem vs 💡 The Solution
 
 | Current Agricultural Challenges | The BharatFarm Solution |
 | :--- | :--- |
-| **Language Barrier:** Most digital tools are restricted to English, alienating 90% of Indian farmers. | **Full Multilingual Support:** The entire platform—including AI chat—is available in **Hindi, Bengali, and English**. |
-| **Information Gap:** Farmers lack real-time access to expert agricultural advice in their native dialects. | **KrishiBot AI:** A 24/7 multilingual voice assistant providing instant contextual guidance via STT/TTS. |
-| **Crop Diseases:** Delayed diagnosis leads to massive yield losses and excessive pesticide use. | **Gemini Vision Diagnostic:** Instant, highly accurate leaf disease detection from a single smartphone photo. |
+| **Information Gap:** Farmers lack real-time access to expert agricultural advice in their native languages. | **KrishiBot AI:** A 24/7 multilingual voice assistant providing instant contextual guidance. |
+| **Crop Diseases:** Delayed diagnosis leads to massive yield losses and excessive pesticide use. | **Gemini Vision Scanner:** Instant, highly accurate leaf disease detection from a single smartphone photo. |
 | **Middle-men Exploitation:** Farmers are forced to sell produce at low margins to intermediaries. | **Direct Agri-Marketplace:** A zero-commission P2P platform connecting farmers directly to buyers. |
 
 ---
 
 ## 🚀 Core Innovations
 
-### 1. 🤖 Intelligent Multilingual AI
-- **🎙️ KrishiBot Assistant:** Powered by **Gemini 2.0 Flash**, KrishiBot is a real-time AI companion utilizing **Speech-to-Text (STT)** and **Text-to-Speech (TTS)**. Farmers can *talk* to their application in their native tongue and get expert advice back via voice.
-- **🍃 AI Leaf Scanner:** Diagnoses plant diseases with human-like precision, recommending exact fertilizers and treatments instantly.
-- **📚 Crop Health Wiki:** A comprehensive, searchable database of 30+ crop diseases, pests, and soil conditions seamlessly integrated with curated, localized treatment recommendations.
+### 1. 🤖 Intelligent AI Ecosystem
+- **🎙️ KrishiBot Assistant:** A real-time AI companion utilizing **Speech-to-Text (STT)** and **Text-to-Speech (TTS)**. Farmers can *talk* to their application and get expert advice back via voice.
+- **🍃 AI Leaf Scanner:** Powered by **Google Gemini Vision**, our scanner diagnoses plant diseases with human-like precision, recommending exact fertilizers and treatments instantly.
 
-### 2. 🎮 Farmer Engagement System
-- **📈 Gamified Progress:** Empowers farmers by rewarding educational interactions. Users earn **XP, Coins, and Badges** natively stored in the ecosystem.
-- **🧠 Daily Agri-Quizzes:** Features an interactive daily quiz system testing knowledge on soil health, pest control, and market strategy, complete with rich GSAP animations and explanations.
-- **🤝 Cross-Feature Hooks:** Integrating directly into the platform, users are automatically awarded XP for utilizing the AI Leaf Scanner and KrishiBot.
-
-### 3. 🌍 Localization & Accessibility
-- **🇮🇳 Native First:** Full UI localization for the major agricultural hubs of India. Switch between English, Hindi, and Bengali with a single click.
-- **Accessibility Tokens:** High-contrast design and voice-first logic ensure that every farmer, regardless of literacy level or visual ability, can use the platform.
-
-### 4. 📊 Precision Analytics
-- **🌤️ Smart Weather:** Localized weather data with proximity-based safety alerts for farming operations.
+### 2. 📊 Precision Analytics
+- **🌤️ Smart Weather:** Localized weather data with proximity-based safety alerts for farming operations (e.g., stopping pesticide spray before rain).
 - **💰 Financial Suite:** Professional cost and revenue calculators supporting local Indian land measurement units (**Acre, Bigha, Katha**).
 - **🗺️ Activity Roadmap:** AI-generated day-by-day schedules tailored specifically to the selected crop's lifecycle.
+
+### 3. 🎬 Cinematic User Experience
+- **GSAP Frame Sequencing:** We abandoned boring SaaS templates for a high-performance **GSAP ScrollTrigger** animation sequence of **240 high-resolution frames** to guide users through an immersive, storytelling landing page.
+- **Responsive Glassmorphism:** A premium, modern interface that scales perfectly from a 4K monitor down to a budget smartphone.
 
 ---
 
@@ -65,67 +49,78 @@ graph TD
     %% Frontend Layer
     subgraph Frontend [Client Browser - Vanilla JS/HTML/CSS]
         UI[Cinematic UI / GSAP]
-        Lang[Multilingual Engine]
-        Chat[KrishiBot Voice UI]
+        Chat[KrishiBot Speech UI]
         Scan[Leaf Scanner UI]
+        Market[P2P Marketplace]
     end
 
     %% Backend Layer
     subgraph Backend [Node.js Proxy Server]
         API[Express API Router]
-        Secure[Protected Gemini Proxy]
+        Auth[Secure Key Management]
     end
 
     %% External AI & Services
     subgraph Services [External APIs]
         Gemini[Google Gemini 2.0 Flash / Vision]
         Weather[OpenWeatherMap API]
+        Images[Unsplash Data]
     end
 
     %% Data Flow
-    UI -->|JSON| API
-    Lang -->|Context| UI
-    Chat -->|Voice Stream| API
-    Scan -->|Image Data| API
+    UI -->|API Requests| API
+    Chat -->|Voice & Text Data| API
+    Scan -->|Base64 Image Data| API
     
-    API -->|Proxied Request| Gemini
-    API -->|Coordinates| Weather
+    API -->|Protected Proxy Params| Gemini
+    API -->|Location Coordinates| Weather
     
-    Gemini -->|AI Insights| API
-    Weather -->|Weather data| API
-    API -->|Processed Results| Frontend
+    Gemini -->|AI Insights / Disease Diagnosis| API
+    Weather -->|Weather Data| API
+    API -->|JSON Processing| Frontend
 ```
 
 ---
 
-## 🌎 Social Impact
+## 🌍 Impact Metrics
 
 By adopting the BharatFarm ecosystem, a typical rural farming community can expect:
 - **⬆️ 15-20% Increase in Profit Margins:** Achieved through direct-to-consumer trade and precise cost calculations.
-- **⬇️ 30% Reduction in Chemical Waste:** Driven by exact, AI-recommended fertilizer dosages.
-- **⏱️ 24/7 Expert Accessibility:** Democratizing agricultural knowledge across the language barrier.
+- **⬇️ 30% Reduction in Chemical Waste:** Driven by exact, AI-recommended fertilizer dosages instead of blind application.
+- **⏱️ 24/7 Expert Accessibility:** Democratizing agricultural knowledge without requiring literacy, thanks to voice integrations.
 
 ---
 
-## 🛠️ Installation
+## 🛠️ Quick Start
 
-1. **Clone & Install**
+### Prerequisites
+- [Node.js](https://nodejs.org/) (v16+)
+- [NPM](https://www.npmjs.com/) (latest)
+
+### Installation
+
+1. **Clone the Repository**
    ```bash
    git clone https://github.com/Souvik-Dey-2029/BharatFarm_Final-Version.git
+   cd BharatFarm_Final-Version
+   ```
+
+2. **Install Dependencies**
+   ```bash
    npm install
    ```
 
-2. **Environment Setup**
-   Create a `.env` file:
+3. **Configure Environment**
+   Create a `.env` file in the root directory:
    ```env
-   GEMINI_API_KEY=your_key_here
+   OPENROUTER_API_KEY=your_gemini_api_key_here
    ```
 
-3. **Run**
+4. **Launch the Server**
    ```bash
    node server.js
    ```
-   *Visit `http://localhost:5000`*
+   *Visit `http://localhost:5000` to experience the application.*
 
 ---
 
@@ -133,10 +128,10 @@ By adopting the BharatFarm ecosystem, a typical rural farming community can expe
 
 | Developer | Role | Profile |
 | :--- | :--- | :--- |
-| **Souvik Dey** | Lead Developer | [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?logo=linkedin)](https://www.linkedin.com/in/souvik-dey-400497366/) |
-| **Partha Sarathi Sarkar**| Full Stack & Prompt Engineer | [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?logo=linkedin)](https://www.linkedin.com/in/partha-sarathi-sarkar-7385a8367/) |
+| **Souvik Dey** | Lead Developer,Backend & Front End/Web Designer & Problem Statement Originator | [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?logo=linkedin)](https://www.linkedin.com/in/souvik-dey-400497366/) |
+| **Partha Sarathi Sarkar**| Full Stack & GenAI Prompt Engineer | [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?logo=linkedin)](https://www.linkedin.com/in/partha-sarathi-sarkar-7385a8367/) |
 | **Samrat Chatterjee** | AI Integration Architect | [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?logo=linkedin)](https://www.linkedin.com/in/samrat-chatterjee-2aa543368/) |
-| **Snehasis Chakroborty**| UI/UX Motion Designer | [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?logo=linkedin)](https://www.linkedin.com/in/snehasis-chakraborty-2b68823a6/) |
+| **Snehasis Chakroborty**| UI/UX Motion Designer & Prompt Engineer | [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?logo=linkedin)](https://www.linkedin.com/in/snehasis-chakraborty-2b68823a6/) |
 
 ---
 

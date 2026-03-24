@@ -13,11 +13,7 @@ let marketplaceState = {
 
 // Ensure marketplace is only initialized once per session
 function checkMarketplaceInit() {
-<<<<<<< HEAD
     console.log('Marketplace module initialized with ' + marketplaceState.products.length + ' items.');
-=======
-
->>>>>>> a7755fd2a3aa0207d4d297713660c27b66b4b548
 }
 
 // ─── Role Picker ────────────────────────────────────────────────────────────

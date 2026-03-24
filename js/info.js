@@ -67,7 +67,6 @@ const infoContent = {
             <p>Real-time data is aggregated from global weather APIs and processed locally to generate safety alerts tailored for farming activities.</p>
         `
     },
-<<<<<<< HEAD
     guide: {
         title: "User Guide",
         label: "Getting Started",
@@ -81,9 +80,6 @@ const infoContent = {
             </ul>
         `
     },
-=======
-
->>>>>>> a7755fd2a3aa0207d4d297713660c27b66b4b548
     dataprotection: {
         title: "Data Protection",
         label: "Security",

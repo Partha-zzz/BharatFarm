@@ -407,11 +407,7 @@ Goal: Act as a friendly, knowledgeable, and reliable digital farming assistant f
               break;
             } catch (err) {
               if (retries === 0) throw err;
-<<<<<<< HEAD
               console.log("[KrishiBot] Fetch failed, retrying in 2 seconds...");
-=======
-              console.warn("[KrishiBot] Fetch failed, retrying in 2 seconds...");
->>>>>>> a7755fd2a3aa0207d4d297713660c27b66b4b548
               await new Promise(r => setTimeout(r, 2000));
               retries--;
             }
@@ -441,14 +437,6 @@ Goal: Act as a friendly, knowledgeable, and reliable digital farming assistant f
         typingEl.remove();
         isTyping = false;
         updateSendBtn();
-<<<<<<< HEAD
-=======
-        
-        // Gamification Hook
-        if (window.bfGamification) {
-            window.bfGamification.trackChat();
-        }
->>>>>>> a7755fd2a3aa0207d4d297713660c27b66b4b548
 
         appendBotMsg(replyText);
         conversationHistory.push({ role: "assistant", content: replyText });
