@@ -348,22 +348,24 @@ Do not include any markdown formatting like \`\`\`json in your response. Just th
                 console.log(`[Analyze] Analyzing leaf picture with Gemini Vision...`);
 
                 const visionPrompt = `
-You are an expert plant pathologist. Analyze the provided image of a plant leaf.
-Identify any diseases, deficiencies, or pests present. If the leaf is healthy, state that it is healthy.
+CRITICAL RULE: If the image provided DOES NOT contain a visible plant leaf (e.g., it shows a person, a random object, an animal, or a broad landscape without a clear leaf), you MUST set:
+- "status": "non_leaf"
+- "name": "No Leaf Detected"
+- "description": Explain clearly that the image does not contain a plant leaf for analysis.
 
-Respond strictly in JSON format matching this exact structure:
+Otherwise, if a leaf is present, analyze it as an expert plant pathologist.
+
+Respond ONLY in raw JSON matching this structure:
 {
   "success": true,
   "disease": {
-    "status": "healthy" | "diseased",
-    "name": "Name of the disease or 'Healthy Plant'",
-    "description": "Short description of the issue and its cause.",
-    "fertilizers": ["Fertilizer recommendation 1", "Fertilizer recommendation 2"],
-    "treatments": ["Actionable tip 1", "Actionable tip 2"]
+    "status": "healthy" | "diseased" | "non_leaf",
+    "name": "Name of the disease, 'Healthy Plant', or 'No Leaf Detected'",
+    "description": "Detailed explanation.",
+    "fertilizers": ["List recommendations if a leaf is found", "..."],
+    "treatments": ["List tips if a leaf is found", "..."]
   }
 }
-
-Do not include any markdown formatting like \`\`\`json in your response. Just return the raw JSON object.
 `;
 
                 const messages = [{
@@ -413,13 +415,13 @@ Do not include any markdown formatting like \`\`\`json in your response. Just re
                 res.end(JSON.stringify({ success: false, error: "Dataset not found" }));
                 return;
             }
-
+            
             const rawData = fs.readFileSync(dataPath, 'utf-8');
             let diseases = JSON.parse(rawData);
 
             const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
             const query = parsedUrl.searchParams.get('q');
-            const pathParts = parsedUrl.pathname.split('/').filter(Boolean);
+            const pathParts = parsedUrl.pathname.split('/').filter(Boolean); // ['api', 'wiki', ...]
 
             // Route: /api/wiki/disease/:id
             if (pathParts[2] === 'disease' && pathParts[3]) {
@@ -451,44 +453,6 @@ Do not include any markdown formatting like \`\`\`json in your response. Just re
             res.end(JSON.stringify({ success: true, count: diseases.length, data: diseases }));
         } catch (e) {
             console.error('[/api/wiki] Error:', e.message);
-            res.writeHead(500, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify({ success: false, error: e.message }));
-        }
-        return;
-    }
-
-    // ── GET /api/quizzes ──────────────────────────────────────────────────────
-    if (req.url.startsWith('/api/quizzes') && req.method === 'GET') {
-        try {
-            const dataPath = path.join(__dirname, 'data', 'quizzes.json');
-            if (fs.existsSync(dataPath)) {
-                const rawData = fs.readFileSync(dataPath, 'utf-8');
-                res.writeHead(200, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify({ success: true, count: JSON.parse(rawData).length, data: JSON.parse(rawData) }));
-            } else {
-                res.writeHead(404, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify({ success: false, error: "Dataset not found" }));
-            }
-        } catch (e) {
-            res.writeHead(500, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify({ success: false, error: e.message }));
-        }
-        return;
-    }
-
-    // ── GET /api/achievements ──────────────────────────────────────────────────
-    if (req.url.startsWith('/api/achievements') && req.method === 'GET') {
-        try {
-            const dataPath = path.join(__dirname, 'data', 'achievements.json');
-            if (fs.existsSync(dataPath)) {
-                const rawData = fs.readFileSync(dataPath, 'utf-8');
-                res.writeHead(200, { 'Content-Type': 'application/json' });
-                res.end(rawData); // already JSON string
-            } else {
-                res.writeHead(404, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify({ success: false, error: "Dataset not found" }));
-            }
-        } catch (e) {
             res.writeHead(500, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ success: false, error: e.message }));
         }

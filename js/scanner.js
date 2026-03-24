@@ -25,7 +25,7 @@ async function analyzeLeaf() {
     if (prevDebug) prevDebug.remove();
 
     try {
-
+        console.log('Sending image to Gemini API...');
 
         // 1. Get Base64 image data from the UI Image Element
         const base64Image = imgElement.src;
@@ -51,7 +51,7 @@ async function analyzeLeaf() {
                 break;
             } catch (err) {
                 if (retries === 0) throw err;
-                console.warn("Fetch failed, retrying in 2 seconds...");
+                console.log("Fetch failed, retrying in 2 seconds...");
                 await new Promise(r => setTimeout(r, 2000));
                 retries--;
             }
@@ -62,7 +62,7 @@ async function analyzeLeaf() {
         }
 
         const data = await response.json();
-
+        console.log('Gemini Predictions:', data);
 
         if (!data.success) {
             showError(data.error || "Could not analyze the leaf image.");
@@ -77,16 +77,41 @@ async function analyzeLeaf() {
         document.getElementById('scanResult').style.display = 'block';
 
         const statusEl = document.getElementById('diseaseStatus');
+        const nameEl = document.getElementById('diseaseName');
+        const fertHeader = document.getElementById('fertHeader');
+        const treatHeader = document.getElementById('treatHeader');
+        
         const isHealthy = result.status === 'healthy';
+        
+        // Defensive Safety Net: Check status, name, AND description for signs of a missed leaf
+        const descLower = (result.description || "").toLowerCase();
+        const nameLower = (result.name || "").toLowerCase();
+        const isNonLeaf = result.status === 'non_leaf' || 
+                          nameLower.includes('no leaf') || 
+                          descLower.includes('does not contain') || 
+                          descLower.includes('not a plant') ||
+                          descLower.includes('shows a person');
 
-        statusEl.textContent = isHealthy ? 'Healthy Plant' : 'Issue Detected';
-        statusEl.className = 'disease-badge ' + (isHealthy ? 'healthy' : 'diseased');
+        if (isNonLeaf) {
+            statusEl.style.display = 'none';
+            nameEl.style.display = 'none';
+            if (fertHeader) fertHeader.style.display = 'none';
+            if (treatHeader) treatHeader.style.display = 'none';
+        } else {
+            statusEl.style.display = 'inline-block';
+            nameEl.style.display = 'block';
+            if (fertHeader) fertHeader.style.display = 'block';
+            if (treatHeader) treatHeader.style.display = 'block';
+            
+            statusEl.textContent = isHealthy ? 'Healthy Plant' : 'Issue Detected';
+            statusEl.className = 'disease-badge ' + (isHealthy ? 'healthy' : 'diseased');
+        }
 
-        document.getElementById('diseaseName').textContent = result.name;
+        nameEl.textContent = result.name;
         document.getElementById('diseaseDescription').textContent = result.description;
 
         const fertList = document.getElementById('fertilizerRecommendations');
-        if (result.fertilizers && Array.isArray(result.fertilizers)) {
+        if (result.fertilizers && Array.isArray(result.fertilizers) && !isNonLeaf) {
             fertList.innerHTML = result.fertilizers.map(f =>
                 `<div class="recommendation-item"><i class="fas fa-check-circle"></i><span>${f}</span></div>`
             ).join('');
@@ -95,7 +120,7 @@ async function analyzeLeaf() {
         }
 
         const treatList = document.getElementById('treatmentTips');
-        if (result.treatments && Array.isArray(result.treatments)) {
+        if (result.treatments && Array.isArray(result.treatments) && !isNonLeaf) {
             treatList.innerHTML = result.treatments.map(t =>
                 `<div class="recommendation-item"><i class="fas fa-check-circle"></i><span>${t}</span></div>`
             ).join('');
@@ -106,11 +131,6 @@ async function analyzeLeaf() {
         if (typeof logActivity === 'function') {
             logActivity('scan', 'Plant leaf scanned via AI', isHealthy ? 'Healthy Plant' : `Detected ${result.name}`);
             updateUserStatistic('totalScans');
-        }
-        
-        // Gamification Hook
-        if (window.bfGamification) {
-            window.bfGamification.trackScan();
         }
 
         loadingEl.classList.add('hidden');
