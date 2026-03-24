@@ -40,6 +40,7 @@
 ### 1. 🤖 Intelligent Multilingual AI
 - **🎙️ KrishiBot Assistant:** Powered by **Gemini 2.0 Flash**, KrishiBot is a real-time AI companion utilizing **Speech-to-Text (STT)** and **Text-to-Speech (TTS)**. Farmers can *talk* to their application in their native tongue and get expert advice back via voice.
 - **🍃 AI Leaf Scanner:** Diagnoses plant diseases with human-like precision, recommending exact fertilizers and treatments instantly.
+- **📚 Crop Health Wiki:** A comprehensive, searchable database of 30+ crop diseases, pests, and soil conditions seamlessly integrated with curated, localized treatment recommendations.
 
 ### 2. 🌍 Localization & Accessibility
 - **🇮🇳 Native First:** Full UI localization for the major agricultural hubs of India. Switch between English, Hindi, and Bengali with a single click.
