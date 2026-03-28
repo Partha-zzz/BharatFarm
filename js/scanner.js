@@ -25,7 +25,7 @@ async function analyzeLeaf() {
     if (prevDebug) prevDebug.remove();
 
     try {
-        console.log('Sending image to Gemini API...');
+
 
         // 1. Get Base64 image data from the UI Image Element
         const base64Image = imgElement.src;
@@ -51,7 +51,7 @@ async function analyzeLeaf() {
                 break;
             } catch (err) {
                 if (retries === 0) throw err;
-                console.log("Fetch failed, retrying in 2 seconds...");
+                console.warn("Fetch failed, retrying in 2 seconds...");
                 await new Promise(r => setTimeout(r, 2000));
                 retries--;
             }
@@ -62,7 +62,7 @@ async function analyzeLeaf() {
         }
 
         const data = await response.json();
-        console.log('Gemini Predictions:', data);
+
 
         if (!data.success) {
             showError(data.error || "Could not analyze the leaf image.");
@@ -78,34 +78,70 @@ async function analyzeLeaf() {
 
         const statusEl = document.getElementById('diseaseStatus');
         const isHealthy = result.status === 'healthy';
+        const isNotPlant = result.status === 'not_a_plant';
 
-        statusEl.textContent = isHealthy ? 'Healthy Plant' : 'Issue Detected';
-        statusEl.className = 'disease-badge ' + (isHealthy ? 'healthy' : 'diseased');
-
-        document.getElementById('diseaseName').textContent = result.name;
-        document.getElementById('diseaseDescription').textContent = result.description;
-
-        const fertList = document.getElementById('fertilizerRecommendations');
-        if (result.fertilizers && Array.isArray(result.fertilizers)) {
-            fertList.innerHTML = result.fertilizers.map(f =>
-                `<div class="recommendation-item"><i class="fas fa-check-circle"></i><span>${f}</span></div>`
-            ).join('');
+        // Set badge text and style based on status
+        if (isNotPlant) {
+            statusEl.textContent = 'Not a Plant';
+            statusEl.className = 'disease-badge not-plant';
+        } else if (isHealthy) {
+            statusEl.textContent = 'Healthy Plant';
+            statusEl.className = 'disease-badge healthy';
         } else {
-            fertList.innerHTML = '';
+            statusEl.textContent = 'Issue Detected';
+            statusEl.className = 'disease-badge diseased';
         }
 
-        const treatList = document.getElementById('treatmentTips');
-        if (result.treatments && Array.isArray(result.treatments)) {
-            treatList.innerHTML = result.treatments.map(t =>
-                `<div class="recommendation-item"><i class="fas fa-check-circle"></i><span>${t}</span></div>`
-            ).join('');
+        // Set heading: show "Not a Plant" instead of the disease name for non-plant images
+        document.getElementById('diseaseName').textContent = isNotPlant ? 'Not a Plant' : result.name;
+        document.getElementById('diseaseDescription').textContent = result.description;
+
+        // Show or hide fertilizer and treatment sections based on whether it's a plant
+        const fertSection = document.getElementById('fertilizerRecommendations');
+        const treatSection = document.getElementById('treatmentTips');
+
+        if (isNotPlant) {
+            // Hide recommendations for non-plant images
+            fertSection.innerHTML = '';
+            treatSection.innerHTML = '';
+            // Also hide the section headers if possible
+            const fertHeader = fertSection.closest('.result-section')?.querySelector('h4') || fertSection.previousElementSibling;
+            const treatHeader = treatSection.closest('.result-section')?.querySelector('h4') || treatSection.previousElementSibling;
+            if (fertHeader) fertHeader.style.display = 'none';
+            if (treatHeader) treatHeader.style.display = 'none';
         } else {
-            treatList.innerHTML = '';
+            // Show section headers back
+            const fertHeader = fertSection.closest('.result-section')?.querySelector('h4') || fertSection.previousElementSibling;
+            const treatHeader = treatSection.closest('.result-section')?.querySelector('h4') || treatSection.previousElementSibling;
+            if (fertHeader) fertHeader.style.display = '';
+            if (treatHeader) treatHeader.style.display = '';
+
+            if (result.fertilizers && Array.isArray(result.fertilizers)) {
+                fertSection.innerHTML = result.fertilizers.map(f =>
+                    `<div class="recommendation-item"><i class="fas fa-check-circle"></i><span>${f}</span></div>`
+                ).join('');
+            } else {
+                fertSection.innerHTML = '';
+            }
+
+            if (result.treatments && Array.isArray(result.treatments)) {
+                treatSection.innerHTML = result.treatments.map(t =>
+                    `<div class="recommendation-item"><i class="fas fa-check-circle"></i><span>${t}</span></div>`
+                ).join('');
+            } else {
+                treatSection.innerHTML = '';
+            }
         }
 
         if (typeof logActivity === 'function') {
-            logActivity('scan', 'Plant leaf scanned via AI', isHealthy ? 'Healthy Plant' : `Detected ${result.name}`);
+            const logLabel = isNotPlant ? 'Not a Plant' : (isHealthy ? 'Healthy Plant' : `Detected ${result.name}`);
+            logActivity('scan', 'Plant leaf scanned via AI', logLabel);
             updateUserStatistic('totalScans');
+        }
+        
+        // Gamification Hook
+        if (window.bfGamification) {
+            window.bfGamification.trackScan();
         }
 
         loadingEl.classList.add('hidden');

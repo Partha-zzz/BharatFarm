@@ -38,7 +38,7 @@ function initUserProfile() {
 // Get user profile
 function getUserProfile() {
     const currentUserData = localStorage.getItem('bharatfarm_current_user');
-    console.log('Current user data from localStorage:', currentUserData);
+
 
     if (!currentUserData) return null;
 
@@ -46,7 +46,7 @@ function getUserProfile() {
     let currentUser;
     try {
         currentUser = JSON.parse(currentUserData);
-        console.log('Parsed current user:', currentUser);
+
     } catch (e) {
         console.error('Error parsing current user:', e);
         return null;
@@ -161,8 +161,16 @@ function updateUserStatistic(statKey) {
 
         // Initialize profile if needed
         if (!currentUser.profile) {
+            console.log('Profile missing, initiating initialization...');
             initUserProfile();
-            return updateUserStatistic(statKey); // Need to wait for init before updating, this is synchronous so it's fine.
+            
+            // Re-fetch user to see if profile was created
+            const refreshedUser = JSON.parse(localStorage.getItem('bharatfarm_current_user') || '{}');
+            if (!refreshedUser.profile) {
+                console.warn('Could not initialize profile for statistic update. Using guest-safe path.');
+                return; // Stop recursion if profile still missing
+            }
+            return updateUserStatistic(statKey); 
         }
 
         // Update statistic
@@ -222,10 +230,10 @@ function getActivities(filterType = 'all', limit = 50) {
 
 // Display profile page
 function showProfilePage() {
-    console.log('showProfilePage called');
+
 
     const user = getUserProfile();
-    console.log('User profile:', user);
+
 
     if (!user) {
         console.error('No user found - this should not happen if logged in');
@@ -295,10 +303,10 @@ function showProfilePage() {
         displayActivities('all');
 
         // Show profile section
-        console.log('Calling showSection with profile');
+
         if (typeof showSection === 'function') {
             showSection('profile');
-            console.log('Profile section should now be visible');
+
         } else {
             console.error('showSection function not found');
         }
@@ -518,4 +526,4 @@ function exportActivityPDF() {
     });
 }
 
-console.log('Profile.js loaded - showProfilePage is available:', typeof showProfilePage);
+

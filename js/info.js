@@ -67,19 +67,7 @@ const infoContent = {
             <p>Real-time data is aggregated from global weather APIs and processed locally to generate safety alerts tailored for farming activities.</p>
         `
     },
-    guide: {
-        title: "User Guide",
-        label: "Getting Started",
-        body: `
-            <h2>Getting Started</h2>
-            <p>Welcome to BharatFarm! Follow these steps to maximize your productivity:</p>
-            <ul>
-                <li><strong>Setup Profile:</strong> Enter your farm location for accurate weather alerts.</li>
-                <li><strong>Start a Session:</strong> Choose your crop to unlock the day-by-day activity roadmap.</li>
-                <li><strong>Use KrishiBot:</strong> Use your voice to ask about fertilizer ratios, market prices, or sowing tips.</li>
-            </ul>
-        `
-    },
+
     dataprotection: {
         title: "Data Protection",
         label: "Security",

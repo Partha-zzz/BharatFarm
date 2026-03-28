@@ -6,7 +6,7 @@
 // ============================================================
 
 let currentWizardStep = 1;
-const BACKEND_URL = 'http://localhost:5000';
+const BACKEND_URL = '';
 
 // ── Wizard Navigation ─────────────────────────────────────────
 
@@ -104,7 +104,7 @@ async function submitSchemesForm() {
         loader.classList.remove('active');
 
         // Fallback to local JSON data
-        console.log('[Schemes] Falling back to local JSON data...');
+        console.warn('[Schemes] Falling back to local JSON data...');
         try {
             const fallbackRes = await fetch('js/schemesData.json');
             const allSchemes  = await fallbackRes.json();
@@ -280,7 +280,7 @@ function renderError(message) {
 // ── Track Apply Click (Analytics) ───────────────────────────
 
 function trackSchemeApply(id, name) {
-    console.log(`[Schemes] User clicked Apply for: ${name} (${id})`);
+
     
     // Save to local analytics
     try {
@@ -298,7 +298,7 @@ function trackSchemeApply(id, name) {
                 timestamp: new Date().toISOString()
             });
             localStorage.setItem('appliedSchemes', JSON.stringify(appliedSchemes));
-            console.log(`[Analytics] Tracked application for: ${name}`);
+
         }
     } catch(e) {
         console.error('[Analytics] Error saving scheme application data:', e);

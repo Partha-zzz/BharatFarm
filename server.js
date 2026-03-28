@@ -8,41 +8,39 @@ const fs = require('fs');
 const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '.env') });
 
-const PORT = 5001;
+const PORT = process.env.PORT || 5000;
 
 // ── API Key (move to a .env file for production) ──────────────────────────────
 // To use .env: npm install dotenv  →  add require('dotenv').config(); at top
-const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
+const OPENROUTER_API_KEY = (process.env.OPENROUTER_API_KEY || "").trim();
 if (OPENROUTER_API_KEY) {
-    console.log('Using API Key starting with:', OPENROUTER_API_KEY.substring(0, 5));
+    console.log('[Auth] API Key detected (starts with: ' + OPENROUTER_API_KEY.substring(0, 7) + '...)');
+} else {
+    console.warn('[Auth] WARNING: OPENROUTER_API_KEY is missing from environment variables!');
 }
 
+const fetch = require('node-fetch');
 const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
-const OPENROUTER_MODEL = "google/gemini-2.0-flash-001";
+const OPENROUTER_MODEL = "google/gemini-2.0-flash-lite-001"; // Highly compatible fast model
 
 // Helper: call OpenRouter
 async function callOpenAI(messages) {
     let lastErrorRaw = "";
-    console.log(`[OpenRouter] Trying model: ${OPENROUTER_MODEL}`);
+    console.log(`[OpenRouter] Trying model: ${OPENROUTER_MODEL} with key: ${OPENROUTER_API_KEY.substring(0, 7)}...`);
     try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 30000);
-
         const r = await fetch(OPENROUTER_URL, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
-                'HTTP-Referer': 'http://localhost:5000',
                 'X-Title': 'BharatFarm'
             },
             body: JSON.stringify({
                 model: OPENROUTER_MODEL,
                 messages: messages
             }),
-            signal: controller.signal
+            timeout: 30000
         });
-        clearTimeout(timeoutId);
 
         const raw = await r.text();
         console.log(`[OpenRouter] Status ${r.status}`);
@@ -348,20 +346,23 @@ Do not include any markdown formatting like \`\`\`json in your response. Just th
                 console.log(`[Analyze] Analyzing leaf picture with Gemini Vision...`);
 
                 const visionPrompt = `
-You are an expert plant pathologist. Analyze the provided image of a plant leaf.
-Identify any diseases, deficiencies, or pests present. If the leaf is healthy, state that it is healthy.
+You are an expert plant pathologist. Analyze the provided image.
+First, determine if the image contains a plant leaf. If it does NOT contain a plant leaf (e.g., it's an animal, person, object, landscape, screenshot, etc.), return status "not_a_plant".
+If it IS a plant leaf, identify any diseases, deficiencies, or pests present. If the leaf is healthy, state that it is healthy.
 
 Respond strictly in JSON format matching this exact structure:
 {
   "success": true,
   "disease": {
-    "status": "healthy" | "diseased",
-    "name": "Name of the disease or 'Healthy Plant'",
-    "description": "Short description of the issue and its cause.",
+    "status": "healthy" | "diseased" | "not_a_plant",
+    "name": "Name of the disease, 'Healthy Plant', or 'Not a Plant'",
+    "description": "Short description of the issue, or explain what the image actually contains if not a plant.",
     "fertilizers": ["Fertilizer recommendation 1", "Fertilizer recommendation 2"],
     "treatments": ["Actionable tip 1", "Actionable tip 2"]
   }
 }
+
+IMPORTANT: If the image is NOT a plant leaf, you MUST set status to "not_a_plant", name to "Not a Plant", and leave fertilizers and treatments as empty arrays.
 
 Do not include any markdown formatting like \`\`\`json in your response. Just return the raw JSON object.
 `;
@@ -404,7 +405,6 @@ Do not include any markdown formatting like \`\`\`json in your response. Just re
     }
 
 
-
     // ── GET /api/wiki ─────────────────────────────────────────────────────────
     if (req.url.startsWith('/api/wiki') && req.method === 'GET') {
         try {
@@ -414,13 +414,13 @@ Do not include any markdown formatting like \`\`\`json in your response. Just re
                 res.end(JSON.stringify({ success: false, error: "Dataset not found" }));
                 return;
             }
-            
+
             const rawData = fs.readFileSync(dataPath, 'utf-8');
             let diseases = JSON.parse(rawData);
 
             const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
             const query = parsedUrl.searchParams.get('q');
-            const pathParts = parsedUrl.pathname.split('/').filter(Boolean); // ['api', 'wiki', ...]
+            const pathParts = parsedUrl.pathname.split('/').filter(Boolean);
 
             // Route: /api/wiki/disease/:id
             if (pathParts[2] === 'disease' && pathParts[3]) {
@@ -458,6 +458,70 @@ Do not include any markdown formatting like \`\`\`json in your response. Just re
         return;
     }
 
+    // ── GET /api/quizzes ──────────────────────────────────────────────────────
+    if (req.url.startsWith('/api/quizzes') && req.method === 'GET') {
+        try {
+            const dataPath = path.join(__dirname, 'data', 'quizzes.json');
+            if (fs.existsSync(dataPath)) {
+                const rawData = fs.readFileSync(dataPath, 'utf-8');
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ success: true, count: JSON.parse(rawData).length, data: JSON.parse(rawData) }));
+            } else {
+                res.writeHead(404, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ success: false, error: "Dataset not found" }));
+            }
+        } catch (e) {
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ success: false, error: e.message }));
+        }
+        return;
+    }
+
+    // ── GET /api/leaderboard ──────────────────────────────────────────────────
+    // Returns a list of top farmers sorted by XP (simulated data for demo)
+    if (req.url.startsWith('/api/leaderboard') && req.method === 'GET') {
+        try {
+            // Simulated leaderboard data — in production this would come from a database
+            const leaderboard = [
+                { name: "Ramesh Kumar", xp: 1820, rank: 1 },
+                { name: "Sunita Devi", xp: 1540, rank: 2 },
+                { name: "Arjun Patel", xp: 1360, rank: 3 },
+                { name: "Lakshmi Bai", xp: 1100, rank: 4 },
+                { name: "Mahesh Singh", xp: 980, rank: 5 },
+                { name: "Priya Sharma", xp: 840, rank: 6 },
+                { name: "Vikram Yadav", xp: 720, rank: 7 },
+                { name: "Anita Reddy", xp: 650, rank: 8 },
+                { name: "Rajesh Verma", xp: 530, rank: 9 },
+                { name: "Kavita Nair", xp: 410, rank: 10 }
+            ];
+
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ success: true, data: leaderboard }));
+        } catch (e) {
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ success: false, error: e.message }));
+        }
+        return;
+    }
+
+    // ── GET /api/achievements ──────────────────────────────────────────────────
+    if (req.url.startsWith('/api/achievements') && req.method === 'GET') {
+        try {
+            const dataPath = path.join(__dirname, 'data', 'achievements.json');
+            if (fs.existsSync(dataPath)) {
+                const rawData = fs.readFileSync(dataPath, 'utf-8');
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(rawData); // already JSON string
+            } else {
+                res.writeHead(404, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ success: false, error: "Dataset not found" }));
+            }
+        } catch (e) {
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ success: false, error: e.message }));
+        }
+        return;
+    }
 
     // ── Static file serving ────────────────────────────────────────────────────
     let filePath = '.' + req.url;

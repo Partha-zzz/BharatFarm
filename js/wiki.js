@@ -1,13 +1,14 @@
 // js/wiki.js
+// Crop Health Wiki — Disease Encyclopedia
 
 let wikiData = [];
 let currentWikiFilter = 'all';
 const wikiGrid = document.getElementById('wikiGrid');
 
-// Fetch Wiki Data from Backend
+// Fetch Wiki Data from Backend (uses relative URL for portability)
 async function fetchWikiData() {
     try {
-        const response = await fetch('http://localhost:5001/api/wiki');
+        const response = await fetch('/api/wiki');
         if (!response.ok) throw new Error('Network response was not ok');
         const data = await response.json();
         
@@ -23,8 +24,6 @@ async function fetchWikiData() {
         wikiGrid.innerHTML = '<div class="wiki-loading" style="color:var(--danger)">Error connecting to server.</div>';
     }
 }
-
-
 
 // Render the grid of disease cards
 function renderWikiGrid(dataToRender) {
@@ -83,13 +82,13 @@ function searchWiki(query) {
 }
 
 // Category filter
-function filterWiki(category) {
+function filterWiki(category, el) {
     currentWikiFilter = category;
     
     // Update active chip
     const chips = document.querySelectorAll('#wikiCategories .chip');
     chips.forEach(c => c.classList.remove('active'));
-    event.target.classList.add('active');
+    if (el) el.classList.add('active');
     
     // Re-run search text filter
     const query = document.getElementById('wikiSearch').value;
@@ -199,21 +198,18 @@ function openWikiModal(diseaseId) {
 
     document.getElementById('wmBody').innerHTML = bodyHtml;
     modalOverlay.style.display = 'flex';
-    document.body.style.overflow = 'hidden'; // Prevent background scrolling
+    document.body.style.overflow = 'hidden';
 }
 
 function closeWikiModal() {
     const modalOverlay = document.getElementById('wikiModalOverlay');
     if (modalOverlay) {
         modalOverlay.style.display = 'none';
-        document.body.style.overflow = 'auto'; // Restore scrolling
+        document.body.style.overflow = 'auto';
     }
 }
 
-
-
 // Load data immediately on page load to be ready
 document.addEventListener('DOMContentLoaded', () => {
-    // Attempt to load wiki data, but do not show the UI unless the section is active
     fetchWikiData();
 });
